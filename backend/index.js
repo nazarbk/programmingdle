@@ -62,7 +62,7 @@ app.get("/Lenguajes", (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  const ip = req.ip; // Esto obtendrá la dirección IP del usuario
+  const ip = req.ip;
   res.send(`Tu dirección IP es: ${ip}`);
 });
 

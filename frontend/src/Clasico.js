@@ -40,7 +40,7 @@ const Clasico = () => {
       fetch('https://programmingdle.onrender.com/') // Reemplaza '/obtenerIP' con la URL de tu backend
       .then(response => response.text())
       .then(data => {
-        console.log(data); // La dirección IP se imprimirá en la consola
+        console.log(data);
       })
       .catch(error => {
         console.error('Error al obtener la dirección IP:', error);
@@ -132,6 +132,8 @@ const Clasico = () => {
     if (coincidencias.length > 5) {
       textoCopiado += `\n+ ${coincidencias.length - 5} filas adicionales`;
     }
+
+    textoCopiado += `\n[https://programmingdle.web.app/]`;
   
     const textarea = document.createElement('textarea');
     textarea.value = textoCopiado;
@@ -161,6 +163,8 @@ const Clasico = () => {
     if (coincidencias.length > 5) {
       textoCompartido += `\n+ ${coincidencias.length - 5} filas adicionales`;
     }
+
+    textoCompartido += `\n[https://programmingdle.web.app/]`;
   
     //Enlace a Whatsapp 
     const mensajeWhatsApp = encodeURIComponent(textoCompartido);
@@ -169,9 +173,7 @@ const Clasico = () => {
     //Readirección a Whatsapp para enviar el mensaje
     window.open(enlaceWhatsApp);
   };
-  
-  
-  console.log(`La dirección IP del usuario es:`, IP);
+
   //console.log('INTENTOS: ', intentos);
   //console.log('HASWON: ', hasWon);
   //console.log('PERSONAJES BUSCADOS:', personajeBuscado);
