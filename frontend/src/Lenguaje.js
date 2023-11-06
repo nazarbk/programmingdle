@@ -17,7 +17,7 @@ const Lenguaje = () => {
     const [lenguajeNoEncontrado, setLenguajeNoEncontrado] = useState(false);
 
     useEffect(() => {
-        fetch('http://localhost:3000/Lenguajes')
+        fetch('https://programmingdle.onrender.com/Lenguajes')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('La solicitud no pudo ser completada.');

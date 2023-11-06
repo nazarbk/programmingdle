@@ -19,7 +19,7 @@ const Clasico = () => {
 
 
   useEffect(() => {
-    fetch('http://localhost:3000/Personajes')
+    fetch('https://programmingdle.onrender.com/Personajes')
       .then(response => {
         if (!response.ok) {
           throw new Error('La solicitud no pudo ser completada.');
@@ -37,7 +37,7 @@ const Clasico = () => {
         console.error(error);
       });
 
-      fetch('http://localhost:3000/') // Reemplaza '/obtenerIP' con la URL de tu backend
+      fetch('https://programmingdle.onrender.com/') // Reemplaza '/obtenerIP' con la URL de tu backend
       .then(response => response.text())
       .then(data => {
         console.log(data); // La dirección IP se imprimirá en la consola

@@ -22,7 +22,7 @@ const Logro = () => {
   };
 
   useEffect(() => {
-    fetch('http://localhost:3000/Personajes')
+    fetch('https://programmingdle.onrender.com/Personajes')
       .then(response => {
         if (!response.ok) {
           throw new Error('La solicitud no pudo ser completada.');
