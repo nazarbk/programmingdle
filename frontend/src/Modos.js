@@ -1,63 +1,56 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Clasico from './Views/Clasico';
-import Logro from './Views/Logro';
+import { Link } from 'react-router-dom';
 
 const Modos = () => {
     return(
         <div className='modos'>
-            <Router>
-                <nav>
-                <ul>
-                    <li><Link to="/clasico">Clasico</Link></li>
-                    <li><Link to="/logro">Logro</Link></li>
-                </ul>
-                </nav>
-                <Routes>
-                    <Route path="/clasico" element={<Clasico />} />
-                    <Route path="/logro" element={<Logro />} />
-                </Routes>
-            </Router>
-
             <div className='modo'>
                 <div className='icono'>
-                    <i class='bx bx-laptop'></i>
+                    <i className='bx bx-laptop'></i>
                 </div>
+                <Link to="/clasico">
                 <div className='nombre'>
                     <h1>Clásico</h1>
                     <p>Adivina el personaje con pistas en cada intento</p>
                 </div>
+                </Link>
             </div>
 
             <div className='modo'>
                 <div className='icono'>
-                    <i class='bx bx-trophy'></i>
+                    <i className='bx bx-trophy'></i>
                 </div>
+                <Link to="/logro">
                 <div className='nombre'>
                     <h1>Logro</h1>
                     <p>Adivina el personaje según su logro</p>
                 </div>
+                </Link>
             </div>
 
             <div className='modo'>
                 <div className='icono'>
-                    <i class='bx bx-code-block'></i>
+                    <i className='bx bx-code-block'></i>
                 </div>
+                <Link to="/lenguaje">
                 <div className='nombre'>
                     <h1>Lenguaje</h1>
                     <p>Adivina el lenguaje de programación</p>
                 </div>
+                </Link>
             </div>
 
             <div className='modo'>
                 <div className='icono'>
-                    <i class='bx bx-image-alt'></i>
+                    <i className='bx bx-image-alt'></i>
                 </div>
+                <Link to="/palabra">
                 <div className='nombre'>
                     <h1>Framework</h1>
                     <p>Adivina el Framework segín su logo</p>
                 </div>
+                </Link>
             </div>
         </div>
     )
