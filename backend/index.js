@@ -61,10 +61,81 @@ app.get("/Lenguajes", (req, res) => {
     });
 });
 
+//IP 
+
 app.get('/', (req, res) => {
   const ip = req.ip;
-  res.send(`Tu dirección IP es: ${ip}`);
+  res.send(ip);
 });
+
+//Usuarios
+
+const usuarioSchema = new mongoose.Schema({
+  ip: String,
+  nombre: {
+    type: String,
+    default: null
+  },
+  intentosclasico: {
+    type: Number,
+    default: null
+  },
+  clasico: {
+    type: [{}],
+    default: [{}]
+  }  
+});
+
+const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
+
+app.post("/Usuarios", (req, res) => {
+  const { ip } = req.body;
+  const nuevoUsuario = new Usuario({ ip });
+
+  nuevoUsuario
+    .save()
+    .then(() => {
+      res.status(201).send({ ok: true, mensaje: "Usuario creado con éxito" });
+    })
+    .catch((error) => {
+      res.status(500).send({ ok: false, error: "Error al crear el usuario" });
+    });
+});
+
+//Buscar usuario por IP
+app.get("/Usuarios/:ip", (req, res) => {
+  const ip = req.params.ip;
+
+  Usuario.findOne({ ip: ip })
+    .then((usuario) => {
+      if (!usuario) {
+        return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
+      }
+      res.status(200).send({ ok: true, usuario });
+    })
+    .catch((error) => {
+      res.status(500).send({ ok: false, error: "Error al buscar el usuario" });
+    });
+});
+
+//Actualizar Usuario por IP
+app.put("/Usuarios/:ip", (req, res) => {
+  const ip = req.params.ip;
+
+  const { nombre, intentosclasico, clasico } = req.body;
+
+  Usuario.findOneAndUpdate({ ip: ip }, { nombre, intentosclasico, clasico }, { new: true })
+    .then((usuario) => {
+      if (!usuario) {
+        return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
+      }
+      res.status(200).send({ ok: true, usuario });
+    })
+    .catch((error) => {
+      res.status(500).send({ ok: false, error: "Error al actualizar el usuario" });
+    });
+});
+
 
 app.listen(3000, () => {
   console.log("Servidor escuchando en el puerto 3000");

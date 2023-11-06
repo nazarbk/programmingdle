@@ -15,11 +15,11 @@ const Clasico = () => {
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [hasWon, setHasWon] = useState(false);
   const [personajeNoEncontrado, setPersonajeNoEncontrado] = useState(false);
-  const [IP, setIP] = useState([]);
 
+  const ipToUpdate = "192.168.1.1";
 
   useEffect(() => {
-    fetch('https://programmingdle.onrender.com/Personajes')
+    fetch('http://localhost:3000/Personajes')
       .then(response => {
         if (!response.ok) {
           throw new Error('La solicitud no pudo ser completada.');
@@ -35,15 +35,6 @@ const Clasico = () => {
       })
       .catch(error => {
         console.error(error);
-      });
-
-      fetch('https://programmingdle.onrender.com/') // Reemplaza '/obtenerIP' con la URL de tu backend
-      .then(response => response.text())
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => {
-        console.error('Error al obtener la dirección IP:', error);
       });
   }, []);
 
@@ -100,10 +91,40 @@ const Clasico = () => {
       if(todasLasCaracteristicasCoinciden){
         setHasWon(true);
       }
-    } else {
-      
     }
   };
+
+  const actualizarUsuario = async () => {
+    const datosActualizacion = {
+      nombre: "Jaimito",
+      intentosclasico: intentos,
+      clasico: personajeBuscado
+    };
+
+    fetch(`http://localhost:3000/Usuarios/${ipToUpdate}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(datosActualizacion),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('La solicitud no pudo ser completada.');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.ok) {
+          console.log('Usuario actualizado:', data.usuario);
+        } else {
+          console.log('Usuario no encontrado:', data.mensaje);
+        }
+      })
+      .catch(error => {
+        console.error('Error al actualizar el usuario:', error);
+      });
+  }
 
   const actualizarIntento = async () => {
     setIntentos(intentos + 1);
@@ -174,9 +195,11 @@ const Clasico = () => {
     window.open(enlaceWhatsApp);
   };
 
-  //console.log('INTENTOS: ', intentos);
+  actualizarUsuario();
   //console.log('HASWON: ', hasWon);
+  //console.log('INTENTOS: ', intentos);
   //console.log('PERSONAJES BUSCADOS:', personajeBuscado);
+  //console.log('PERSONAJES COMPARADOS:',coincidencias);
 
   return (
     <div className='clasico'>
