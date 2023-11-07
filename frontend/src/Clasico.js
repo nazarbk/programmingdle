@@ -17,6 +17,7 @@ const Clasico = () => {
   const [personajeNoEncontrado, setPersonajeNoEncontrado] = useState(false);
   const [ipToUpdate, setipToUpdate] = useState(null);
   const [actualizarPersonajes, setactualizarPersonajes] = useState(false);
+  const [actualizarUser, setaactualizarUser] = useState(false);
 
   useEffect(() => {
       fetch('https://programmingdle.onrender.com/Personajes')
@@ -59,9 +60,9 @@ const Clasico = () => {
             }
             if(data.usuario.clasico !== null && data.usuario.clasico.length !== 0){
               setPersonajeBuscado(data.usuario.clasico);
-
               setactualizarPersonajes(true);
             }
+              setHasWon(data.usuario.haswonclasico);
           }
         })
         .catch(error => {
@@ -122,6 +123,7 @@ const Clasico = () => {
       setPersonajeBuscado([...personajeBuscado, { personaje, coincidencias }]);
       setCoincidencias((prevCoincidencias) => [...prevCoincidencias, coincidencias]);
       eliminarPersonaje(busqueda);
+      setaactualizarUser(true);
 
       if(todasLasCaracteristicasCoinciden){
         setHasWon(true);
@@ -133,7 +135,8 @@ const Clasico = () => {
     const datosActualizacion = {
       nombre: "Jaimito",
       intentosclasico: intentos,
-      clasico: personajeBuscado
+      clasico: personajeBuscado,
+      haswonclasico: hasWon
     };
 
     fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
@@ -159,6 +162,8 @@ const Clasico = () => {
       .catch(error => {
         console.error('Error al actualizar el usuario:', error);
       });
+
+      setaactualizarUser(false);
   }
 
   const actualizarIntento = async () => {
@@ -171,11 +176,16 @@ const Clasico = () => {
 
   const eliminarPersonaje = (nombre) => {
     const nuevosPersonajes = [...personajes];
-  
     const nuevosPersonajesFiltrados = nuevosPersonajes.filter((personaje) => personaje.nombre !== nombre);
-  
     setPersonajes(nuevosPersonajesFiltrados);
   };
+
+  const eliminarPersonajes = () =>{
+    const nombresPersonajesBuscados = personajeBuscado.map((item) => item.personaje.nombre);
+    const nuevosPersonajes = personajes.filter((personaje) => !nombresPersonajesBuscados.includes(personaje.nombre));
+    setPersonajes(nuevosPersonajes);
+    setactualizarPersonajes(false);
+  }
 
   const copiarButton = () => {
     const ultimasCincoCoincidencias = coincidencias.slice(-5);
@@ -230,12 +240,11 @@ const Clasico = () => {
     window.open(enlaceWhatsApp);
   };
 
-  actualizarUsuario();
+  if(actualizarUser){
+    actualizarUsuario();
+  }
   if(actualizarPersonajes){
-    personajeBuscado.forEach((personaje) => {
-      console.log(personaje.personaje.nombre);
-      //eliminarPersonaje(personaje.personaje.nombre);
-    });
+    eliminarPersonajes();
   }
   //console.log('HASWON: ', hasWon);
   //console.log('INTENTOS: ', intentos);
