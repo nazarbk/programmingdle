@@ -22,38 +22,40 @@ function App() {
           body: JSON.stringify(nuevoUsuario),
         };
 
-        const ipToSearch = data;
+        const ipToSearch = data.toString();
 
-      fetch(`https://programmingdle.onrender.com/${ipToSearch}`)
-        .then(response => {
-          if (!response.ok) {
-            fetch('https://programmingdle.onrender.com/Usuarios', options)
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('La solicitud no pudo ser completada.');
-              }
-              return response.json();
-            })
-            .then(data => {
-              console.log('Usuario creado con éxito:', data);
-            })
-            .catch(error => {
-              console.error('Error al crear el usuario:', error);
-            });
-          }
-          return response.json();
+        console.log('IP: ', ipToSearch);
+
+        fetch(`https://programmingdle.onrender.com/Usuarios/${ipToSearch}`)
+          .then(response => {
+            if (!response.ok) {
+              fetch('https://programmingdle.onrender.com/Usuarios', options)
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('La solicitud no pudo ser completada.');
+                }
+                return response.json();
+              })
+              .then(data => {
+                console.log('Usuario creado con éxito:', data);
+              })
+              .catch(error => {
+                console.error('Error al crear el usuario:', error);
+              });
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (data.ok) {
+              console.log('Usuario encontrado:', data.usuario);
+            } else {
+              console.log('Usuario NO encontrado:', data.usuario);
+            }
+          })
+          .catch(error => {
+            console.error('Error al buscar el usuario:', error);
+          });
         })
-        .then(data => {
-          if (data.ok) {
-            console.log('Usuario encontrado:', data.usuario);
-          } else {
-            console.log('Usuario NO encontrado:', data.usuario);
-          }
-        })
-        .catch(error => {
-          console.error('Error al buscar el usuario:', error);
-        });
-      })
       .catch(error => {
         console.error('Error al obtener la dirección IP:', error);
       });
@@ -62,7 +64,7 @@ function App() {
   return (
       <div className="App">
         <Header />
-        <Modos />
+        <Modos/>
       </div>
   );
 }

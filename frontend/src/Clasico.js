@@ -15,11 +15,11 @@ const Clasico = () => {
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [hasWon, setHasWon] = useState(false);
   const [personajeNoEncontrado, setPersonajeNoEncontrado] = useState(false);
-
-  const ipToUpdate = "192.168.1.1";
+  const [ipToUpdate, setipToUpdate] = useState(null);
+  const [actualizarPersonajes, setactualizarPersonajes] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:3000/Personajes')
+      fetch('https://programmingdle.onrender.com/Personajes')
       .then(response => {
         if (!response.ok) {
           throw new Error('La solicitud no pudo ser completada.');
@@ -30,11 +30,46 @@ const Clasico = () => {
         setPersonajes(data.resultado);
 
         const indiceAleatorio = Math.floor(Math.random() * data.resultado.length);
-        const personajeAleatorioInicial = data.resultado[indiceAleatorio];
+        const personajeAleatorioInicial = data.resultado[1];
         setpersonajeDelDia(personajeAleatorioInicial);
       })
       .catch(error => {
         console.error(error);
+      });
+
+      fetch('https://programmingdle.onrender.com/')
+      .then(response => response.text())
+      .then(data => {
+        setipToUpdate(data.toString());
+
+        const ipToSearch = data.toString();
+
+        fetch(`https://programmingdle.onrender.com/Usuarios/${ipToSearch}`)
+        .then(response => {
+          if (!response.ok) {
+          } else {
+            return response.json();
+          }
+        })
+        .then(data => {
+          if (data.ok) {
+            console.log('Usuario encontrado:', data.usuario);
+            if(data.usuario.intentosclasico !== 0 && data.usuario.intentosclasico !== null){
+              setIntentos(data.usuario.intentosclasico);
+            }
+            if(data.usuario.clasico !== null && data.usuario.clasico.length !== 0){
+              setPersonajeBuscado(data.usuario.clasico);
+
+              setactualizarPersonajes(true);
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error al buscar el usuario:', error);
+        });
+      })
+      .catch(error => {
+        console.error('Error al obtener la dirección IP:', error);
       });
   }, []);
 
@@ -101,7 +136,7 @@ const Clasico = () => {
       clasico: personajeBuscado
     };
 
-    fetch(`http://localhost:3000/Usuarios/${ipToUpdate}`, {
+    fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -196,6 +231,12 @@ const Clasico = () => {
   };
 
   actualizarUsuario();
+  if(actualizarPersonajes){
+    personajeBuscado.forEach((personaje) => {
+      console.log(personaje.personaje.nombre);
+      //eliminarPersonaje(personaje.personaje.nombre);
+    });
+  }
   //console.log('HASWON: ', hasWon);
   //console.log('INTENTOS: ', intentos);
   //console.log('PERSONAJES BUSCADOS:', personajeBuscado);

@@ -82,7 +82,7 @@ const usuarioSchema = new mongoose.Schema({
   },
   clasico: {
     type: [{}],
-    default: [{}]
+    default: null
   }  
 });
 
