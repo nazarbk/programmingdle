@@ -84,7 +84,10 @@ const usuarioSchema = new mongoose.Schema({
     type: [{}],
     default: null
   },
-  haswonclasico: Boolean
+  haswonclasico: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
