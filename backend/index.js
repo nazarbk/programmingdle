@@ -138,7 +138,7 @@ app.get("/Usuarios/:ip", (req, res) => {
 app.put("/Usuarios/:ip", (req, res) => {
   const ip = req.params.ip;
 
-  const { nombre, intentosclasico, clasico, haswonclasico } = req.body;
+  const { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje } = req.body;
 
   Usuario.findOneAndUpdate({ ip: ip }, { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje }, { new: true })
     .then((usuario) => {
