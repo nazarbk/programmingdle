@@ -503,6 +503,14 @@ a {
   transform-origin: center bottom;
 }
 
+.sharecard p{
+  margin-bottom: 0;
+}
+
+.coincidenciasdiv{
+  margin-top: 25px;
+}
+
 .shareButtonStyle{
   margin-top: 25px;
   color: #C6D3DB;

@@ -134,6 +134,23 @@ app.get("/Usuarios/:ip", (req, res) => {
     });
 });
 
+//Ranking de clasico
+app.get("/Usuarios", (req, res) => {
+  Usuario.find({
+    nombre: { $ne: null },
+    clasico: { $ne: null, $exists: true, $not: { $size: 0 } }
+  })
+    .sort({ "clasico.length": -1 }) // Ordenar por la longitud del campo clasico
+    .limit(10)
+    .then((usuarios) => {
+      res.status(200).send({ ok: true, usuarios });
+    })
+    .catch((error) => {
+      res.status(500).send({ ok: false, error: "Error al obtener usuarios" });
+    });
+});
+
+
 //Actualizar Usuario por IP
 app.put("/Usuarios/:ip", (req, res) => {
   const ip = req.params.ip;

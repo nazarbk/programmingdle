@@ -15,6 +15,9 @@ const Lenguaje = () => {
     const [mostrarMensaje, setMostrarMensaje] = useState(false);
     const [hasWon, setHasWon] = useState(false);
     const [lenguajeNoEncontrado, setLenguajeNoEncontrado] = useState(false);
+    const [ipToUpdate, setipToUpdate] = useState(null);
+    const [actualizarPersonajes, setactualizarPersonajes] = useState(false);
+    const [actualizarUser, setaactualizarUser] = useState(false);
 
     useEffect(() => {
         fetch('https://programmingdle.onrender.com/Lenguajes')
@@ -27,13 +30,46 @@ const Lenguaje = () => {
         .then(data => {
             setLenguajes(data.resultado);
 
-            const indiceAleatorio = Math.floor(Math.random() * data.resultado.length);
-            const lenguajeAleatorioInicial = data.resultado[indiceAleatorio];
+            //const indiceAleatorio = Math.floor(Math.random() * data.resultado.length);
+            const lenguajeAleatorioInicial = data.resultado[5];
             setLenguajeDelDia(lenguajeAleatorioInicial);
         })
         .catch(error => {
             console.error(error);
         });
+
+        fetch('https://programmingdle.onrender.com/')
+      .then(response => response.text())
+      .then(data => {
+        setipToUpdate(data.toString());
+
+        const ipToSearch = data.toString();
+
+        fetch(`https://programmingdle.onrender.com/Usuarios/${ipToSearch}`)
+        .then(response => {
+          if (!response.ok) {
+          } else {
+            return response.json();
+          }
+        })
+        .then(data => {
+          if (data.ok) {
+            console.log('Usuario encontrado:', data.usuario);
+            if(data.usuario.clasico !== null && data.usuario.clasico.length !== 0){
+              setLenguajeBuscado(data.usuario.lenguaje);
+              setIntentos(data.usuario.lenguaje.length);
+              setactualizarPersonajes(true);
+            }
+              setHasWon(data.usuario.haswonlenguaje);
+          }
+        })
+        .catch(error => {
+          console.error('Error al buscar el usuario:', error);
+        });
+      })
+      .catch(error => {
+        console.error('Error al obtener la dirección IP:', error);
+      });
     }, []);
 
     const mostrarPista = () => {
@@ -56,6 +92,7 @@ const Lenguaje = () => {
             setLenguajeBuscado([...lenguajeBuscado, { lenguaje, coincidencias }]);
             setCoincidencias(coincidencias);
             eliminarLenguaje(busqueda);
+            setaactualizarUser(true);
 
             console.log('COINCIDENCIA: ', coincidencias);
 
@@ -66,6 +103,39 @@ const Lenguaje = () => {
             
         }
     };
+
+    const actualizarUsuario = async () => {
+        const datosActualizacion = {
+          lenguaje: lenguajeBuscado,
+          haswonlenguaje: hasWon
+        };
+    
+        fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(datosActualizacion),
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('La solicitud no pudo ser completada.');
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (data.ok) {
+              console.log('Usuario actualizado:', data.usuario);
+            } else {
+              console.log('Usuario no encontrado:', data.mensaje);
+            }
+          })
+          .catch(error => {
+            console.error('Error al actualizar el usuario:', error);
+          });
+    
+          setaactualizarUser(false);
+      }
 
     const actualizarIntento = async () => {
     setIntentos(intentos + 1);
@@ -79,6 +149,13 @@ const Lenguaje = () => {
         
         setLenguajes(nuevosLenguajesFiltrados);
     };
+
+    const eliminarLenguajes = () =>{
+        const nuevosLenguajesBuscados = lenguajeBuscado.map((item) => item.lenguaje.lenguaje);
+        const nuevosLenguajes = lenguajes.filter((lenguaje) => !nuevosLenguajesBuscados.includes(lenguaje.lenguaje));
+        setLenguajes(nuevosLenguajes);
+        setactualizarPersonajes(false);
+    }
 
     const handleBusquedaChange = (e) => {
         const valor = e.target.value;
@@ -99,7 +176,55 @@ const Lenguaje = () => {
         setBusqueda(lenguaje);
         setResultadosBusqueda([]);
       };
+
+    const copiarButton = () => {
+        let textoCopiado = `He encontrado el lenguaje de #Programmingdle en ${intentos} intentos`;
+        if (lenguajeBuscado.length > 5) {
+            textoCopiado += `\n+ ${lenguajeBuscado.length - 5} filas adicionales`;
+        }
+
+        textoCopiado += `\n[https://programmingdle.web.app/]`;
+        
+        const textarea = document.createElement('textarea');
+        textarea.value = textoCopiado;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        //Mostrar un mensaje que indique que se ha copiado 
+        const copiadoMensaje = document.getElementById('copiadoMensaje');
+        copiadoMensaje.style.display = 'block';
+
+        //Ocultar el mensaje después de 2 segundos
+        setTimeout(() => {
+            copiadoMensaje.style.display = 'none';
+        }, 2000);
+    };
     
+    const compartirButton = () => {
+        let textoCompartido = `He encontrado el lenguaje de #Programmingdle en ${intentos} intentos`;
+        if (lenguajeBuscado.length > 5) {
+            textoCompartido += `\n+ ${lenguajeBuscado.length - 5} filas adicionales`;
+        }
+
+        textoCompartido += `\n[https://programmingdle.web.app/]`;
+        
+        //Enlace a Whatsapp 
+        const mensajeWhatsApp = encodeURIComponent(textoCompartido);
+        const enlaceWhatsApp = `https://api.whatsapp.com/send?text=${mensajeWhatsApp}`;
+        
+        //Redirección a Whatsapp para enviar el mensaje
+        window.open(enlaceWhatsApp);
+    };
+
+    if(actualizarUser){
+        actualizarUsuario();
+    }
+    if(actualizarPersonajes){
+        eliminarLenguajes();
+    }
+
     return lenguajeDelDia ? (
         <div className='lenguaje'>
             <Header/>
@@ -218,8 +343,8 @@ const Lenguaje = () => {
                     <p>He encontrado el lenguaje de #Programmingdle en {intentos} intentos</p>
 
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <button className="shareButtonStyle"> <i className='bx bx-copy-alt'></i> Copiar</button>
-                    <button className="shareButtonStyle"><i className='bx bxl-whatsapp'></i> Compartir</button>
+                        <button className="shareButtonStyle" onClick={copiarButton}> <i className='bx bx-copy-alt'></i> Copiar</button>
+                        <button className="shareButtonStyle" onClick={compartirButton}><i className='bx bxl-whatsapp'></i> Compartir</button>
                     </div>
                     
                     <p id="copiadoMensaje" className="copiado-mensaje" style={{ display: 'none' }}>¡Texto copiado al portapapeles!  </p>

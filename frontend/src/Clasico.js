@@ -132,6 +132,7 @@ const Clasico = () => {
   const actualizarUsuario = async () => {
     const datosActualizacion = {
       nombre: "Jaimito",
+      intentosclasico: intentos,
       clasico: personajeBuscado,
       haswonclasico: hasWon
     };

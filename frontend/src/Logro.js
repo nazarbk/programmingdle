@@ -35,8 +35,8 @@ const Logro = () => {
       .then(data => {
         setPersonajes(data.resultado);
 
-        const indiceAleatorio = Math.floor(Math.random() * data.resultado.length);
-        const personajeAleatorioInicial = data.resultado[indiceAleatorio];
+        //const indiceAleatorio = Math.floor(Math.random() * data.resultado.length);
+        const personajeAleatorioInicial = data.resultado[4];
         setpersonajeDelDia(personajeAleatorioInicial);
       })
       .catch(error => {
@@ -61,11 +61,11 @@ const Logro = () => {
           if (data.ok) {
             console.log('Usuario encontrado:', data.usuario);
             if(data.usuario.clasico !== null && data.usuario.clasico.length !== 0){
-              setPersonajeBuscado(data.usuario.clasico);
-              setIntentos(data.usuario.clasico.length);
+              setPersonajeBuscado(data.usuario.logro);
+              setIntentos(data.usuario.logro.length);
               setactualizarPersonajes(true);
             }
-              setHasWon(data.usuario.haswonclasico);
+              setHasWon(data.usuario.haswonlogro);
           }
         })
         .catch(error => {
@@ -177,21 +177,8 @@ const Logro = () => {
   };
 
   const copiarButton = () => {
-    const emojis = personajeBuscado.slice(-5).map((buscado) => {
-      return Object.entries(buscado.coincidencias).map(([atributo, coincide]) => {
-        if (atributo !== 'nombre') {
-          const isAmbito = atributo === 'ambito';
-          const isAmbitoMatch = isAmbito && !coincide && (personajeDelDia.ambito.toLowerCase().includes(buscado.personaje.ambito.toLowerCase()) || buscado.personaje.ambito.toLowerCase().includes(personajeDelDia.ambito.toLowerCase()));
-    
-          const emoji = isAmbitoMatch ? '🟡' : (coincide ? '✅' : '❌');
-    
-          return emoji;
-        }
-        return null;
-      }).join(' ');
-    }).join('\n');
   
-    let textoCopiado = `He encontrado el personaje de #Programmingdle en modo Clásico en ${intentos} intentos:\n${emojis}`;
+    let textoCopiado = `He encontrado el personaje de #Programmingdle en modo Logro en ${intentos} intentos`;
     if (personajeBuscado.length > 5) {
       textoCopiado += `\n+ ${personajeBuscado.length - 5} filas adicionales`;
     }
@@ -216,21 +203,7 @@ const Logro = () => {
   };
 
   const compartirButton = () => {
-    const emojis = personajeBuscado.slice(-5).map((buscado) => {
-      return Object.entries(buscado.coincidencias).map(([atributo, coincide]) => {
-        if (atributo !== 'nombre') {
-          const isAmbito = atributo === 'ambito';
-          const isAmbitoMatch = isAmbito && !coincide && (personajeDelDia.ambito.toLowerCase().includes(buscado.personaje.ambito.toLowerCase()) || buscado.personaje.ambito.toLowerCase().includes(personajeDelDia.ambito.toLowerCase()));
-    
-          const emoji = isAmbitoMatch ? '🟡' : (coincide ? '✅' : '❌');
-    
-          return emoji;
-        }
-        return null;
-      }).join(' ');
-    }).join('\n');
-
-    let textoCompartido = `He encontrado el personaje de #Programmingdle en modo Clásico en ${intentos} intentos:\n${emojis}`;
+    let textoCompartido = `He encontrado el personaje de #Programmingdle en modo Logro en ${intentos} intentos`;
     if (personajeBuscado.length > 5) {
       textoCompartido += `\n+ ${personajeBuscado.length - 5} filas adicionales`;
     }
