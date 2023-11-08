@@ -18,8 +18,11 @@ const Clasico = () => {
   const [ipToUpdate, setipToUpdate] = useState(null);
   const [actualizarPersonajes, setactualizarPersonajes] = useState(false);
   const [actualizarUser, setaactualizarUser] = useState(false);
+  const [usersranking, setUsersRanking] = useState([]);
+  const [cargarRanking, setcargarRanking] = useState(false);
 
   useEffect(() => {
+      //Personajes
       fetch('https://programmingdle.onrender.com/Personajes')
       .then(response => {
         if (!response.ok) {
@@ -38,6 +41,7 @@ const Clasico = () => {
         console.error(error);
       });
 
+      //IP
       fetch('https://programmingdle.onrender.com/')
       .then(response => response.text())
       .then(data => {
@@ -70,6 +74,9 @@ const Clasico = () => {
       .catch(error => {
         console.error('Error al obtener la dirección IP:', error);
       });
+
+      //Ranking
+      setcargarRanking(true);
   }, []);
 
   const handleBusquedaChange = (e) => {
@@ -260,12 +267,34 @@ const Clasico = () => {
   if(actualizarPersonajes){
     eliminarPersonajes();
   }
+  if(cargarRanking){
+    fetch('https://programmingdle.onrender.com/Usuarios', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('La solicitud no pudo ser completada.');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setUsersRanking(data.usuarios);
+      })
+      .catch(error => {
+        console.error('Error al obtener usuarios:', error);
+      });
+      setcargarRanking(false);
+  }
+
   //console.log('HASWON: ', hasWon);
   //console.log('INTENTOS: ', intentos);
   //console.log('PERSONAJES BUSCADOS:', personajeBuscado);
   //console.log('PERSONAJES COMPARADOS:',coincidencias);
 
-  return (
+  return usersranking ? (
     <div className='clasico'>
         <Header/>
         <div className='clasicocard'>
@@ -423,8 +452,28 @@ const Clasico = () => {
         </div>
       ) : null
       }
+
+    <div className='ranking'>
+      <h1>Usuarios</h1>
+      <table className='papel'>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Intentos</th>
+          </tr>
+        </thead>
+        <tbody>
+          {usersranking.map(user => (
+            <tr key={user._id}>
+              <td>{user.nombre || ''}</td>
+              <td>{user.clasico.length || ''}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  );
+    </div>
+  ) : null;
 }
 
 export default Clasico;

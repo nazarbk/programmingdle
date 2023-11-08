@@ -711,4 +711,10 @@ a {
   font-size: 20px;
 }
 
+/*Ranking*/
+.ranking{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 

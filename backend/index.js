@@ -138,7 +138,8 @@ app.get("/Usuarios/:ip", (req, res) => {
 app.get("/Usuarios", (req, res) => {
   Usuario.find({
     nombre: { $ne: null },
-    clasico: { $ne: null, $exists: true, $not: { $size: 0 } }
+    clasico: { $ne: null, $exists: true, $not: { $size: 0 } },
+    haswonclasico: true
   })
     .sort({ "clasico.length": -1 }) // Ordenar por la longitud del campo clasico
     .limit(10)
