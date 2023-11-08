@@ -16,6 +16,9 @@ const Logro = () => {
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [hasWon, setHasWon] = useState(false);
   const [personajeNoEncontrado, setPersonajeNoEncontrado] = useState(false);
+  const [ipToUpdate, setipToUpdate] = useState(null);
+  const [actualizarPersonajes, setactualizarPersonajes] = useState(false);
+  const [actualizarUser, setaactualizarUser] = useState(false);
 
   const mostrarPista = () => {
     setMostrarMensaje(!mostrarMensaje);
@@ -39,6 +42,39 @@ const Logro = () => {
       .catch(error => {
         console.error(error);
       });
+
+      fetch('https://programmingdle.onrender.com/')
+      .then(response => response.text())
+      .then(data => {
+        setipToUpdate(data.toString());
+
+        const ipToSearch = data.toString();
+
+        fetch(`https://programmingdle.onrender.com/Usuarios/${ipToSearch}`)
+        .then(response => {
+          if (!response.ok) {
+          } else {
+            return response.json();
+          }
+        })
+        .then(data => {
+          if (data.ok) {
+            console.log('Usuario encontrado:', data.usuario);
+            if(data.usuario.clasico !== null && data.usuario.clasico.length !== 0){
+              setPersonajeBuscado(data.usuario.clasico);
+              setIntentos(data.usuario.clasico.length);
+              setactualizarPersonajes(true);
+            }
+              setHasWon(data.usuario.haswonclasico);
+          }
+        })
+        .catch(error => {
+          console.error('Error al buscar el usuario:', error);
+        });
+      })
+      .catch(error => {
+        console.error('Error al obtener la dirección IP:', error);
+      });
   }, []);
 
   const compararPersonajes = async () => {
@@ -57,6 +93,7 @@ const Logro = () => {
       setPersonajeBuscado([...personajeBuscado, { personaje, coincidencias }]);
       setCoincidencias(coincidencias);
       eliminarPersonaje(busqueda);
+      setaactualizarUser(true);
 
       console.log('COINCIDENCIA: ', coincidencias);
 
@@ -67,6 +104,39 @@ const Logro = () => {
       
     }
   };
+
+  const actualizarUsuario = async () => {
+    const datosActualizacion = {
+      logro: personajeBuscado,
+      haswonlogro: hasWon
+    };
+
+    fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(datosActualizacion),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('La solicitud no pudo ser completada.');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.ok) {
+          console.log('Usuario actualizado:', data.usuario);
+        } else {
+          console.log('Usuario no encontrado:', data.mensaje);
+        }
+      })
+      .catch(error => {
+        console.error('Error al actualizar el usuario:', error);
+      });
+
+      setaactualizarUser(false);
+  }
 
   const actualizarIntento = async () => {
     setIntentos(intentos + 1);
@@ -79,6 +149,13 @@ const Logro = () => {
   
     setPersonajes(nuevosPersonajesFiltrados);
   };
+
+  const eliminarPersonajes = () =>{
+    const nombresPersonajesBuscados = personajeBuscado.map((item) => item.personaje.nombre);
+    const nuevosPersonajes = personajes.filter((personaje) => !nombresPersonajesBuscados.includes(personaje.nombre));
+    setPersonajes(nuevosPersonajes);
+    setactualizarPersonajes(false);
+  }
 
   const handleBusquedaChange = (e) => {
     const valor = e.target.value;
@@ -98,6 +175,82 @@ const Logro = () => {
     setBusqueda(nombre);
     setResultadosBusqueda([]);
   };
+
+  const copiarButton = () => {
+    const emojis = personajeBuscado.slice(-5).map((buscado) => {
+      return Object.entries(buscado.coincidencias).map(([atributo, coincide]) => {
+        if (atributo !== 'nombre') {
+          const isAmbito = atributo === 'ambito';
+          const isAmbitoMatch = isAmbito && !coincide && (personajeDelDia.ambito.toLowerCase().includes(buscado.personaje.ambito.toLowerCase()) || buscado.personaje.ambito.toLowerCase().includes(personajeDelDia.ambito.toLowerCase()));
+    
+          const emoji = isAmbitoMatch ? '🟡' : (coincide ? '✅' : '❌');
+    
+          return emoji;
+        }
+        return null;
+      }).join(' ');
+    }).join('\n');
+  
+    let textoCopiado = `He encontrado el personaje de #Programmingdle en modo Clásico en ${intentos} intentos:\n${emojis}`;
+    if (personajeBuscado.length > 5) {
+      textoCopiado += `\n+ ${personajeBuscado.length - 5} filas adicionales`;
+    }
+
+    textoCopiado += `\n[https://programmingdle.web.app/]`;
+  
+    const textarea = document.createElement('textarea');
+    textarea.value = textoCopiado;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+
+    //Mostrar un mensaje que indique que se ha copiado 
+    const copiadoMensaje = document.getElementById('copiadoMensaje');
+    copiadoMensaje.style.display = 'block';
+
+    //Ocultar el mensaje después de 2 segundos
+    setTimeout(() => {
+      copiadoMensaje.style.display = 'none';
+    }, 2000);
+  };
+
+  const compartirButton = () => {
+    const emojis = personajeBuscado.slice(-5).map((buscado) => {
+      return Object.entries(buscado.coincidencias).map(([atributo, coincide]) => {
+        if (atributo !== 'nombre') {
+          const isAmbito = atributo === 'ambito';
+          const isAmbitoMatch = isAmbito && !coincide && (personajeDelDia.ambito.toLowerCase().includes(buscado.personaje.ambito.toLowerCase()) || buscado.personaje.ambito.toLowerCase().includes(personajeDelDia.ambito.toLowerCase()));
+    
+          const emoji = isAmbitoMatch ? '🟡' : (coincide ? '✅' : '❌');
+    
+          return emoji;
+        }
+        return null;
+      }).join(' ');
+    }).join('\n');
+
+    let textoCompartido = `He encontrado el personaje de #Programmingdle en modo Clásico en ${intentos} intentos:\n${emojis}`;
+    if (personajeBuscado.length > 5) {
+      textoCompartido += `\n+ ${personajeBuscado.length - 5} filas adicionales`;
+    }
+
+    textoCompartido += `\n[https://programmingdle.web.app/]`;
+  
+    //Enlace a Whatsapp 
+    const mensajeWhatsApp = encodeURIComponent(textoCompartido);
+    const enlaceWhatsApp = `https://api.whatsapp.com/send?text=${mensajeWhatsApp}`;
+  
+    //Redirección a Whatsapp para enviar el mensaje
+    window.open(enlaceWhatsApp);
+  };
+
+  if(actualizarUser){
+    actualizarUsuario();
+  }
+  if(actualizarPersonajes){
+    eliminarPersonajes();
+  }
 
   return personajeDelDia ? (
       <div className='logro'>
@@ -208,8 +361,8 @@ const Logro = () => {
                 <p>He encontrado el personaje de #Programmingdle en modo Logro en {intentos} intentos</p>
 
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <button className="shareButtonStyle"> <i className='bx bx-copy-alt'></i> Copiar</button>
-                  <button className="shareButtonStyle"><i className='bx bxl-whatsapp'></i> Compartir</button>
+                  <button className="shareButtonStyle" onClick={copiarButton}> <i className='bx bx-copy-alt'></i> Copiar</button>
+                  <button className="shareButtonStyle" onClick={compartirButton}><i className='bx bxl-whatsapp'></i> Compartir</button>
                 </div>
                 
                 <p id="copiadoMensaje" className="copiado-mensaje" style={{ display: 'none' }}>¡Texto copiado al portapapeles!  </p>

@@ -76,15 +76,27 @@ const usuarioSchema = new mongoose.Schema({
     type: String,
     default: null
   },
-  intentosclasico: {
-    type: Number,
-    default: null
-  },
   clasico: {
     type: [{}],
     default: null
   },
   haswonclasico: {
+    type: Boolean,
+    default: false
+  },
+  logro: {
+    type: [{}],
+    default: null
+  },
+  haswonlogro: {
+    type: Boolean,
+    default: false
+  },
+  lenguaje: {
+    type: [{}],
+    default: null
+  },
+  haswonlenguaje: {
     type: Boolean,
     default: false
   }
@@ -128,7 +140,7 @@ app.put("/Usuarios/:ip", (req, res) => {
 
   const { nombre, intentosclasico, clasico, haswonclasico } = req.body;
 
-  Usuario.findOneAndUpdate({ ip: ip }, { nombre, intentosclasico, clasico, haswonclasico }, { new: true })
+  Usuario.findOneAndUpdate({ ip: ip }, { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje }, { new: true })
     .then((usuario) => {
       if (!usuario) {
         return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });

@@ -31,7 +31,7 @@ const Clasico = () => {
         setPersonajes(data.resultado);
 
         const indiceAleatorio = Math.floor(Math.random() * data.resultado.length);
-        const personajeAleatorioInicial = data.resultado[1];
+        const personajeAleatorioInicial = data.resultado[8];
         setpersonajeDelDia(personajeAleatorioInicial);
       })
       .catch(error => {
@@ -55,11 +55,9 @@ const Clasico = () => {
         .then(data => {
           if (data.ok) {
             console.log('Usuario encontrado:', data.usuario);
-            if(data.usuario.intentosclasico !== 0 && data.usuario.intentosclasico !== null){
-              setIntentos(data.usuario.intentosclasico);
-            }
             if(data.usuario.clasico !== null && data.usuario.clasico.length !== 0){
               setPersonajeBuscado(data.usuario.clasico);
+              setIntentos(data.usuario.clasico.length);
               setactualizarPersonajes(true);
             }
               setHasWon(data.usuario.haswonclasico);
@@ -134,7 +132,6 @@ const Clasico = () => {
   const actualizarUsuario = async () => {
     const datosActualizacion = {
       nombre: "Jaimito",
-      intentosclasico: intentos,
       clasico: personajeBuscado,
       haswonclasico: hasWon
     };
@@ -188,15 +185,23 @@ const Clasico = () => {
   }
 
   const copiarButton = () => {
-    const ultimasCincoCoincidencias = coincidencias.slice(-5);
-  
-    const emojis = ultimasCincoCoincidencias.map((coincidencia) => {
-      return Object.values(coincidencia).map((coincide) => (coincide ? '✅' : '❌')).join(' ');
+    const emojis = personajeBuscado.slice(-5).map((buscado) => {
+      return Object.entries(buscado.coincidencias).map(([atributo, coincide]) => {
+        if (atributo !== 'nombre') {
+          const isAmbito = atributo === 'ambito';
+          const isAmbitoMatch = isAmbito && !coincide && (personajeDelDia.ambito.toLowerCase().includes(buscado.personaje.ambito.toLowerCase()) || buscado.personaje.ambito.toLowerCase().includes(personajeDelDia.ambito.toLowerCase()));
+    
+          const emoji = isAmbitoMatch ? '🟡' : (coincide ? '✅' : '❌');
+    
+          return emoji;
+        }
+        return null;
+      }).join(' ');
     }).join('\n');
   
     let textoCopiado = `He encontrado el personaje de #Programmingdle en modo Clásico en ${intentos} intentos:\n${emojis}`;
-    if (coincidencias.length > 5) {
-      textoCopiado += `\n+ ${coincidencias.length - 5} filas adicionales`;
+    if (personajeBuscado.length > 5) {
+      textoCopiado += `\n+ ${personajeBuscado.length - 5} filas adicionales`;
     }
 
     textoCopiado += `\n[https://programmingdle.web.app/]`;
@@ -219,15 +224,23 @@ const Clasico = () => {
   };
 
   const compartirButton = () => {
-    const ultimasCincoCoincidencias = coincidencias.slice(-5);
-  
-    const emojis = ultimasCincoCoincidencias.map((coincidencia) => {
-      return Object.values(coincidencia).map((coincide) => (coincide ? '✅' : '❌')).join(' ');
+    const emojis = personajeBuscado.slice(-5).map((buscado) => {
+      return Object.entries(buscado.coincidencias).map(([atributo, coincide]) => {
+        if (atributo !== 'nombre') {
+          const isAmbito = atributo === 'ambito';
+          const isAmbitoMatch = isAmbito && !coincide && (personajeDelDia.ambito.toLowerCase().includes(buscado.personaje.ambito.toLowerCase()) || buscado.personaje.ambito.toLowerCase().includes(personajeDelDia.ambito.toLowerCase()));
+    
+          const emoji = isAmbitoMatch ? '🟡' : (coincide ? '✅' : '❌');
+    
+          return emoji;
+        }
+        return null;
+      }).join(' ');
     }).join('\n');
 
     let textoCompartido = `He encontrado el personaje de #Programmingdle en modo Clásico en ${intentos} intentos:\n${emojis}`;
-    if (coincidencias.length > 5) {
-      textoCompartido += `\n+ ${coincidencias.length - 5} filas adicionales`;
+    if (personajeBuscado.length > 5) {
+      textoCompartido += `\n+ ${personajeBuscado.length - 5} filas adicionales`;
     }
 
     textoCompartido += `\n[https://programmingdle.web.app/]`;
@@ -236,7 +249,7 @@ const Clasico = () => {
     const mensajeWhatsApp = encodeURIComponent(textoCompartido);
     const enlaceWhatsApp = `https://api.whatsapp.com/send?text=${mensajeWhatsApp}`;
   
-    //Readirección a Whatsapp para enviar el mensaje
+    //Redirección a Whatsapp para enviar el mensaje
     window.open(enlaceWhatsApp);
   };
 
@@ -354,7 +367,7 @@ const Clasico = () => {
                 <tr className='intentostabla'>
                   <td className={buscado.coincidencias.nombre ? 'blue_cell' : 'blue_cell'}>{buscado.personaje.nombre}</td>
                   <td className={buscado.coincidencias.genero ? 'green_cell' : 'red_cell'}>{buscado.personaje.genero}</td>
-                  <td className={buscado.coincidencias.ambito ? 'green_cell' : (buscado.coincidencias.ambito === false && personajeDelDia.ambito.toLowerCase().includes(buscado.personaje.ambito.toLowerCase())) ? 'yellow_cell' : 'red_cell'}>{buscado.personaje.ambito}</td>
+                  <td className={buscado.coincidencias.ambito ? 'green_cell' : (buscado.coincidencias.ambito === false && (personajeDelDia.ambito.toLowerCase().includes(buscado.personaje.ambito.toLowerCase()) || buscado.personaje.ambito.toLowerCase().includes(personajeDelDia.ambito.toLowerCase()))) ? 'yellow_cell' : 'red_cell'}>{buscado.personaje.ambito}</td>
                   <td className={buscado.coincidencias.adjetivo ? 'green_cell' : 'red_cell'}>{buscado.personaje.adjetivo}</td>
                   <td className={buscado.coincidencias.año ? 'green_cell' : 'red_cell'}>
                     {buscado.coincidencias.año ? (
@@ -388,14 +401,14 @@ const Clasico = () => {
               <div key={index}>
                 {Object.entries(buscado.coincidencias).map(([atributo, coincide], subindex) => (
                   atributo !== 'nombre' ? (
-                    <div key={atributo} className={`cuadrado ${atributo === 'ambito' ? (coincide ? 'green_cell' : (coincide === false && personajeDelDia.ambito.toLowerCase().includes(buscado.personaje.ambito.toLowerCase())) ? 'yellow_cell' : 'red_cell') : (coincide ? 'green_cell' : 'red_cell')}`}></div>
+                    <div key={atributo} className={`cuadrado ${atributo === 'ambito' ? (coincide ? 'green_cell' : (coincide === false && (personajeDelDia.ambito.toLowerCase().includes(buscado.personaje.ambito.toLowerCase()) || buscado.personaje.ambito.toLowerCase().includes(personajeDelDia.ambito.toLowerCase()))) ? 'yellow_cell' : 'red_cell') : (coincide ? 'green_cell' : 'red_cell')}`}></div>
                   ) : null
                 ))}
               </div>
             ))}
 
-              {coincidencias.length > 5 && (
-                <p className='filasadicionales'>+ {coincidencias.length - 5} filas adicionales</p>
+              {personajeBuscado.length > 5 && (
+                <p className='filasadicionales'>+ {personajeBuscado.length - 5} filas adicionales</p>
               )}
             </div>
 
