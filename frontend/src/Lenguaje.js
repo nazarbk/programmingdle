@@ -60,7 +60,7 @@ const Lenguaje = () => {
         .then(data => {
           if (data.ok) {
             console.log('Usuario encontrado:', data.usuario);
-            if(data.usuario.clasico !== null && data.usuario.clasico.length !== 0){
+            if(data.usuario.lenguaje !== null && data.usuario.lenguaje.length !== 0){
               setLenguajeBuscado(data.usuario.lenguaje);
               setIntentos(data.usuario.lenguaje.length);
               setactualizarPersonajes(true);

@@ -65,9 +65,9 @@ const Logro = () => {
         .then(data => {
           if (data.ok) {
             console.log('Usuario encontrado:', data.usuario);
-            if(data.usuario.clasico !== null && data.usuario.clasico.length !== 0){
-              setPersonajeBuscado(data.usuario.clasico);
-              setIntentos(data.usuario.clasico.length);
+            if(data.usuario.logro !== null && data.usuario.logro.length !== 0){
+              setPersonajeBuscado(data.usuario.logro);
+              setIntentos(data.usuario.logro.length);
               setactualizarPersonajes(true);
             }
             if(data.usuario.nombre != null && data.usuario.nombre.length != ''){

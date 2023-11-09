@@ -313,7 +313,7 @@ const Clasico = () => {
     eliminarPersonajes();
   }
   if(cargarRanking){
-    fetch('https://programmingdle.onrender.com/Usuarios/rankclasico', {
+    fetch('https://programmingdle.onrender.com/Usuarios', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
