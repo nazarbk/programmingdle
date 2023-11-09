@@ -157,7 +157,7 @@ app.get("/Usuarios/ranklogro", (req, res) => {
     logro: { $ne: null, $exists: true, $not: { $size: 0 } },
     haswonlogro: true
   })
-    .sort({ "clasico.length": -1 }) // Ordenar por la longitud del campo clasico
+    .sort({ "logro.length": -1 }) // Ordenar por la longitud del campo clasico
     .limit(10)
     .then((usuarios) => {
       res.status(200).send({ ok: true, usuarios });
@@ -173,7 +173,7 @@ app.get("/Usuarios/ranklenguaje", (req, res) => {
     lenguaje: { $ne: null, $exists: true, $not: { $size: 0 } },
     haswonlenguaje: true
   })
-    .sort({ "clasico.length": -1 }) // Ordenar por la longitud del campo clasico
+    .sort({ "lenguaje.length": -1 }) // Ordenar por la longitud del campo clasico
     .limit(10)
     .then((usuarios) => {
       res.status(200).send({ ok: true, usuarios });
