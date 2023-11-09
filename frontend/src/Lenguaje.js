@@ -18,6 +18,11 @@ const Lenguaje = () => {
     const [ipToUpdate, setipToUpdate] = useState(null);
     const [actualizarPersonajes, setactualizarPersonajes] = useState(false);
     const [actualizarUser, setaactualizarUser] = useState(false);
+    const [usersranking, setUsersRanking] = useState([]);
+    const [cargarRanking, setcargarRanking] = useState(false);
+    const [username, setUsername] = useState('');
+    //username que se usa para almacenar el valor del input
+    const [nombreusuario, setNombreusuario] = useState('');
 
     useEffect(() => {
         fetch('https://programmingdle.onrender.com/Lenguajes')
@@ -59,6 +64,9 @@ const Lenguaje = () => {
               setLenguajeBuscado(data.usuario.lenguaje);
               setIntentos(data.usuario.lenguaje.length);
               setactualizarPersonajes(true);
+            }
+            if(data.usuario.nombre != null && data.usuario.nombre.length != ''){
+                setUsername(data.usuario.nombre)
             }
               setHasWon(data.usuario.haswonlenguaje);
           }
@@ -218,12 +226,73 @@ const Lenguaje = () => {
         window.open(enlaceWhatsApp);
     };
 
+    const handleUsernameChange = (e) => {
+        const valor = e.target.value;
+        setNombreusuario(valor);
+    }
+
+    const actualizarNombreUsuario = () => {
+        setUsername(nombreusuario);
+    
+        const datosActualizacion = {
+          nombre: nombreusuario
+        };
+    
+        fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(datosActualizacion),
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('La solicitud no pudo ser completada.');
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (data.ok) {
+              console.log('Usuario actualizado:', data.usuario);
+            } else {
+              console.log('Usuario no encontrado:', data.mensaje);
+            }
+          })
+          .catch(error => {
+            console.error('Error al actualizar el usuario:', error);
+          });
+    
+          setcargarRanking(true);
+      };
+
     if(actualizarUser){
         actualizarUsuario();
     }
     if(actualizarPersonajes){
         eliminarLenguajes();
     }
+    if(cargarRanking){
+
+        fetch('https://programmingdle.onrender.com/Usuarios/ranklenguaje', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('La solicitud no pudo ser completada.');
+            }
+            return response.json();
+          })
+          .then(data => {
+            setUsersRanking(data.usuarios);
+          })
+          .catch(error => {
+            console.error('Error al obtener usuarios:', error);
+          });
+          setcargarRanking(false);
+      }
 
     return lenguajeDelDia ? (
         <div className='lenguaje'>
@@ -352,6 +421,44 @@ const Lenguaje = () => {
                 </div>
             ) : null
             }
+
+            <h2 className="titrank">
+                <i className='bx bxs-crown'></i> Ranking Diario
+            </h2>
+
+            <div className='ranking-container'>
+                {!username && (
+                <div className="popup">
+                    <h2>Ingresa tu nombre de usuario para acceder al ranking</h2>
+                    <input
+                    type="text"
+                    placeholder="Nombre de usuario"
+                    value={nombreusuario}
+                    onChange={handleUsernameChange}
+                    />
+                    <button onClick={actualizarNombreUsuario}>Guardar</button>
+                </div>
+                )}
+                <div className='ranking'>
+                <table className='paper-table'>
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Intentos</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {/* Muestra el ranking solo si se ha ingresado un nombre de usuario */}
+                    {usersranking.map(user => (
+                        <tr key={user._id}>
+                        <td>{user.nombre || ''}</td>
+                        <td>{user.clasico.length || ''}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+                </div>
+            </div>
         </div>
     ) : null
 } 

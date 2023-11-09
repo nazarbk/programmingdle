@@ -135,11 +135,43 @@ app.get("/Usuarios/:ip", (req, res) => {
 });
 
 //Ranking de clasico
-app.get("/Usuarios", (req, res) => {
+app.get("/Usuarios/rankclasico", (req, res) => {
   Usuario.find({
     nombre: { $ne: null },
     clasico: { $ne: null, $exists: true, $not: { $size: 0 } },
     haswonclasico: true
+  })
+    .sort({ "clasico.length": -1 }) // Ordenar por la longitud del campo clasico
+    .limit(10)
+    .then((usuarios) => {
+      res.status(200).send({ ok: true, usuarios });
+    })
+    .catch((error) => {
+      res.status(500).send({ ok: false, error: "Error al obtener usuarios" });
+    });
+});
+
+app.get("/Usuarios/ranklogro", (req, res) => {
+  Usuario.find({
+    nombre: { $ne: null },
+    logro: { $ne: null, $exists: true, $not: { $size: 0 } },
+    haswonlogro: true
+  })
+    .sort({ "clasico.length": -1 }) // Ordenar por la longitud del campo clasico
+    .limit(10)
+    .then((usuarios) => {
+      res.status(200).send({ ok: true, usuarios });
+    })
+    .catch((error) => {
+      res.status(500).send({ ok: false, error: "Error al obtener usuarios" });
+    });
+});
+
+app.get("/Usuarios/ranklenguaje", (req, res) => {
+  Usuario.find({
+    nombre: { $ne: null },
+    lenguaje: { $ne: null, $exists: true, $not: { $size: 0 } },
+    haswonlenguaje: true
   })
     .sort({ "clasico.length": -1 }) // Ordenar por la longitud del campo clasico
     .limit(10)
