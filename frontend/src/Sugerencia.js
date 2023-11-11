@@ -122,7 +122,7 @@ const Sugerencia = () => {
                 <input className="sugerencia-input" type="text" value={adjetivo} onChange={handleAdjetivoChange} />
             </div>
             <div className="input-container">
-                <label className="sugerencia-label">anio:</label>
+                <label className="sugerencia-label">Año:</label>
                 <input className="sugerencia-input" type="text" value={anio} onChange={handleanioChange} />
             </div>
             <div className="input-container">

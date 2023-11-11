@@ -196,7 +196,7 @@ const personajesugerenciasSchema = new mongoose.Schema({
   genero: String,
   ambito: String,
   adjetivo: String,
-  año: String,
+  anio: Number,
   dato: String,
   pista: String,
   pais: String
@@ -236,7 +236,7 @@ app.post("/Personajessugerencias", async (req, res) => {
       genero,
       ambito,
       adjetivo,
-      año,
+      anio,
       dato,
       pista,
       pais
