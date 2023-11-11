@@ -236,7 +236,7 @@ app.post("/Personajessugerencias", async (req, res) => {
       genero,
       ambito,
       adjetivo,
-      anio,
+      año,
       dato,
       pista,
       pais
