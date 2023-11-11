@@ -127,8 +127,10 @@ app.get("/Usuarios/:ip", async (req, res) => {
   const desencriptedIp = req.params.ip;
 
   try {
-    const hashedIp = await bcrypt.hash(desencriptedIp, 10);
-    const usuarioEncontrado = await Usuario.findOne({ ip: hashedIp });
+    const usuarios = await Usuario.find();
+    const usuarioEncontrado = usuarios.find((usuario) => {
+      return bcrypt.compare(desencriptedIp, usuario.ip);
+    });
 
     if (!usuarioEncontrado) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
@@ -154,31 +156,38 @@ app.get("/Usuarios", (req, res) => {
     });
 });
 
-// Actualizar Usuario por IP
+//actualizar usuario según ip
 app.put("/Usuarios/:ip", async (req, res) => {
-  const desencriptedIp = req.params.ip;
-
-  const { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje } = req.body;
+  const ipParametro = req.params.ip;
 
   try {
-    const hashedIp = await bcrypt.hash(desencriptedIp, 10);
+    // Encuentra al usuario por la IP hasheada
+    const usuario = await Usuario.findOne({ ip: { $exists: true } }); // Ajusta la consulta según tu esquema
 
-    const usuarioActualizado = await Usuario.findOneAndUpdate(
-      { ip: hashedIp },
+    if (!usuario) {
+      return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
+    }
+
+    // Compara la IP proporcionada con la IP hasheada almacenada en la base de datos
+    const esIgual = await bcrypt.compare(ipParametro, usuario.ip);
+
+    if (!esIgual) {
+      return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
+    }
+
+    // Si las IPs coinciden, actualiza el usuario
+    const { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje } = req.body;
+    const updatedUsuario = await Usuario.findOneAndUpdate(
+      { ip: usuario.ip },
       { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje },
       { new: true }
     );
 
-    if (!usuarioActualizado) {
-      return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
-    }
-
-    res.status(200).send({ ok: true, usuario: usuarioActualizado });
+    res.status(200).send({ ok: true, usuario: updatedUsuario });
   } catch (error) {
     res.status(500).send({ ok: false, error: "Error al actualizar el usuario" });
   }
 });
-
 
 
 app.listen(3000, () => {
