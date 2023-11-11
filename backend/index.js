@@ -191,12 +191,11 @@ app.put("/Usuarios/:ip", async (req, res) => {
 
 //Personajessugerencia
 const sugerenciaSchema = new mongoose.Schema({
-  _id: Number,
   nombre: String ,
   genero: String,
   ambito: String,
   adjetivo: String,
-  anio: Number,
+  año: Number,
   dato: String,
   pista: String,
   pais: String
@@ -233,7 +232,7 @@ app.post("/Sugerencias", async (req, res) => {
       genero,
       ambito,
       adjetivo,
-      anio,
+      año,
       dato,
       pista,
       pais
@@ -243,7 +242,7 @@ app.post("/Sugerencias", async (req, res) => {
 
     res.status(201).send({ ok: true, mensaje: "Sugerencia creada con éxito" });
   } catch (error) {
-    console.error("Error al crear la sugerencia:", error); // Agrega esta línea para imprimir el error en la consola
+    console.error("Error al crear la sugerencia:", error);
     res.status(500).send({ ok: false, error: "Error al crear la sugerencia", detalle: error.message });
   }
 });
