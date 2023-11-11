@@ -6,7 +6,7 @@ const Sugerencia = () => {
   const [genero, setGenero] = useState('');
   const [ambito, setAmbito] = useState([]);
   const [adjetivo, setAdjetivo] = useState('');
-  const [año, setaño] = useState('');
+  const [anio, setanio] = useState('');
   const [dato, setDato] = useState('');
   const [pista, setPista] = useState('');
   const [pais, setPais] = useState('');
@@ -30,9 +30,9 @@ const Sugerencia = () => {
     setAdjetivo(nuevoAdjetivo);
   };
 
-  const handleañoChange = (e) => {
-    const nuevoaño = e.target.value.replace(/[^0-9]/g, '');
-    setaño(nuevoaño);
+  const handleanioChange = (e) => {
+    const nuevoanio = e.target.value.replace(/[^0-9]/g, '');
+    setanio(nuevoanio);
   };
 
   const handleDatoChange = (e) => {
@@ -53,7 +53,7 @@ const Sugerencia = () => {
       genero &&
       ambito.length > 0 &&
       adjetivo &&
-      año &&
+      anio &&
       dato &&
       pista &&
       pais
@@ -64,7 +64,7 @@ const Sugerencia = () => {
         genero,
         ambito: ambitoString,
         adjetivo,
-        año,
+        anio,
         dato,
         pista,
         pais,
@@ -122,8 +122,8 @@ const Sugerencia = () => {
                 <input className="sugerencia-input" type="text" value={adjetivo} onChange={handleAdjetivoChange} />
             </div>
             <div className="input-container">
-                <label className="sugerencia-label">Año:</label>
-                <input className="sugerencia-input" type="text" value={año} onChange={handleañoChange} />
+                <label className="sugerencia-label">anio:</label>
+                <input className="sugerencia-input" type="text" value={anio} onChange={handleanioChange} />
             </div>
             <div className="input-container">
                 <label className="sugerencia-label">Dato interesante:</label>
