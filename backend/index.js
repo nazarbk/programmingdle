@@ -191,15 +191,15 @@ app.put("/Usuarios/:ip", async (req, res) => {
 
 //Personajessugerencia
 const personajesugerenciasSchema = new mongoose.Schema({
-_id: Number,
-nombre: String ,
-genero: String,
-ambito: String,
-adjetivo: String,
-año: String,
-dato: String,
-pista: String,
-pais: String
+  _id: Number,
+  nombre: String ,
+  genero: String,
+  ambito: String,
+  adjetivo: String,
+  año: String,
+  dato: String,
+  pista: String,
+  pais: String
 });
 
 const Personajesugerencias = mongoose.model("Personajesugerencias", personajesugerenciasSchema, "Personajessugerencias");
@@ -228,6 +228,8 @@ app.post("/Personajessugerencias", async (req, res) => {
     pais
   } = req.body;
 
+  console.log('PERSONAJE QUE VA A SER SUBIDO: ', req.body)
+
   try {
     const nuevoPersonaje = new Personajesugerencias({
       nombre,
@@ -239,6 +241,8 @@ app.post("/Personajessugerencias", async (req, res) => {
       pista,
       pais
     });
+
+    console.log('PERSONAJE QUE VA A SER SUBIDO COMPRIBAR: ', nuevoPersonaje);
 
     await nuevoPersonaje.save();
 

@@ -58,7 +58,7 @@ const Sugerencia = () => {
       pista &&
       pais
     ) {
-        const ambitoString = ambito.length > 1 ? `${ambito.slice(0, -1).join(', ')} y ${ambito.slice(-1)}` : ambito[0];
+      const ambitoString = ambito.length > 1 ? `${ambito.slice(0, -1).join(', ')} y ${ambito.slice(-1)}` : ambito[0];
       const nuevoPersonaje = {
         nombre,
         genero,
