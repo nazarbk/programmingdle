@@ -206,7 +206,7 @@ const Sugerencia = mongoose.model("Sugerencia", sugerenciaSchema, "Sugerencias")
 
 // GET /sugerencia: función que devuelve los personajes sugeridos de la BD
 app.get("/Sugerencias", (req, res) => {
-  Sugerencia.find()
+    Sugerencia.find()
     .then((resultado) => {
       res.status(200).send({ ok: true, resultado: resultado });
     })
@@ -215,7 +215,7 @@ app.get("/Sugerencias", (req, res) => {
     });
 });
 
-// POST /Sugerencia: función que agrega un nuevo personaje sugerido a la BD
+// POST /Sugerencias: función para agregar una nueva sugerencia a la BD
 app.post("/Sugerencias", async (req, res) => {
   const {
     nombre,
@@ -228,10 +228,8 @@ app.post("/Sugerencias", async (req, res) => {
     pais
   } = req.body;
 
-  console.log('PERSONAJE QUE VA A SER SUBIDO: ', req.body)
-
   try {
-    const nuevoPersonaje = new Personajesugerencias({
+    const nuevaSugerencia = new Sugerencia({
       nombre,
       genero,
       ambito,
@@ -242,16 +240,13 @@ app.post("/Sugerencias", async (req, res) => {
       pais
     });
 
-    console.log('PERSONAJE QUE VA A SER SUBIDO COMPRIBAR: ', nuevoPersonaje);
+    await nuevaSugerencia.save();
 
-    await nuevoPersonaje.save();
-
-    res.status(201).send({ ok: true, mensaje: "Personaje sugerido creado con éxito" });
+    res.status(201).send({ ok: true, mensaje: "Sugerencia creada con éxito" });
   } catch (error) {
-    res.status(500).send({ ok: false, error: "Error al crear el personaje sugerido" });
+    res.status(500).send({ ok: false, error: "Error al crear la sugerencia" });
   }
 });
-
 
 
 app.listen(3000, () => {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Header from './Header';
+import { useEffect } from 'react';
 
 const Sugerencia = () => {
   const [nombre, setNombre] = useState('');
@@ -10,6 +11,23 @@ const Sugerencia = () => {
   const [dato, setDato] = useState('');
   const [pista, setPista] = useState('');
   const [pais, setPais] = useState('');
+
+    useEffect(() => {
+        //Personajes
+        fetch('https://programmingdle.onrender.com/Sugerencias')
+        .then(response => {
+        if (!response.ok) {
+            throw new Error('La solicitud no pudo ser completada.');
+        }
+        return response.json();
+        })
+        .then(data => {
+            console.log('DATA: ', data)
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }, []);
 
   const handleNombreChange = (e) => {
     const nuevoNombre = e.target.value.replace(/[^A-Za-z]/g, '');
@@ -72,7 +90,7 @@ const Sugerencia = () => {
 
       console.log('NUEVO PERSONAJE: ', nuevoPersonaje);
 
-      fetch('https://programmingdle.onrender.com/Personajessugerencias', {
+      fetch('https://programmingdle.onrender.com/Sugerencias', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
