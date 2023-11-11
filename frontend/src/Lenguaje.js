@@ -19,10 +19,12 @@ const Lenguaje = () => {
     const [actualizarPersonajes, setactualizarPersonajes] = useState(false);
     const [actualizarUser, setaactualizarUser] = useState(false);
     const [usersranking, setUsersRanking] = useState([]);
-    const [cargarRanking, setcargarRanking] = useState(false);
     const [username, setUsername] = useState('');
     //username que se usa para almacenar el valor del input
     const [nombreusuario, setNombreusuario] = useState('');
+    const [showContent, setShowContent] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [popupVisible, setPopupVisible] = useState(false);
 
     useEffect(() => {
         fetch('https://programmingdle.onrender.com/Lenguajes')
@@ -44,9 +46,9 @@ const Lenguaje = () => {
         });
 
         fetch('https://programmingdle.onrender.com/')
-      .then(response => response.text())
-      .then(data => {
-        setipToUpdate(data.toString());
+        .then(response => response.text())
+        .then(data => {
+          setipToUpdate(data.toString());
 
         const ipToSearch = data.toString();
 
@@ -78,6 +80,14 @@ const Lenguaje = () => {
       .catch(error => {
         console.error('Error al obtener la dirección IP:', error);
       });
+
+      //Ranking
+      cargarRanking();
+
+      setTimeout(() => {
+        setLoading(false);
+        setShowContent(true);
+      }, 1000);
     }, []);
 
     const mostrarPista = () => {
@@ -105,7 +115,8 @@ const Lenguaje = () => {
             console.log('COINCIDENCIA: ', coincidencias);
 
             if(coincidencias.lenguaje === true){
-            setHasWon(true);
+              setHasWon(true);
+              cargarRanking();
             }
         } else {
             
@@ -254,6 +265,7 @@ const Lenguaje = () => {
           .then(data => {
             if (data.ok) {
               console.log('Usuario actualizado:', data.usuario);
+              cargarRanking();
             } else {
               console.log('Usuario no encontrado:', data.mensaje);
             }
@@ -261,8 +273,6 @@ const Lenguaje = () => {
           .catch(error => {
             console.error('Error al actualizar el usuario:', error);
           });
-    
-          setcargarRanking(true);
       };
 
     if(actualizarUser){
@@ -271,32 +281,101 @@ const Lenguaje = () => {
     if(actualizarPersonajes){
         eliminarLenguajes();
     }
-    if(cargarRanking){
+    const cargarRanking = () => {
+      fetch('https://programmingdle.onrender.com/Usuarios', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('La solicitud no pudo ser completada.');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.usuarios && data.usuarios.length > 0) {
+            const usuariosOrdenados = data.usuarios
+            .filter(usuario => 
+              usuario.lenguaje && 
+              usuario.lenguaje.length > 0 && 
+              usuario.haswonlenguaje === true
+            )
+            .sort((a, b) => a.lenguaje.length - b.lenguaje.length);
+            setUsersRanking(usuariosOrdenados);
+          } else {
+            setUsersRanking([]);
+          }
+        })
+        .catch(error => {
+          console.error('Error al obtener usuarios:', error);
+        });
+    }
 
-        fetch('https://programmingdle.onrender.com/Usuarios/ranklenguaje', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('La solicitud no pudo ser completada.');
-            }
-            return response.json();
-          })
-          .then(data => {
-            setUsersRanking(data.usuarios);
-          })
-          .catch(error => {
-            console.error('Error al obtener usuarios:', error);
-          });
-          setcargarRanking(false);
-      }
+    const handlePopupToggle = () => {
+      setPopupVisible(!popupVisible);
+    };
+  
+    const handleClosePopup = () => {
+      setPopupVisible(false);
+    };
 
-    return lenguajeDelDia ? (
+    return (
         <div className='lenguaje'>
             <Header/>
+
+            {loading && (
+              <div className='loading'>
+                <i class='bx bx-loader-circle bx-spin'></i>
+              </div>
+            )}
+
+            {showContent && (
+            <div>
+
+            <div className="containerStyle">
+              <p className="mail">
+                <a href="mailto:quizmizdevs@gmail.com" className="tooltip" data-tooltip="Enviar correo electrónico">
+                  <i className='bx bx-envelope'></i>
+                  <span class="tooltip-text">Enviar correo electrónico</span>
+                </a>
+              </p>
+              <p className="rank">
+                <a href="#ranking-section" className="tooltip" data-tooltip="Ranking diario">
+                  <i className='bx bx-bar-chart-alt-2'></i>
+                  <span class="tooltip-text">Ranking diario</span>
+                </a>
+              </p>
+              <p className="help">
+                <a href='#help' className="tooltip" data-tooltip="Ranking diario" onClick={handlePopupToggle}>
+                  <i className='bx bx-help-circle'></i>
+                  <span class="tooltip-text">¿Cómo se juega?</span>
+                </a>
+              </p>
+            </div>
+
+            {popupVisible && (
+              <div className="overlay">
+                <div className="popup2">
+                  <button className="close-button" onClick={handlePopupToggle}>
+                    <i className="bx bx-x"></i>
+                  </button>
+                  <h2>¿Cómo se juega?</h2>
+                  <p>Adivina el campeón de hoy del juego de Programmingdle. Cambia cada 24 horas.</p>
+                  <h2>Modo Lenguaje</h2>
+                  <p>En el modo Lenguaje intenta a que lenguaje de programación pertenece el trozo de código que se muestra.
+                  </p>
+                  <p><span className='verde'>Verde</span> Indica que es el lenguaje a encontrar.<br></br>
+                    <span className='rojo'>Rojo</span> Indica que no hay coincidencia entre el lenguaje que ingresaste y el lenguaje a adivinar.
+                  </p>
+                  <h2>Pista</h2>
+                  <p>Para ayudarte a encontrar el lenguaje, podrás desbloquear una pista tras varios intentos.</p>
+                  <p>Si has adivinado el lenguaje, puedes regresar a la sección de pistas y ver la pista sobre el lenguaje a adivinar</p>
+                </div>
+              </div>
+            )}
+            
             <div className='clasicocard'>
                 <h2  className='clasicotitulo'>A que lenguaje pertenece el código</h2>
                 <div className='cabecera'>
@@ -426,7 +505,7 @@ const Lenguaje = () => {
                 <i className='bx bxs-crown'></i> Ranking Diario
             </h2>
 
-            <div className='ranking-container'>
+            <div className='ranking-container' id='ranking-section'>
                 {!username && (
                 <div className="popup">
                     <h2>Ingresa tu nombre de usuario para acceder al ranking</h2>
@@ -448,19 +527,20 @@ const Lenguaje = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {/* Muestra el ranking solo si se ha ingresado un nombre de usuario */}
                     {usersranking.map(user => (
                         <tr key={user._id}>
                         <td>{user.nombre || ''}</td>
-                        <td>{user.clasico.length || ''}</td>
+                        <td>{user.lenguaje.length || ''}</td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
                 </div>
             </div>
-        </div>
-    ) : null
+            </div>
+      )}
+    </div>
+  );
 } 
 
 export default Lenguaje;

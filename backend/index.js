@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cron = require("node-cron");
 const { ObjectId } = require("mongodb");
+const bcrypt = require("bcrypt");
 
 //mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/?retryWrites=true&w=majority");
 mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/Programmingdle");
@@ -104,35 +105,45 @@ const usuarioSchema = new mongoose.Schema({
 
 const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
 
-app.post("/Usuarios", (req, res) => {
+// POST /Usuarios: función para crear un nuevo usuario
+app.post("/Usuarios", async (req, res) => {
   const { ip } = req.body;
-  const nuevoUsuario = new Usuario({ ip });
 
-  nuevoUsuario
-    .save()
-    .then(() => {
-      res.status(201).send({ ok: true, mensaje: "Usuario creado con éxito" });
-    })
-    .catch((error) => {
-      res.status(500).send({ ok: false, error: "Error al crear el usuario" });
-    });
+  try {
+    const hashedIp = await bcrypt.hash(ip, 10);
+
+    const nuevoUsuario = new Usuario({ ip: hashedIp });
+
+    await nuevoUsuario.save();
+
+    res.status(201).send({ ok: true, mensaje: "Usuario creado con éxito" });
+  } catch (error) {
+    res.status(500).send({ ok: false, error: "Error al crear el usuario" });
+  }
 });
 
 //Buscar usuario por IP
-app.get("/Usuarios/:ip", (req, res) => {
-  const ip = req.params.ip;
+app.get("/Usuarios/:ip", async (req, res) => {
+  const desencriptedIp = req.params.ip;
 
-  Usuario.findOne({ ip: ip })
-    .then((usuario) => {
-      if (!usuario) {
-        return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
-      }
-      res.status(200).send({ ok: true, usuario });
-    })
-    .catch((error) => {
-      res.status(500).send({ ok: false, error: "Error al buscar el usuario" });
+  try {
+    const usuarios = await Usuario.find();
+
+    // Iterar sobre los usuarios y verificar la dirección IP desencriptada
+    const usuarioEncontrado = usuarios.find((usuario) => {
+      return bcrypt.compare(desencriptedIp, usuario.ip);
     });
+
+    if (!usuarioEncontrado) {
+      return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
+    }
+
+    res.status(200).send({ ok: true, usuario: usuarioEncontrado });
+  } catch (error) {
+    res.status(500).send({ ok: false, error: "Error al buscar el usuario" });
+  }
 });
+
 
 //Ranking de clasico
 app.get("/Usuarios", (req, res) => {

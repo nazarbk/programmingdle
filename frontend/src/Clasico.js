@@ -19,10 +19,13 @@ const Clasico = () => {
   const [actualizarPersonajes, setactualizarPersonajes] = useState(false);
   const [actualizarUser, setaactualizarUser] = useState(false);
   const [usersranking, setUsersRanking] = useState([]);
-  const [cargarRanking, setcargarRanking] = useState(false);
   const [username, setUsername] = useState('');
   //username que se usa para almacenar el valor del input
   const [nombreusuario, setNombreusuario] = useState('');
+  const [showContent, setShowContent] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const [popupVisible, setPopupVisible] = useState(false);
 
   useEffect(() => {
       //Personajes
@@ -67,7 +70,7 @@ const Clasico = () => {
               setIntentos(data.usuario.clasico.length);
               setactualizarPersonajes(true);
             }
-            if(data.usuario.nombre != null && data.usuario.nombre.length != ''){
+            if(data.usuario.nombre != null && data.usuario.nombre.length !== 0){
               setUsername(data.usuario.nombre)
             }
               setHasWon(data.usuario.haswonclasico);
@@ -82,7 +85,12 @@ const Clasico = () => {
       });
 
       //Ranking
-      setcargarRanking(true);
+      cargarRanking();
+
+      setTimeout(() => {
+        setLoading(false);
+        setShowContent(true);
+      }, 1000);
   }, []);
 
   const handleBusquedaChange = (e) => {
@@ -143,7 +151,7 @@ const Clasico = () => {
 
       if(todasLasCaracteristicasCoinciden){
         setHasWon(true);
-        setcargarRanking(true);
+        cargarRanking();
       }
     }
   };
@@ -171,6 +179,7 @@ const Clasico = () => {
       .then(data => {
         if (data.ok) {
           console.log('Usuario actualizado:', data.usuario);
+          cargarRanking();
         } else {
           console.log('Usuario no encontrado:', data.mensaje);
         }
@@ -178,13 +187,10 @@ const Clasico = () => {
       .catch(error => {
         console.error('Error al actualizar el usuario:', error);
       });
-
-      setcargarRanking(true);
   };
 
   const actualizarUsuario = async () => {
     const datosActualizacion = {
-      intentosclasico: intentos,
       clasico: personajeBuscado,
       haswonclasico: hasWon
     };
@@ -312,7 +318,7 @@ const Clasico = () => {
   if(actualizarPersonajes){
     eliminarPersonajes();
   }
-  if(cargarRanking){
+  const cargarRanking = () => {
     fetch('https://programmingdle.onrender.com/Usuarios', {
         method: 'GET',
         headers: {
@@ -326,23 +332,111 @@ const Clasico = () => {
         return response.json();
       })
       .then(data => {
-        setUsersRanking(data.usuarios);
+        if (data.usuarios && data.usuarios.length > 0) {
+          const usuariosOrdenados = data.usuarios
+          .filter(usuario => 
+            usuario.clasico && 
+            usuario.clasico.length > 0 && 
+            usuario.haswonclasico === true
+          )
+          .sort((a, b) => a.clasico.length - b.clasico.length);
+          setUsersRanking(usuariosOrdenados);
+        } else {
+          setUsersRanking([]);
+        }
       })
       .catch(error => {
         console.error('Error al obtener usuarios:', error);
       });
-      setcargarRanking(false);
   }
+
+  const handlePopupToggle = () => {
+    setPopupVisible(!popupVisible);
+  };
+
+  const handleClosePopup = () => {
+    setPopupVisible(false);
+  };
+
 
   //console.log('HASWON: ', hasWon);
   //console.log('INTENTOS: ', intentos);
   //console.log('PERSONAJES BUSCADOS:', personajeBuscado);
   //console.log('PERSONAJES COMPARADOS:',coincidencias);
-  console.log('NOMBRE DE USUARIO: ', nombreusuario);
 
-  return (
+  return(
     <div className='clasico'>
         <Header/>
+
+        {loading && (
+          <div className='loading'>
+            <i class='bx bx-loader-circle bx-spin'></i>
+          </div>
+        )}
+
+      {showContent && (
+      <div>
+        <div className="containerStyle">
+          <p className="mail">
+            <a href="mailto:quizmizdevs@gmail.com" className="tooltip" data-tooltip="Enviar correo electrónico">
+              <i className='bx bx-envelope'></i>
+              <span class="tooltip-text">Enviar correo electrónico</span>
+            </a>
+          </p>
+          <p className="rank">
+            <a href="#ranking-section" className="tooltip" data-tooltip="Ranking diario">
+              <i className='bx bx-bar-chart-alt-2'></i>
+              <span class="tooltip-text">Ranking diario</span>
+            </a>
+          </p>
+          <p className="help">
+            <a href='#help' className="tooltip" data-tooltip="Ranking diario" onClick={handlePopupToggle}>
+              <i className='bx bx-help-circle'></i>
+              <span class="tooltip-text">¿Cómo se juega?</span>
+            </a>
+          </p>
+        </div>
+
+        {popupVisible && (
+          <div className="overlay">
+            <div className="popup2">
+              <button className="close-button" onClick={handlePopupToggle}>
+                <i className="bx bx-x"></i>
+              </button>
+              <h2>¿Cómo se juega?</h2>
+              <p>Adivina el campeón de hoy del juego de Programmingdle. Cambia cada 24 horas.</p>
+              <h2>Modo Clásico</h2>
+              <p>En el modo clásico, es suficiente con escribir el nombre de un personaje famoso relacionado con Multimedia para que aparezcan sus características.
+                El color de las celdas cambiará para mostrar lo cerca que estaba tu respuesta del personaje del día a encontrar.
+              </p>
+              <p><span className='verde'>Verde</span> Indica que la caracteristicaes una coincidencia exacta.<br></br>
+              <span className='amarillo'>Amarillo</span> Indica coincidencia parcial.<br></br>
+                <span className='rojo'>Rojo</span> Indica que no hay coincidencia entre lo que ingresaste y la caracteristica.</p>
+              <p>
+              &#8593; &#8595; Las flechas en el año, indican si la respuesta a la caracteristica del año está por encima o por debajo de lo que ingresaste, es decir si nació antes o despúes.
+              </p>
+              <h2>Características</h2>
+              <h3>Género</h3>
+              <p><span className='valoresposibles'>Valores posibles:</span> Masculino, Femenino, Otro...</p>
+              <h3>Ámbito</h3>
+              <p>Ámbito en el que destaca principalmente ese personaje</p>
+              <p><span className='valoresposibles'>Valores posibles:</span> Programación, Desarrollo web o Videojuegos</p>
+              <h3>Adjetivo</h3>
+              <p>Adjetivo calificativo según sus logros o aportaciones</p>
+              <p><span className='valoresposibles'>Valores posibles:</span> Innovador/a, Visionario/a, Revolucionario/a, etc...</p>
+              <h3>País</h3>
+              <p>País de origen del personaje</p>
+              <p><span className='valoresposibles'>Valores posibles:</span> Reino Unido, Francia, Japón, etc...</p>
+              <h3>Año</h3>
+              <p>Fecha de nacimiento del personaje</p>
+              <p><span className='valoresposibles'>Valores posibles:</span> Cualquier año</p>
+              <h2>Pista</h2>
+              <p>Para ayudarte a encontrar al personaje, podrás desbloquear una pista sobre un logro suyo tras varios intentos.</p>
+              <p>Si has adivinado el personaje, puedes regresar a la sección de pistas y ver la pista sobre el personaje a adivinar</p>
+            </div>
+          </div>
+        )}
+      
         <div className='clasicocard'>
           <h2  className='clasicotitulo'>¡Adivina el personaje del día!</h2>
           {(intentos >= 6 || hasWon) ? (
@@ -503,7 +597,7 @@ const Clasico = () => {
         <i className='bx bxs-crown'></i> Ranking Diario
       </h2>
 
-      <div className='ranking-container'>
+      <div className='ranking-container' id='ranking-section'>
         {!username && (
           <div className="popup">
             <h2>Ingresa tu nombre de usuario para acceder al ranking</h2>
@@ -525,7 +619,6 @@ const Clasico = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Muestra el ranking solo si se ha ingresado un nombre de usuario */}
               {usersranking.map(user => (
                 <tr key={user._id}>
                   <td>{user.nombre || ''}</td>
@@ -536,6 +629,8 @@ const Clasico = () => {
           </table>
         </div>
       </div>
+      </div>
+      )}
     </div>
   );
 }

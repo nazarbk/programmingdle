@@ -24,7 +24,9 @@ const Header = () => {
     };
 
     const handleMouseLeave = () => {
-        typed.destroy();
+        if(typed){
+          typed.destroy();
+        }
     };
 
     return (
