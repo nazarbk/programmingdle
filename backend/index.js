@@ -196,7 +196,7 @@ nombre: String ,
 genero: String,
 ambito: String,
 adjetivo: String,
-año: Number,
+año: String,
 dato: String,
 pista: String,
 pais: String
@@ -222,7 +222,7 @@ app.post("/Personajessugerencias", async (req, res) => {
     genero,
     ambito,
     adjetivo,
-    ano,
+    año,
     dato,
     pista,
     pais
@@ -234,7 +234,7 @@ app.post("/Personajessugerencias", async (req, res) => {
       genero,
       ambito,
       adjetivo,
-      ano,
+      año,
       dato,
       pista,
       pais
