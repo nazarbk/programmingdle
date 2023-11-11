@@ -7,7 +7,7 @@ const Sugerencia = () => {
   const [genero, setGenero] = useState('');
   const [ambito, setAmbito] = useState([]);
   const [adjetivo, setAdjetivo] = useState('');
-  const [anio, setanio] = useState('');
+  const [año, setaño] = useState('');
   const [dato, setDato] = useState('');
   const [pista, setPista] = useState('');
   const [pais, setPais] = useState('');
@@ -50,7 +50,7 @@ const Sugerencia = () => {
 
   const handleanioChange = (e) => {
     const nuevoanio = e.target.value.replace(/[^0-9]/g, '');
-    setanio(nuevoanio);
+    setaño(nuevoanio);
   };
 
   const handleDatoChange = (e) => {
@@ -71,7 +71,7 @@ const Sugerencia = () => {
       genero &&
       ambito.length > 0 &&
       adjetivo &&
-      anio &&
+      año &&
       dato &&
       pista &&
       pais
@@ -82,7 +82,7 @@ const Sugerencia = () => {
         genero,
         ambito: ambitoString,
         adjetivo,
-        anio,
+        año,
         dato,
         pista,
         pais,
@@ -141,7 +141,7 @@ const Sugerencia = () => {
             </div>
             <div className="input-container">
                 <label className="sugerencia-label">Año:</label>
-                <input className="sugerencia-input" type="text" value={anio} onChange={handleanioChange} />
+                <input className="sugerencia-input" type="text" value={año} onChange={handleanioChange} />
             </div>
             <div className="input-container">
                 <label className="sugerencia-label">Dato interesante:</label>
