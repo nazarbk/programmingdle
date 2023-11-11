@@ -190,7 +190,7 @@ app.put("/Usuarios/:ip", async (req, res) => {
 });
 
 //Personajessugerencia
-const personajesugerenciasSchema = new mongoose.Schema({
+const sugerenciaSchema = new mongoose.Schema({
   _id: Number,
   nombre: String ,
   genero: String,
@@ -202,11 +202,11 @@ const personajesugerenciasSchema = new mongoose.Schema({
   pais: String
 });
 
-const Personajesugerencias = mongoose.model("Personajesugerencias", personajesugerenciasSchema, "Personajessugerencias");
+const Sugerencia = mongoose.model("Sugerencia", sugerenciaSchema, "Sugerencias");
 
-// GET /personajes: función que devuelve los personajes sugeridos de la BD
-app.get("/Personajessugerencias", (req, res) => {
-    Personajesugerencias.find()
+// GET /sugerencia: función que devuelve los personajes sugeridos de la BD
+app.get("/Sugerencias", (req, res) => {
+  Sugerencia.find()
     .then((resultado) => {
       res.status(200).send({ ok: true, resultado: resultado });
     })
@@ -215,8 +215,8 @@ app.get("/Personajessugerencias", (req, res) => {
     });
 });
 
-// POST /Personajessugerencias: función que agrega un nuevo personaje sugerido a la BD
-app.post("/Personajessugerencias", async (req, res) => {
+// POST /Sugerencia: función que agrega un nuevo personaje sugerido a la BD
+app.post("/Sugerencias", async (req, res) => {
   const {
     nombre,
     genero,
