@@ -105,7 +105,7 @@ const usuarioSchema = new mongoose.Schema({
 
 const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
 
-// POST /Usuarios: función para crear un nuevo usuario
+//POST
 app.post("/Usuarios", async (req, res) => {
   const { ip } = req.body;
 
@@ -127,12 +127,8 @@ app.get("/Usuarios/:ip", async (req, res) => {
   const desencriptedIp = req.params.ip;
 
   try {
-    const usuarios = await Usuario.find();
-
-    // Iterar sobre los usuarios y verificar la dirección IP desencriptada
-    const usuarioEncontrado = usuarios.find((usuario) => {
-      return bcrypt.compare(desencriptedIp, usuario.ip);
-    });
+    const hashedIp = await bcrypt.hash(desencriptedIp, 10);
+    const usuarioEncontrado = await Usuario.findOne({ ip: hashedIp });
 
     if (!usuarioEncontrado) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
@@ -158,24 +154,31 @@ app.get("/Usuarios", (req, res) => {
     });
 });
 
-
-//Actualizar Usuario por IP
-app.put("/Usuarios/:ip", (req, res) => {
-  const ip = req.params.ip;
+// Actualizar Usuario por IP
+app.put("/Usuarios/:ip", async (req, res) => {
+  const desencriptedIp = req.params.ip;
 
   const { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje } = req.body;
 
-  Usuario.findOneAndUpdate({ ip: ip }, { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje }, { new: true })
-    .then((usuario) => {
-      if (!usuario) {
-        return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
-      }
-      res.status(200).send({ ok: true, usuario });
-    })
-    .catch((error) => {
-      res.status(500).send({ ok: false, error: "Error al actualizar el usuario" });
-    });
+  try {
+    const hashedIp = await bcrypt.hash(desencriptedIp, 10);
+
+    const usuarioActualizado = await Usuario.findOneAndUpdate(
+      { ip: hashedIp },
+      { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje },
+      { new: true }
+    );
+
+    if (!usuarioActualizado) {
+      return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
+    }
+
+    res.status(200).send({ ok: true, usuario: usuarioActualizado });
+  } catch (error) {
+    res.status(500).send({ ok: false, error: "Error al actualizar el usuario" });
+  }
 });
+
 
 
 app.listen(3000, () => {
