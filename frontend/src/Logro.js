@@ -146,6 +146,7 @@ const Logro = () => {
       .then(data => {
         if (data.ok) {
           console.log('Usuario actualizado:', data.usuario);
+          cargarRanking();
         } else {
           console.log('Usuario no encontrado:', data.mensaje);
         }
@@ -153,7 +154,6 @@ const Logro = () => {
       .catch(error => {
         console.error('Error al actualizar el usuario:', error);
       });
-
       setaactualizarUser(false);
   }
 
@@ -316,11 +316,6 @@ const Logro = () => {
   const handlePopupToggle = () => {
     setPopupVisible(!popupVisible);
   };
-
-  const handleClosePopup = () => {
-    setPopupVisible(false);
-  };
-
 
   return (
       <div className='logro'>

@@ -189,6 +189,66 @@ app.put("/Usuarios/:ip", async (req, res) => {
   }
 });
 
+//Personajessugerencia
+const personajesugerenciasSchema = new mongoose.Schema({
+_id: Number,
+nombre: String ,
+genero: String,
+ambito: String,
+adjetivo: String,
+año: Number,
+dato: String,
+pista: String,
+pais: String
+});
+
+const Personajesugerencias = mongoose.model("Personajesugerencias", personajesugerenciasSchema, "Personajessugerencias");
+
+// GET /personajes: función que devuelve los personajes sugeridos de la BD
+app.get("/Personajessugerencias", (req, res) => {
+    Personajesugerencias.find()
+    .then((resultado) => {
+      res.status(200).send({ ok: true, resultado: resultado });
+    })
+    .catch((error) => {
+      res.status(500).send({ ok: false, error: "Error obteniendo personajes" });
+    });
+});
+
+// POST /Personajessugerencias: función que agrega un nuevo personaje sugerido a la BD
+app.post("/Personajessugerencias", async (req, res) => {
+  const {
+    nombre,
+    genero,
+    ambito,
+    adjetivo,
+    ano,
+    dato,
+    pista,
+    pais
+  } = req.body;
+
+  try {
+    const nuevoPersonaje = new Personajesugerencias({
+      nombre,
+      genero,
+      ambito,
+      adjetivo,
+      ano,
+      dato,
+      pista,
+      pais
+    });
+
+    await nuevoPersonaje.save();
+
+    res.status(201).send({ ok: true, mensaje: "Personaje sugerido creado con éxito" });
+  } catch (error) {
+    res.status(500).send({ ok: false, error: "Error al crear el personaje sugerido" });
+  }
+});
+
+
 
 app.listen(3000, () => {
   console.log("Servidor escuchando en el puerto 3000");

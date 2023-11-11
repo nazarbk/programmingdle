@@ -48,7 +48,9 @@ const Header = () => {
           </div>
 
           <div className="settings">
-            <i className='bx bx-cog' ></i>
+            <Link to="/sugerencia">
+              <i class='bx bx-add-to-queue'></i>
+            </Link>
           </div>
         </header>
 

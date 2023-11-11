@@ -210,6 +210,7 @@ const Clasico = () => {
       })
       .then(data => {
         if (data.ok) {
+          cargarRanking();
           console.log('Usuario actualizado:', data.usuario);
         } else {
           console.log('Usuario no encontrado:', data.mensaje);
@@ -218,7 +219,6 @@ const Clasico = () => {
       .catch(error => {
         console.error('Error al actualizar el usuario:', error);
       });
-
       setaactualizarUser(false);
   }
 
@@ -353,11 +353,6 @@ const Clasico = () => {
   const handlePopupToggle = () => {
     setPopupVisible(!popupVisible);
   };
-
-  const handleClosePopup = () => {
-    setPopupVisible(false);
-  };
-
 
   //console.log('HASWON: ', hasWon);
   //console.log('INTENTOS: ', intentos);

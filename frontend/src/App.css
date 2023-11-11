@@ -991,3 +991,53 @@ a {
 .valoresposibles{
   color: #F5FCCD;
 }
+
+.sugerencia-container {
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.sugerencia-container  h2{
+  color: white;
+}
+
+.input-container {
+  margin-bottom: 30px;
+}
+
+.sugerencia-label {
+  display: block;
+  margin-bottom: 5px;
+  color: #F5FCCD;
+  font-size: 20px;
+}
+
+.sugerencia-input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  color: white;
+  font-size: 22px;
+  padding: 10px;
+  background-color: #0E3650;
+  border: 4px solid #419197;
+  border-radius: 15px;
+
+  box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.7);
+}
+
+.sugerencia-container button{
+  color: white;
+  font-size: 22px;
+  padding: 10px;
+  background-color: #0E3650;
+  border: 4px solid #419197;
+  border-radius: 15px;
+}
+
+.sugerencia-container button:hover{
+  background-color: #fff;
+  color: #0E3650;
+  cursor: pointer;
+}
