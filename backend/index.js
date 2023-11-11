@@ -215,7 +215,6 @@ app.get("/Sugerencias", (req, res) => {
     });
 });
 
-// POST /Sugerencias: función para agregar una nueva sugerencia a la BD
 app.post("/Sugerencias", async (req, res) => {
   const {
     nombre,
@@ -244,7 +243,8 @@ app.post("/Sugerencias", async (req, res) => {
 
     res.status(201).send({ ok: true, mensaje: "Sugerencia creada con éxito" });
   } catch (error) {
-    res.status(500).send({ ok: false, error: "Error al crear la sugerencia" });
+    console.error("Error al crear la sugerencia:", error); // Agrega esta línea para imprimir el error en la consola
+    res.status(500).send({ ok: false, error: "Error al crear la sugerencia", detalle: error.message });
   }
 });
 
