@@ -1100,3 +1100,19 @@ a {
     font-size: 50%;
   }
 }
+
+.iconoframework{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 75px;
+  height: 100px;
+  width: 100px;
+  border: 4px solid #F5FCCD;
+  border-radius: 15px;
+  color: #F5FCCD;
+  margin: auto;
+  box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.7);
+  margin-bottom: 25px;
+}

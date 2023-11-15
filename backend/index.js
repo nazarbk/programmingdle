@@ -25,7 +25,15 @@ adjetivo: String,
 año: Number,
 dato: String,
 pista: String,
-pais: String
+pais: String,
+deldia: {
+  type: Boolean,
+  default: false
+},
+deldialogro: {
+  type: Boolean,
+  default: false
+},
 });
 
 const Personaje = mongoose.model("Personaje", personajeSchema, "Personajes");
@@ -43,10 +51,14 @@ app.get("/Personajes", (req, res) => {
 
 //Lenguajes
 const lenguajeSchema = new mongoose.Schema({
-_id: Number,
-lenguaje: String ,
-dato: String,
-pista: String
+  _id: Number,
+  lenguaje: String ,
+  dato: String,
+  pista: String,
+  deldia: {
+    type: Boolean,
+    default: false
+  },
 });
 
 const Lenguaje = mongoose.model("Lenguaje", lenguajeSchema, "Lenguajes");
@@ -98,6 +110,14 @@ const usuarioSchema = new mongoose.Schema({
     default: null
   },
   haswonlenguaje: {
+    type: Boolean,
+    default: false
+  },
+  framework: {
+    type: [{}],
+    default: null
+  },
+  haswonframework: {
     type: Boolean,
     default: false
   },
@@ -180,10 +200,10 @@ app.put("/Usuarios/:ip", async (req, res) => {
     }
 
     // Si las IPs coinciden, actualiza el usuario
-    const { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje } = req.body;
+    const { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje, framework, haswonframework, rol } = req.body;
     const updatedUsuario = await Usuario.findOneAndUpdate(
       { ip: usuario.ip },
-      { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje },
+      { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje, framework, haswonframework, rol },
       { new: true }
     );
 
@@ -254,7 +274,11 @@ app.post("/Sugerencias", async (req, res) => {
 const frameworkSchema = new mongoose.Schema({
   nombre: String ,
   icon: String,
-  dato: String
+  dato: String,
+  deldia: {
+    type: Boolean,
+    default: false
+  },
 });
 
 const Framework = mongoose.model("Framework", frameworkSchema, "Frameworks");

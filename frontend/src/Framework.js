@@ -27,9 +27,9 @@ const Framework = () => {
   const [showContent, setShowContent] = useState(false);
   const [loading, setLoading] = useState(true);
   const [popupVisible, setPopupVisible] = useState(false);
-  
-  const mostrarPista = () => {
-    setMostrarMensaje(!mostrarMensaje);
+
+  const iconComponents = {
+    BiCodeBlock, BiLogoTypescript, BiLogoMongodb, BiLogoJava, BiLogoGoLang, BiLogoVisualStudio, BiLogoUnity, BiLogoPhp, BiLogoGithub, BiLogoAngular, BiLogoCodepen, BiLogoHtml5, BiLogoJavascript, BiLogoVuejs, BiLogoReact, BiLogoBootstrap, BiLogoBlender, BiLogoSpringBoot, BiLogoTux, BiLogoMarkdown, BiLogoPython, BiLogoFirebase, BiLogoCPlusPlus, BiLogoLess
   };
 
   useEffect(() => {
@@ -41,7 +41,10 @@ const Framework = () => {
         return response.json();
       })
       .then(data => {
-        console.log('FRAMEWORKS: ', data.resultado);
+        setPersonajes(data.resultado);
+        //const indiceAleatorio = Math.floor(Math.random() * data.resultado.length);
+        const personajeAleatorioInicial = data.resultado[0];
+        setpersonajeDelDia(personajeAleatorioInicial);
       })
       .catch(error => {
         console.error(error);
@@ -371,30 +374,10 @@ const Framework = () => {
 
         <div className='containerclasico'>
           <div className='clasicocard'>
-            <h2  className='clasicotitulo'>Un personaje que...</h2>
-              <div className='hoja'>
-                <p className='logrotexto'></p>
-              </div>
-              {(intentos >= 6 || hasWon) ? (
-                <div className='pistadiv2'>
-                  <i className='bx bx-bulb bx-tada' onClick={mostrarPista}></i>
-                  <p className='pistatexto2'>Pista del dato</p>
-                  {mostrarMensaje && (
-                    <div className='bocadillopista'>
-                      <p className='pistatexto3'>{personajeDelDia.pista}</p>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                intentos === 0 ? (
-                  null
-                ) : (
-                  <div className='pistadiv'>
-                    <i className='bx bx-bulb'></i>
-                    <p className='pistatexto'>Pista en {6 - intentos} intentos</p>
-                  </div>
-                )
-              )}
+            <h2  className='clasicotitulo'>A que tecnología pertenece el icono...</h2>
+            <div className='iconoframework'>
+              {iconComponents[personajeDelDia.icon] && React.createElement(iconComponents[personajeDelDia.icon])}
+            </div>
           </div>
         </div>
 
