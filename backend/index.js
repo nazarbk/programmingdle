@@ -194,13 +194,14 @@ app.put("/Usuarios/:ip", async (req, res) => {
   try {
     const usuario = await Usuario.findOne({ ip: { $exists: true } });
 
+    console.log('USUARIO: ', usuario);
+
     if (!usuario) {
+      console.log('NO ECONTRANDO');
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
     }
 
     const esIgual = await bcrypt.compare(ipParametro, usuario.ip);
-
-    console.log('ESIGUAL: ', esIgual);
 
     if (!esIgual) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
