@@ -154,7 +154,7 @@ app.get("/Usuarios/:ip", async (req, res) => {
 
   try {
     const usuarios = await Usuario.find();
-    
+
     const usuariosConIp = usuarios.filter((usuario) => usuario.ip);
 
     const usuarioEncontrado = usuariosConIp.find((usuario) => {
@@ -189,28 +189,31 @@ app.get("/Usuarios", (req, res) => {
 app.put("/Usuarios/:ip", async (req, res) => {
   const ipParametro = req.params.ip;
 
+  console.log('IP: ', ipParametro);
+
   try {
-    // Encuentra al usuario por la IP hasheada
-    const usuario = await Usuario.findOne({ ip: { $exists: true } }); // Ajusta la consulta según tu esquema
+    const usuario = await Usuario.findOne({ ip: { $exists: true } });
 
     if (!usuario) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
     }
 
-    // Compara la IP proporcionada con la IP hasheada almacenada en la base de datos
     const esIgual = await bcrypt.compare(ipParametro, usuario.ip);
+
+    console.log('ESIGUAL: ', esIgual);
 
     if (!esIgual) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
     }
 
-    // Si las IPs coinciden, actualiza el usuario
+    console.log('ESIGUAL: '. esIgual);
     const { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje, framework, haswonframework, rol } = req.body;
     const updatedUsuario = await Usuario.findOneAndUpdate(
       { ip: usuario.ip },
       { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje, framework, haswonframework, rol },
       { new: true }
     );
+    console.log('UPDATED USER: '. updatedUsuario);
 
     res.status(200).send({ ok: true, usuario: updatedUsuario });
   } catch (error) {
