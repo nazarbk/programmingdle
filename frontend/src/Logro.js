@@ -41,9 +41,8 @@ const Logro = () => {
       })
       .then(data => {
         setPersonajes(data.resultado);
-
-        //const indiceAleatorio = Math.floor(Math.random() * data.resultado.length);
-        const personajeAleatorioInicial = data.resultado[4];
+        
+        const personajeAleatorioInicial = data.resultado.find(personaje => personaje.deldialogro === true);
         setpersonajeDelDia(personajeAleatorioInicial);
       })
       .catch(error => {
@@ -198,9 +197,6 @@ const Logro = () => {
   const copiarButton = () => {
   
     let textoCopiado = `He encontrado el personaje de #Programmingdle en modo Logro en ${intentos} intentos`;
-    if (personajeBuscado.length > 5) {
-      textoCopiado += `\n+ ${personajeBuscado.length - 5} filas adicionales`;
-    }
 
     textoCopiado += `\n[https://programmingdle.web.app/]`;
   
@@ -223,9 +219,6 @@ const Logro = () => {
 
   const compartirButton = () => {
     let textoCompartido = `He encontrado el personaje de #Programmingdle en modo Logro en ${intentos} intentos`;
-    if (personajeBuscado.length > 5) {
-      textoCompartido += `\n+ ${personajeBuscado.length - 5} filas adicionales`;
-    }
 
     textoCompartido += `\n[https://programmingdle.web.app/]`;
   
@@ -243,36 +236,59 @@ const Logro = () => {
   }
 
   const actualizarNombreUsuario = () => {
-    setUsername(nombreusuario);
-
-    const datosActualizacion = {
-      nombre: nombreusuario
-    };
-
-    fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
-      method: 'PUT',
+    fetch('https://programmingdle.onrender.com/Usuarios', {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(datosActualizacion),
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('La solicitud no pudo ser completada.');
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('La solicitud no pudo ser completada.');
+      }
+      return response.json();
+    })
+    .then(data => {
+        const nombreUsuarioExistente = data.usuarios.some(usuario => usuario.nombre === nombreusuario);
+
+        if(!nombreUsuarioExistente){
+          setUsername(nombreusuario);
+
+          const datosActualizacion = {
+            nombre: nombreusuario
+          };
+
+          fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(datosActualizacion),
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('La solicitud no pudo ser completada.');
+              }
+              return response.json();
+            })
+            .then(data => {
+              if (data.ok) {
+                console.log('Usuario actualizado:', data.usuario);
+                cargarRanking();
+              } else {
+                console.log('Usuario no encontrado:', data.mensaje);
+              }
+            })
+            .catch(error => {
+              console.error('Error al actualizar el usuario:', error);
+            });
+        }else{
+          alert('El nombre de usuario ya existe');
         }
-        return response.json();
-      })
-      .then(data => {
-        if (data.ok) {
-          console.log('Usuario actualizado:', data.usuario);
-          cargarRanking();
-        } else {
-          console.log('Usuario no encontrado:', data.mensaje);
-        }
-      })
-      .catch(error => {
-        console.error('Error al actualizar el usuario:', error);
-      });
+    })
+    .catch(error => {
+      console.error('Error al obtener usuarios:', error);
+    });
   };
 
   if(actualizarUser){

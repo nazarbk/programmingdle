@@ -45,10 +45,10 @@ const Modos = () => {
                 <div className='icono'>
                     <i className='bx bx-image-alt'></i>
                 </div>
-                <Link to="/framework">
+                <Link to="/icono">
                 <div className='nombre'>
-                    <h1>Framework</h1>
-                    <p>Adivina el Framework segín su logo</p>
+                    <h1>Icono</h1>
+                    <p>Adivina la tecnología según su logo</p>
                 </div>
                 </Link>
             </div>

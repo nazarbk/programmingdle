@@ -10,7 +10,7 @@ import Clasico from './Clasico';
 import Logro from './Logro';
 import Lenguaje from './Lenguaje';
 import Sugerencia from './Sugerencia';
-import Framework from './Framework';
+import Icono from './Icono';
 
 const router = createBrowserRouter([
   {
@@ -30,8 +30,8 @@ const router = createBrowserRouter([
     element: <Lenguaje/>
   },
   {
-    path: "/framework",
-    element: <Framework/>
+    path: "/icono",
+    element: <Icono/>
   }
   ,
   {

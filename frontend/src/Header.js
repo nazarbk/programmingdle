@@ -68,7 +68,7 @@ const Header = () => {
                 <Link to="/lenguaje">Lenguaje</Link>
               </li>
               <li>
-                <Link to="/framework">Framework</Link>
+                <Link to="/icono">Icono</Link>
               </li>
             </ul>
           </div>

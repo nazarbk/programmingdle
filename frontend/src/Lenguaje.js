@@ -37,9 +37,8 @@ const Lenguaje = () => {
         .then(data => {
             setLenguajes(data.resultado);
 
-            //const indiceAleatorio = Math.floor(Math.random() * data.resultado.length);
-            const lenguajeAleatorioInicial = data.resultado[5];
-            setLenguajeDelDia(lenguajeAleatorioInicial);
+            const personajeAleatorioInicial = data.resultado.find(personaje => personaje.deldia === true);
+            setLenguajeDelDia(personajeAleatorioInicial);
         })
         .catch(error => {
             console.error(error);
@@ -198,9 +197,6 @@ const Lenguaje = () => {
 
     const copiarButton = () => {
         let textoCopiado = `He encontrado el lenguaje de #Programmingdle en ${intentos} intentos`;
-        if (lenguajeBuscado.length > 5) {
-            textoCopiado += `\n+ ${lenguajeBuscado.length - 5} filas adicionales`;
-        }
 
         textoCopiado += `\n[https://programmingdle.web.app/]`;
         
@@ -223,9 +219,6 @@ const Lenguaje = () => {
     
     const compartirButton = () => {
         let textoCompartido = `He encontrado el lenguaje de #Programmingdle en ${intentos} intentos`;
-        if (lenguajeBuscado.length > 5) {
-            textoCompartido += `\n+ ${lenguajeBuscado.length - 5} filas adicionales`;
-        }
 
         textoCompartido += `\n[https://programmingdle.web.app/]`;
         
@@ -243,37 +236,60 @@ const Lenguaje = () => {
     }
 
     const actualizarNombreUsuario = () => {
-        setUsername(nombreusuario);
-    
-        const datosActualizacion = {
-          nombre: nombreusuario
-        };
-    
-        fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(datosActualizacion),
-        })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('La solicitud no pudo ser completada.');
-            }
-            return response.json();
-          })
-          .then(data => {
-            if (data.ok) {
-              console.log('Usuario actualizado:', data.usuario);
-              cargarRanking();
-            } else {
-              console.log('Usuario no encontrado:', data.mensaje);
-            }
-          })
-          .catch(error => {
-            console.error('Error al actualizar el usuario:', error);
-          });
-      };
+      fetch('https://programmingdle.onrender.com/Usuarios', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('La solicitud no pudo ser completada.');
+        }
+        return response.json();
+      })
+      .then(data => {
+          const nombreUsuarioExistente = data.usuarios.some(usuario => usuario.nombre === nombreusuario);
+  
+          if(!nombreUsuarioExistente){
+            setUsername(nombreusuario);
+  
+            const datosActualizacion = {
+              nombre: nombreusuario
+            };
+  
+            fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(datosActualizacion),
+            })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('La solicitud no pudo ser completada.');
+                }
+                return response.json();
+              })
+              .then(data => {
+                if (data.ok) {
+                  console.log('Usuario actualizado:', data.usuario);
+                  cargarRanking();
+                } else {
+                  console.log('Usuario no encontrado:', data.mensaje);
+                }
+              })
+              .catch(error => {
+                console.error('Error al actualizar el usuario:', error);
+              });
+          }else{
+            alert('El nombre de usuario ya existe');
+          }
+      })
+      .catch(error => {
+        console.error('Error al obtener usuarios:', error);
+      });
+    };
 
     if(actualizarUser){
         actualizarUsuario();
@@ -424,10 +440,10 @@ const Lenguaje = () => {
                     <div className='icono2'>
                         <i className='bx bx-image-alt'></i>
                     </div>
-                    <Link to="/logro">
+                    <Link to="/icono">
                         <div className='nombre2'>
-                            <h1>Framework</h1>
-                            <p>Adivina el Framework segín su logo</p>
+                            <h1>Icono</h1>
+                            <p>Adivina la tecnología según su icono</p>
                         </div>
                     </Link>
                 </div>

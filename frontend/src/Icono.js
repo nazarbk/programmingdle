@@ -5,7 +5,7 @@ import CountdownClock from './CountdownClock';
 import { Link } from 'react-router-dom';
 
 import { BiCodeBlock, BiLogoTypescript, BiLogoMongodb, BiLogoJava, BiLogoGoLang, BiLogoVisualStudio, BiLogoUnity, BiLogoPhp, BiLogoGithub, BiLogoAngular, BiLogoCodepen, BiLogoHtml5, BiLogoJavascript, BiLogoVuejs, BiLogoReact, BiLogoBootstrap, BiLogoBlender, BiLogoSpringBoot, BiLogoTux, BiLogoMarkdown, BiLogoPython, BiLogoFirebase, BiLogoCPlusPlus, BiLogoLess} from 'react-icons/bi';
-const Framework = () => {
+const Icono = () => {
   const [personajes, setPersonajes] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [resultadosBusqueda, setResultadosBusqueda] = useState([]);
@@ -42,8 +42,7 @@ const Framework = () => {
       })
       .then(data => {
         setPersonajes(data.resultado);
-        //const indiceAleatorio = Math.floor(Math.random() * data.resultado.length);
-        const personajeAleatorioInicial = data.resultado[0];
+        const personajeAleatorioInicial = data.resultado.find(personaje => personaje.deldia === true);
         setpersonajeDelDia(personajeAleatorioInicial);
       })
       .catch(error => {
@@ -120,7 +119,6 @@ const Framework = () => {
         cargarRanking();
       }
     } else {
-      
     }
   };
 
@@ -197,10 +195,7 @@ const Framework = () => {
 
   const copiarButton = () => {
   
-    let textoCopiado = `He encontrado el personaje de #Programmingdle en modo Logro en ${intentos} intentos`;
-    if (personajeBuscado.length > 5) {
-      textoCopiado += `\n+ ${personajeBuscado.length - 5} filas adicionales`;
-    }
+    let textoCopiado = `He encontrado el Icono de #Programmingdle en ${intentos} intentos`; 
 
     textoCopiado += `\n[https://programmingdle.web.app/]`;
   
@@ -222,10 +217,7 @@ const Framework = () => {
   };
 
   const compartirButton = () => {
-    let textoCompartido = `He encontrado el personaje de #Programmingdle en modo Logro en ${intentos} intentos`;
-    if (personajeBuscado.length > 5) {
-      textoCompartido += `\n+ ${personajeBuscado.length - 5} filas adicionales`;
-    }
+    let textoCompartido = `He encontrado el Icono de #Programmingdle en ${intentos} intentos`;
 
     textoCompartido += `\n[https://programmingdle.web.app/]`;
   
@@ -243,36 +235,59 @@ const Framework = () => {
   }
 
   const actualizarNombreUsuario = () => {
-    setUsername(nombreusuario);
-
-    const datosActualizacion = {
-      nombre: nombreusuario
-    };
-
-    fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
-      method: 'PUT',
+    fetch('https://programmingdle.onrender.com/Usuarios', {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(datosActualizacion),
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('La solicitud no pudo ser completada.');
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('La solicitud no pudo ser completada.');
+      }
+      return response.json();
+    })
+    .then(data => {
+        const nombreUsuarioExistente = data.usuarios.some(usuario => usuario.nombre === nombreusuario);
+
+        if(!nombreUsuarioExistente){
+          setUsername(nombreusuario);
+
+          const datosActualizacion = {
+            nombre: nombreusuario
+          };
+
+          fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(datosActualizacion),
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('La solicitud no pudo ser completada.');
+              }
+              return response.json();
+            })
+            .then(data => {
+              if (data.ok) {
+                console.log('Usuario actualizado:', data.usuario);
+                cargarRanking();
+              } else {
+                console.log('Usuario no encontrado:', data.mensaje);
+              }
+            })
+            .catch(error => {
+              console.error('Error al actualizar el usuario:', error);
+            });
+        }else{
+          alert('El nombre de usuario ya existe');
         }
-        return response.json();
-      })
-      .then(data => {
-        if (data.ok) {
-          console.log('Usuario actualizado:', data.usuario);
-          cargarRanking();
-        } else {
-          console.log('Usuario no encontrado:', data.mensaje);
-        }
-      })
-      .catch(error => {
-        console.error('Error al actualizar el usuario:', error);
-      });
+    })
+    .catch(error => {
+      console.error('Error al obtener usuarios:', error);
+    });
   };
 
   if(actualizarUser){
@@ -298,11 +313,11 @@ const Framework = () => {
         if (data.usuarios && data.usuarios.length > 0) {
           const usuariosOrdenados = data.usuarios
           .filter(usuario => 
-            usuario.logro && 
-            usuario.logro.length > 0 && 
-            usuario.haswonlogro === true
+            usuario.framework && 
+            usuario.framework.length > 0 && 
+            usuario.haswonframework === true
           )
-          .sort((a, b) => a.logro.length - b.logro.length);
+          .sort((a, b) => a.framework.length - b.framework.length);
           setUsersRanking(usuariosOrdenados);
         } else {
           setUsersRanking([]);
@@ -316,6 +331,15 @@ const Framework = () => {
   const handlePopupToggle = () => {
     setPopupVisible(!popupVisible);
   };
+
+  const iconoEstilos = {
+    filter: `blur(${9 - intentos}px)`
+  };
+
+  const iconoSinEstilo = {
+    filter: `blur(${0}px)`
+  };
+
 
   return (
       <div className='logro'>
@@ -357,17 +381,16 @@ const Framework = () => {
               <i className="bx bx-x"></i>
             </button>
             <h2>¿Cómo se juega?</h2>
-            <p>Adivina el campeón de hoy del juego de Programmingdle. Cambia cada 24 horas.</p>
-            <h2>Modo Logro</h2>
-            <p>En el modo logro, intenta adivinar qúe personaje famoso tuvo ese logro/descubrimiento durante su vida.
-              El color de las celdas cambiará para mostrar lo cerca que estaba tu respuesta del personaje del día a encontrar.
+            <p>Adivina el icono de hoy del juego de Programmingdle. Cambia cada 24 horas.</p>
+            <h2>Modo Icono</h2>
+            <p>En el modo Icono, intenta adivinar a que tecnología/herramienta pertenece el Icono.
+              El color de las celdas cambiará para mostrar lo cerca que estaba tu respuesta del Icono del día a encontrar.
             </p>
-            <p><span className='verde'>Verde</span> Indica que es el personaje a encontrar.<br></br>
-                <span className='rojo'>Rojo</span> Indica que no hay coincidencia entre el personaje que ingresaste y el personaje a adivinar.
+            <p><span className='verde'>Verde</span> Indica que es el icono a encontrar.<br></br>
+                <span className='rojo'>Rojo</span> Indica que no hay coincidencia entre el icono que ingresaste y el icono a adivinar.
             </p>
             <h2>Pista</h2>
-            <p>Para ayudarte a encontrar al personaje, podrás desbloquear una pista sobre el personaje tras varios intentos.</p>
-            <p>Si has adivinado el personaje, puedes regresar a la sección de pistas y ver la pista sobre el personaje a adivinar</p>
+            <p>Para ayudarte a encontrar al icono, este se irá renderizando poco a poco con cada intento que hagas, de modo que a los 9 intentos el icono tendrá su estado original.</p>
           </div>
         </div>
       )}
@@ -375,9 +398,18 @@ const Framework = () => {
         <div className='containerclasico'>
           <div className='clasicocard'>
             <h2  className='clasicotitulo'>A que tecnología pertenece el icono...</h2>
-            <div className='iconoframework'>
-              {iconComponents[personajeDelDia.icon] && React.createElement(iconComponents[personajeDelDia.icon])}
+            <div  className='iconoframework' >
+            {hasWon ?(
+              <div style={iconoSinEstilo}>
+                {iconComponents[personajeDelDia.icon] && React.createElement(iconComponents[personajeDelDia.icon])}
+              </div>
+            ) : (
+              <div style={iconoEstilos}>
+                {iconComponents[personajeDelDia.icon] && React.createElement(iconComponents[personajeDelDia.icon])}
+              </div>
+            )}
             </div>
+            <p className='textoframe'>Cada intento renderizará un poco más la imagen</p>
           </div>
         </div>
 
@@ -386,22 +418,12 @@ const Framework = () => {
             <div className='wincard'>
               <h2  className='wintext'>¡Has acertado!</h2>
               <p className="wintext2">#{personajeDelDia.nombre}</p>
-
-              <p className="contador">Próximo personaje en</p>
-              <CountdownClock/> 
-
-              <p className='nextmode'>Siguiente modo:</p>
-              <div className='modo2'>
-                <div className='icono2'>
-                    <i className='bx bx-code-block'></i>
-                </div>
-                <Link to="/lenguaje">
-                <div className='nombre2'>
-                    <h1>Lenguaje</h1>
-                    <p>Adivina el lenguaje de programación</p>
-                </div>
-                </Link>
+              <div className='datodiv'>
+                  <p className='titulodato'>¿Sabías que...?</p>
+                  <p className='textodato'>{personajeDelDia.dato}</p>
               </div>
+              <p className="contador">Próximo icono en</p>
+              <CountdownClock/> 
             </div>
           </div>
         ) : (
@@ -457,7 +479,7 @@ const Framework = () => {
         {hasWon ? (
             <div className='downcard'>
               <div className='sharecard'>
-                <p>He encontrado el personaje de #Programmingdle en modo Logro en {intentos} intentos</p>
+                <p>He encontrado el icono de #Programmingdle en {intentos} intentos</p>
 
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <button className="shareButtonStyle" onClick={copiarButton}> <i className='bx bx-copy-alt'></i> Copiar</button>
@@ -499,7 +521,7 @@ const Framework = () => {
               {usersranking.map(user => (
                 <tr key={user._id}>
                   <td>{user.nombre || ''}</td>
-                  <td>{user.logro.length || ''}</td>
+                  <td>{user.framework.length || ''}</td>
                 </tr>
               ))}
             </tbody>
@@ -512,4 +534,4 @@ const Framework = () => {
   );
 }
 
-export default Framework;
+export default Icono;

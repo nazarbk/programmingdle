@@ -150,6 +150,8 @@ app.post("/Usuarios", async (req, res) => {
 app.get("/Usuarios/:ip", async (req, res) => {
   const desencriptedIp = req.params.ip;
 
+  console.log('IP a buscar: ', desencriptedIp);
+
   try {
     const usuarios = await Usuario.find();
     const usuarioEncontrado = usuarios.find((usuario) => {

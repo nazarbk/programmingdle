@@ -13,6 +13,71 @@ body{
   background-color: #12486B;
 }
 
+.wrapper span{
+  position: fixed;
+  animation: animate 10s linear infinite;
+  font-size: 50px;
+  z-index: -1;
+  bottom: -100px;
+  color: #0a1b25;
+}
+
+.wrapper span:nth-child(1){
+  left: 60px;
+  animation-delay: 0.6s;
+}
+.wrapper span:nth-child(2){
+  left: 10%;
+  animation-delay: 3s;
+}
+.wrapper span:nth-child(3){
+  left: 20%;
+  animation-delay: 2s;
+}
+.wrapper span:nth-child(4){
+  left: 30%;
+  animation-delay: 5s;
+}
+.wrapper span:nth-child(5){
+  left: 40%;
+  animation-delay: 1s;
+}
+.wrapper span:nth-child(6){
+  left: 50%;
+  animation-delay: 7s;
+}
+.wrapper span:nth-child(7){
+  left: 60%;
+  animation-delay: 6s;
+}
+.wrapper span:nth-child(8){
+  left: 70%;
+  animation-delay: 8s;
+}
+.wrapper span:nth-child(9){
+  left: 80%;
+  animation-delay: 6s;
+}
+.wrapper span:nth-child(10){
+  left: 90%;
+  animation-delay: 4s;
+}
+
+
+@keyframes animate{
+  0%{
+    transform: translateY(0);
+    opacity: .8;
+  }
+  70%{
+    opacity: .5;
+  }
+  100%{
+    transform: translateY(-800px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
 .header-container{
   position: fixed;
   width: 100%;
@@ -75,7 +140,19 @@ body{
   border-radius: 15px;
   box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.7);
   transition: .3s ease;
+  animation: aparecerDesdeDerecha 1s ease-out;
  }
+
+ @keyframes aparecerDesdeDerecha {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
 .nombre { 
   background-color: #419197;
@@ -85,6 +162,18 @@ body{
   padding: 12px;
   box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.7);
   transition: .3s ease;
+  animation: aparecerDesdeIzquierda 1s ease-out;
+}
+
+@keyframes aparecerDesdeIzquierda {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .modo:hover{
@@ -129,6 +218,7 @@ a {
 .menu-dropdown{
   text-align: center;
   background-color: white;
+  animation: aparecerDesdeDerecha 1s ease-out;
 }
 
 .menu-dropdown ul{
@@ -533,10 +623,10 @@ a {
 
 .shareButtonStyle{
   margin-top: 25px;
-  color: #C6D3DB;
+  color: white;
   padding: 15px;
   font-size: 25px;
-  border: 4px solid #C6D3DB;
+  border: 4px solid white;
   border-radius: 12px;
   background-color: #419197;
 
@@ -544,7 +634,7 @@ a {
 }
 
 .shareButtonStyle:hover{
-  background-color: #C6D3DB;
+  background-color: white;
   color: #419197;
   border: 4px solid #419197;
   cursor: pointer;
@@ -1018,6 +1108,14 @@ a {
   margin: 0 auto;
 }
 
+.sugerencia-container div:nth-child(even){
+  animation: aparecerDesdeDerecha 1s ease-out;
+}
+
+.sugerencia-container div:nth-child(odd){
+  animation: aparecerDesdeIzquierda 1s ease-out;
+}
+
 .sugerencia-container  h2{
   color: white;
 }
@@ -1115,4 +1213,9 @@ a {
   margin: auto;
   box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.7);
   margin-bottom: 25px;
+}
+
+.textoframe{
+  color: white;
+  font-size: 17px;
 }
