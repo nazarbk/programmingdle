@@ -365,7 +365,7 @@ const Clasico = () => {
 
         {loading && (
           <div className='loading'>
-            <i class='bx bx-loader-circle bx-spin'></i>
+            <i className='bx bx-loader-circle bx-spin'></i>
           </div>
         )}
 
@@ -432,38 +432,40 @@ const Clasico = () => {
           </div>
         )}
       
-        <div className='clasicocard'>
-          <h2  className='clasicotitulo'>¡Adivina el personaje del día!</h2>
-          {(intentos >= 6 || hasWon) ? (
-            <div className='pistadiv2'>
-              <i className='bx bx-bulb bx-tada' onClick={mostrarPista}></i>
-              <p className='pistatexto2'>Pista del logro</p>
-              {mostrarMensaje && (
-                <div className='bocadillopista'>
-                  <p className='pistatexto3'>{personajeDelDia.pista}</p>
-                </div>
-              )}
-            </div>
-          ) : (
-            intentos === 0 ? (
-              <p className='clasicotexto'>Escribe cualquier personaje para empezar</p>
-            ) : (
-              <div className='pistadiv'>
-                <i className='bx bx-bulb'></i>
-                <p className='pistatexto'>Pista en {6 - intentos} intentos</p>
+        <div className='containerclasico'>
+          <div className='clasicocard'>
+            <h2  className='clasicotitulo'>¡Adivina el personaje del día!</h2>
+            {(intentos >= 6 || hasWon) ? (
+              <div className='pistadiv2'>
+                <i className='bx bx-bulb bx-tada' onClick={mostrarPista}></i>
+                <p className='pistatexto2'>Pista del logro</p>
+                {mostrarMensaje && (
+                  <div className='bocadillopista'>
+                    <p className='pistatexto3'>{personajeDelDia.pista}</p>
+                  </div>
+                )}
               </div>
-            )
-          )}
+            ) : (
+              intentos === 0 ? (
+                <p className='clasicotexto'>Escribe cualquier personaje para empezar</p>
+              ) : (
+                <div className='pistadiv'>
+                  <i className='bx bx-bulb'></i>
+                  <p className='pistatexto'>Pista en {6 - intentos} intentos</p>
+                </div>
+              )
+            )}
+          </div>
         </div>
 
         {hasWon ?(
           <div className='downcard'>
-            <div className='wincard'>
-              <h2  className='wintext'>¡Has acertado!</h2>
-              <p className="wintext2">#{personajeDelDia.nombre}</p>
-              <div className='datodiv'>
-                <p className='titulodato'>¿Sabías que...?</p>
-                <p className='textodato'>{personajeDelDia.dato}</p>
+              <div className='wincard'>
+                <h2  className='wintext'>¡Has acertado!</h2>
+                <p className="wintext2">#{personajeDelDia.nombre}</p>
+                <div className='datodiv'>
+                  <p className='titulodato'>¿Sabías que...?</p>
+                  <p className='textodato'>{personajeDelDia.dato}</p>
               </div>
 
               <p className="contador">Próximo personaje en</p>

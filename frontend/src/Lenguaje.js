@@ -323,7 +323,7 @@ const Lenguaje = () => {
 
             {loading && (
               <div className='loading'>
-                <i class='bx bx-loader-circle bx-spin'></i>
+                <i className='bx bx-loader-circle bx-spin'></i>
               </div>
             )}
 
@@ -372,36 +372,38 @@ const Lenguaje = () => {
               </div>
             )}
             
-            <div className='clasicocard'>
-                <h2  className='clasicotitulo'>A que lenguaje pertenece el código</h2>
-                <div className='cabecera'>
-                    <span className='icon'><i className='bx bx-minus'></i></span>
-                    <span className='icon'><i className='bx bx-square-rounded'></i></span>
-                    <span className='icon'><i className='bx bx-x'></i></span>
-                </div>
-                <div className='terminal'>
-                    <pre className='codigotexto'>{lenguajeDelDia.codigo}</pre>
-                </div>
-                {(intentos >= 6 || hasWon) ? (
-                <div className='pistadiv2'>
-                    <i className='bx bx-bulb bx-tada' onClick={mostrarPista}></i>
-                    <p className='pistatexto2'>Pista del logro</p>
-                    {mostrarMensaje && (
-                    <div className='bocadillopista'>
-                        <p className='pistatexto3'>{lenguajeDelDia.pista}</p>
-                    </div>
-                    )}
-                </div>
-                ) : (
-                intentos === 0 ? (
-                    null
-                ) : (
-                    <div className='pistadiv'>
-                    <i className='bx bx-bulb'></i>
-                    <p className='pistatexto'>Pista en {6 - intentos} intentos</p>
-                    </div>
-                )
-                )}
+            <div className='containerclasico'>
+              <div className='clasicocard'>
+                  <h2  className='clasicotitulo'>¿A que lenguaje pertenece el código?</h2>
+                  <div className='cabecera'>
+                      <span className='icon'><i className='bx bx-minus'></i></span>
+                      <span className='icon'><i className='bx bx-square-rounded'></i></span>
+                      <span className='icon'><i className='bx bx-x'></i></span>
+                  </div>
+                  <div className='terminal'>
+                      <pre className='codigotexto'>{lenguajeDelDia.codigo}</pre>
+                  </div>
+                  {(intentos >= 6 || hasWon) ? (
+                  <div className='pistadiv2'>
+                      <i className='bx bx-bulb bx-tada' onClick={mostrarPista}></i>
+                      <p className='pistatexto2'>Pista del lenguaje</p>
+                      {mostrarMensaje && (
+                      <div className='bocadillopista'>
+                          <p className='pistatexto3'>{lenguajeDelDia.pista}</p>
+                      </div>
+                      )}
+                  </div>
+                  ) : (
+                  intentos === 0 ? (
+                      null
+                  ) : (
+                      <div className='pistadiv'>
+                      <i className='bx bx-bulb'></i>
+                      <p className='pistatexto'>Pista en {6 - intentos} intentos</p>
+                      </div>
+                  )
+                  )}
+              </div>
             </div>
 
             {hasWon ?(

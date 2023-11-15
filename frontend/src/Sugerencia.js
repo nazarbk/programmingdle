@@ -11,23 +11,7 @@ const Sugerencia = () => {
   const [dato, setDato] = useState('');
   const [pista, setPista] = useState('');
   const [pais, setPais] = useState('');
-
-    useEffect(() => {
-        //Personajes
-        fetch('https://programmingdle.onrender.com/Sugerencias')
-        .then(response => {
-        if (!response.ok) {
-            throw new Error('La solicitud no pudo ser completada.');
-        }
-        return response.json();
-        })
-        .then(data => {
-            console.log('DATA: ', data)
-        })
-        .catch(error => {
-            console.error(error);
-        });
-    }, []);
+  const [enviadoConExito, setEnviadoConExito] = useState(false);
 
   const handleNombreChange = (e) => {
     const nuevoNombre = e.target.value.replace(/[^A-Za-z]/g, '');
@@ -65,6 +49,10 @@ const Sugerencia = () => {
     setPais(e.target.value);
   };
 
+  const handlePopupToggle = () => {
+    setEnviadoConExito(!enviadoConExito);
+  };
+
   const handleEnviarClick = () => {
     if (
       nombre &&
@@ -88,8 +76,6 @@ const Sugerencia = () => {
         pais,
       };
 
-      console.log('NUEVO PERSONAJE: ', nuevoPersonaje);
-
       fetch('https://programmingdle.onrender.com/Sugerencias', {
         method: 'POST',
         headers: {
@@ -99,7 +85,19 @@ const Sugerencia = () => {
       })
         .then(response => response.json())
         .then(data => {
-          console.log('Respuesta del servidor:', data);
+            if (data.ok) {
+                setEnviadoConExito(true);
+                setNombre('');
+                setGenero('');
+                setAmbito([]);
+                setAdjetivo('');
+                setaño('');
+                setDato('');
+                setPista('');
+                setPais('');
+              } else {
+                setEnviadoConExito(false);
+              }
         })
         .catch(error => {
           console.error('Error al hacer la solicitud:', error);
@@ -156,9 +154,19 @@ const Sugerencia = () => {
                 <input className="sugerencia-input" type="text" value={pais} onChange={handlePaisChange} />
             </div>
             <div className="input-container">
-            <button onClick={handleEnviarClick}>Enviar</button>
-      </div>
+                <button onClick={handleEnviarClick}>Enviar</button>
+            </div>
         </div>
+        {enviadoConExito && (
+            <div className="overlay">
+                <div className="popup3">
+                <button className="close-button" onClick={handlePopupToggle}>
+                    <i className="bx bx-x"></i>
+                </button>
+                <h2>Sugerencia enviada con éxito</h2>
+                </div>
+            </div>
+        )}
     </div>
   );
 };

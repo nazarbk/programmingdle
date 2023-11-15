@@ -45,7 +45,7 @@ const Modos = () => {
                 <div className='icono'>
                     <i className='bx bx-image-alt'></i>
                 </div>
-                <Link to="/palabra">
+                <Link to="/framework">
                 <div className='nombre'>
                     <h1>Framework</h1>
                     <p>Adivina el Framework segín su logo</p>

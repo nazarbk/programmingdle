@@ -2,10 +2,68 @@ import React, { useState } from 'react';
 import './App.css';
 import Typed from 'typed.js';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 
 const Header = () => {
     const [menuVisible, setMenuVisible] = useState(false);
+    const [rol, setRol] = useState('');
+
+    useEffect(() => {
+      fetch('https://programmingdle.onrender.com/')
+        .then(response => response.text())
+        .then(data => {
+  
+          const nuevoUsuario = {
+            ip: data,
+          };
+    
+          const options = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(nuevoUsuario),
+          };
+  
+          const ipToSearch = data.toString();
+  
+          console.log('IP: ', ipToSearch);
+  
+          fetch(`https://programmingdle.onrender.com/Usuarios/${ipToSearch}`)
+            .then(response => {
+              if (!response.ok) {
+                fetch('https://programmingdle.onrender.com/Usuarios', options)
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error('La solicitud no pudo ser completada.');
+                  }
+                  return response.json();
+                })
+                .then(data => {
+                  console.log('Usuario creado con éxito:', data);
+                })
+                .catch(error => {
+                  console.error('Error al crear el usuario:', error);
+                });
+              }
+              return response.json();
+            })
+            .then(data => {
+              if (data.ok) {
+                console.log('Usuario encontrado:', data.usuario);
+              } else {
+                console.log('Usuario NO encontrado:', data.usuario);
+              }
+            })
+            .catch(error => {
+              console.error('Error al buscar el usuario:', error);
+            });
+          })
+        .catch(error => {
+          console.error('Error al obtener la dirección IP:', error);
+        });
+    }, []);
 
     const toggleMenu = () => {
       setMenuVisible(!menuVisible);
@@ -49,7 +107,7 @@ const Header = () => {
 
           <div className="settings">
             <Link to="/sugerencia">
-              <i class='bx bx-add-to-queue'></i>
+              <i className='bx bx-add-to-queue'></i>
             </Link>
           </div>
         </header>
@@ -67,7 +125,7 @@ const Header = () => {
                 <Link to="/lenguaje">Lenguaje</Link>
               </li>
               <li>
-                <Link to="/palabra">Palabra</Link>
+                <Link to="/framework">Framework</Link>
               </li>
             </ul>
           </div>

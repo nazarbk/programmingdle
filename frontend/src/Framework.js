@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import CountdownClock from './CountdownClock';
 import { Link } from 'react-router-dom';
 
-const Logro = () => {
+import { BiCodeBlock, BiLogoTypescript, BiLogoMongodb, BiLogoJava, BiLogoGoLang, BiLogoVisualStudio, BiLogoUnity, BiLogoPhp, BiLogoGithub, BiLogoAngular, BiLogoCodepen, BiLogoHtml5, BiLogoJavascript, BiLogoVuejs, BiLogoReact, BiLogoBootstrap, BiLogoBlender, BiLogoSpringBoot, BiLogoTux, BiLogoMarkdown, BiLogoPython, BiLogoFirebase, BiLogoCPlusPlus, BiLogoLess} from 'react-icons/bi';
+const Framework = () => {
   const [personajes, setPersonajes] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [resultadosBusqueda, setResultadosBusqueda] = useState([]);
@@ -26,13 +27,13 @@ const Logro = () => {
   const [showContent, setShowContent] = useState(false);
   const [loading, setLoading] = useState(true);
   const [popupVisible, setPopupVisible] = useState(false);
-
+  
   const mostrarPista = () => {
     setMostrarMensaje(!mostrarMensaje);
   };
 
   useEffect(() => {
-    fetch('https://programmingdle.onrender.com/Personajes')
+    fetch('https://programmingdle.onrender.com/Frameworks')
       .then(response => {
         if (!response.ok) {
           throw new Error('La solicitud no pudo ser completada.');
@@ -40,11 +41,7 @@ const Logro = () => {
         return response.json();
       })
       .then(data => {
-        setPersonajes(data.resultado);
-
-        //const indiceAleatorio = Math.floor(Math.random() * data.resultado.length);
-        const personajeAleatorioInicial = data.resultado[4];
-        setpersonajeDelDia(personajeAleatorioInicial);
+        console.log('FRAMEWORKS: ', data.resultado);
       })
       .catch(error => {
         console.error(error);
@@ -376,7 +373,7 @@ const Logro = () => {
           <div className='clasicocard'>
             <h2  className='clasicotitulo'>Un personaje que...</h2>
               <div className='hoja'>
-                <p className='logrotexto'>{personajeDelDia.dato}</p>
+                <p className='logrotexto'></p>
               </div>
               {(intentos >= 6 || hasWon) ? (
                 <div className='pistadiv2'>
@@ -532,4 +529,4 @@ const Logro = () => {
   );
 }
 
-export default Logro;
+export default Framework;

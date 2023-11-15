@@ -100,6 +100,10 @@ const usuarioSchema = new mongoose.Schema({
   haswonlenguaje: {
     type: Boolean,
     default: false
+  },
+  rol: {
+    type: String,
+    default: 'user'
   }
 });
 
@@ -245,6 +249,25 @@ app.post("/Sugerencias", async (req, res) => {
     console.error("Error al crear la sugerencia:", error);
     res.status(500).send({ ok: false, error: "Error al crear la sugerencia", detalle: error.message });
   }
+});
+
+const frameworkSchema = new mongoose.Schema({
+  nombre: String ,
+  icon: String,
+  dato: String
+});
+
+const Framework = mongoose.model("Framework", frameworkSchema, "Frameworks");
+
+// GET /framework: función que devuelve los iconos sugeridos de la BD
+app.get("/Frameworks", (req, res) => {
+    Framework.find()
+    .then((resultado) => {
+      res.status(200).send({ ok: true, resultado: resultado });
+    })
+    .catch((error) => {
+      res.status(500).send({ ok: false, error: "Error obteniendo el icono" });
+    });
 });
 
 

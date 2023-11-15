@@ -9,8 +9,8 @@ import {
 import Clasico from './Clasico';
 import Logro from './Logro';
 import Lenguaje from './Lenguaje';
-import Palabra from './Palabra';
 import Sugerencia from './Sugerencia';
+import Framework from './Framework';
 
 const router = createBrowserRouter([
   {
@@ -30,8 +30,8 @@ const router = createBrowserRouter([
     element: <Lenguaje/>
   },
   {
-    path: "/palabra",
-    element: <Palabra/>
+    path: "/framework",
+    element: <Framework/>
   }
   ,
   {
