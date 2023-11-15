@@ -67,15 +67,15 @@ const Framework = () => {
         .then(data => {
           if (data.ok) {
             console.log('Usuario encontrado:', data.usuario);
-            if(data.usuario.logro !== null && data.usuario.logro.length !== 0){
-              setPersonajeBuscado(data.usuario.logro);
-              setIntentos(data.usuario.logro.length);
+            if(data.usuario.framework !== null && data.usuario.framework.length !== 0){
+              setPersonajeBuscado(data.usuario.framework);
+              setIntentos(data.usuario.framework.length);
               setactualizarPersonajes(true);
             }
             if(data.usuario.nombre != null && data.usuario.nombre.length !== 0){
               setUsername(data.usuario.nombre)
             }
-              setHasWon(data.usuario.haswonlogro);
+              setHasWon(data.usuario.haswonframework);
           }
         })
         .catch(error => {
@@ -126,8 +126,8 @@ const Framework = () => {
 
   const actualizarUsuario = async () => {
     const datosActualizacion = {
-      logro: personajeBuscado,
-      haswonlogro: hasWon
+      framework: personajeBuscado,
+      haswonframework: hasWon
     };
 
     fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
@@ -333,19 +333,19 @@ const Framework = () => {
         <p className="mail">
           <a href="mailto:quizmizdevs@gmail.com" className="tooltip" data-tooltip="Enviar correo electrónico">
             <i className='bx bx-envelope'></i>
-            <span class="tooltip-text">Enviar correo electrónico</span>
+            <span className="tooltip-text">Enviar correo electrónico</span>
           </a>
         </p>
         <p className="rank">
           <a href="#ranking-section" className="tooltip" data-tooltip="Ranking diario">
             <i className='bx bx-bar-chart-alt-2'></i>
-            <span class="tooltip-text">Ranking diario</span>
+            <span className="tooltip-text">Ranking diario</span>
           </a>
         </p>
         <p className="help">
           <a href='#help' className="tooltip" data-tooltip="Ranking diario" onClick={handlePopupToggle}>
             <i className='bx bx-help-circle'></i>
-            <span class="tooltip-text">¿Cómo se juega?</span>
+            <span className="tooltip-text">¿Cómo se juega?</span>
           </a>
         </p>
       </div>
