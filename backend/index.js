@@ -154,7 +154,10 @@ app.get("/Usuarios/:ip", async (req, res) => {
 
   try {
     const usuarios = await Usuario.find();
-    const usuarioEncontrado = usuarios.find((usuario) => {
+    
+    const usuariosConIp = usuarios.filter((usuario) => usuario.ip);
+
+    const usuarioEncontrado = usuariosConIp.find((usuario) => {
       return bcrypt.compare(desencriptedIp, usuario.ip);
     });
 
