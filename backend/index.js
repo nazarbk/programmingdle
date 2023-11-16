@@ -146,7 +146,6 @@ app.post("/Usuarios", async (req, res) => {
   }
 });
 
-//Buscar usuario por IP
 app.get("/Usuarios/:ip", async (req, res) => {
   const desencriptedIp = req.params.ip;
 
@@ -155,12 +154,18 @@ app.get("/Usuarios/:ip", async (req, res) => {
   try {
     const usuarios = await Usuario.find();
     console.log('USUARIOS ALMACENADOS: ', usuarios);
-    const usuariosConIp = usuarios.filter((usuario) => usuario.ip);
+
+    // Filtra los usuarios que tienen una IP no nula
+    const usuariosConIp = usuarios.filter((usuario) => usuario.ip !== null);
     console.log('USUARIOS CON IP: ', usuariosConIp);
+
     const usuarioEncontrado = usuariosConIp.find((usuario) => {
+      // Compara la IP desencriptada con el hash almacenado
       return bcrypt.compare(desencriptedIp, usuario.ip);
     });
+
     console.log('USUARIO ENCONTRADO: ', usuarioEncontrado);
+
     if (!usuarioEncontrado) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
     }
@@ -170,6 +175,7 @@ app.get("/Usuarios/:ip", async (req, res) => {
     res.status(500).send({ ok: false, error: "Error al buscar el usuario" });
   }
 });
+
 
 
 //Ranking de clasico
