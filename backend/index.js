@@ -5,6 +5,7 @@ const cron = require("node-cron");
 const { ObjectId } = require("mongodb");
 const bcrypt = require("bcrypt");
 const crypto = require('crypto');
+const secretKey = 'SecretKeyProgrammingdle';
 
 //mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/?retryWrites=true&w=majority");
 mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/Programmingdle");
@@ -140,7 +141,7 @@ app.post('/Usuarios', async (req, res) => {
     return res.status(400).json({ error: 'La dirección IP es requerida.' });
   }
 
-  const encryptedIP = encryptIP(ip);
+  const encryptedIP = encryptIP(ip, secretKey);
   console.log('ENCRYPTED IP: ', encryptedIP);
 
   try {
@@ -160,26 +161,37 @@ app.post('/Usuarios', async (req, res) => {
 });
 
 // Buscar usuario por IP
-app.get("/Usuarios/:ip", async (req, res) => {
-  let desencriptedIp = req.params.ip;
-  var existe = false;
+// GET para comparar una dirección IP sin encriptar con las IP encriptadas en la base de datos
+app.get('/Usuarios/:ip', async (req, res) => {
+  const { ip } = req.params;
+
+  console.log('IP a comparar: ', ip);
+
+  if (!ip) {
+    return res.status(400).json({ error: 'La dirección IP es requerida.' });
+  }
 
   try {
-    let usuarios = await Usuario.find();
-    console.log('IP USUARIO 1: ', usuarios[0].ip);
-    if (bcrypt.compareSync('92.58.87.98', '$2b$10$7CCv8rL4Y03nCkLLJ7h1XuPxniZgeApLnamqpo9cT2qTSxxNzkpHm')) {
-        existe = true;
-    }
+    // Buscar todos los usuarios con sus IP encriptadas
+    const usuarios = await Usuario.find();
 
-    if (!existe) {
-      return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
-    }
+    // Realizar la comparación con cada usuario
+    const usuariosCoincidentes = usuarios.filter(usuario => {
+      const decryptedIP = decryptIP(usuario.ip, secretKey);
+      return decryptedIP === ip;
+    });
 
-    res.status(200).send({ ok: true, usuario: usuarioEncontrado });
+    if (usuariosCoincidentes.length > 0) {
+      res.status(200).json({ message: 'Dirección IP encontrada en usuarios:', usuariosCoincidentes });
+    } else {
+      res.status(404).json({ message: 'Dirección IP no encontrada en usuarios.' });
+    }
   } catch (error) {
-    res.status(500).send({ ok: false, error: "Error al buscar el usuario" });
+    console.error(error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
   }
 });
+
 
 //Ranking de clasico
 app.get("/Usuarios", (req, res) => {
@@ -312,12 +324,23 @@ app.get("/Frameworks", (req, res) => {
     });
 });
 
-function encryptIP(ip) {
-  const secretKey = 'SecretKeyProgrammingdle';
+function encryptIP(ip, key) {
   const cipher = crypto.createCipher('aes-256-cbc', secretKey);
   let encrypted = cipher.update(ip, 'utf-8', 'hex');
   encrypted += cipher.final('hex');
   return encrypted;
+}
+
+function decryptIP(ip, key) {
+  try {
+    const decipher = crypto.createDecipher('aes-256-cbc', key);
+    let decrypted = decipher.update(ip, 'hex', 'utf-8');
+    decrypted += decipher.final('utf-8');
+    return decrypted;
+  } catch (error) {
+    console.error('Error al descifrar la dirección IP:', error);
+    return null;
+  }
 }
 
 
