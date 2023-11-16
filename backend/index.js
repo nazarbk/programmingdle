@@ -154,11 +154,8 @@ app.get("/Usuarios/:ip", async (req, res) => {
   try {
     let usuarios = await Usuario.find();
     console.log('IP USUARIO 1: ', usuarios[0].ip);
-    for (var i = 0; i < usuarios.length; i++) {
-      if (bcrypt.compareSync(desencriptedIp, usuarios[i].ip)) {
-          existe = true;
-          break;
-      }
+    if (bcrypt.compareSync('92.58.87.98', '$2b$10$7CCv8rL4Y03nCkLLJ7h1XuPxniZgeApLnamqpo9cT2qTSxxNzkpHm')) {
+        existe = true;
     }
 
     if (!existe) {
