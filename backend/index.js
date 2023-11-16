@@ -154,13 +154,13 @@ app.get("/Usuarios/:ip", async (req, res) => {
 
   try {
     const usuarios = await Usuario.find();
-
+    console.log('USUARIOS ALMACENADOS: ', usuarios);
     const usuariosConIp = usuarios.filter((usuario) => usuario.ip);
-
+    console.log('USUARIOS CON IP: ', usuariosConIp);
     const usuarioEncontrado = usuariosConIp.find((usuario) => {
       return bcrypt.compare(desencriptedIp, usuario.ip);
     });
-
+    console.log('USUARIO ENCONTRADO: ', usuarioEncontrado);
     if (!usuarioEncontrado) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
     }
