@@ -189,38 +189,34 @@ app.get("/Usuarios", (req, res) => {
 app.put("/Usuarios/:ip", async (req, res) => {
   const ipParametro = req.params.ip;
 
-  console.log('IP: ', ipParametro);
-
   try {
-    const usuario = await Usuario.findOne({ ip: { $exists: true } });
+    const usuarios = await Usuario.find();
 
-    console.log('USUARIO: ', usuario);
+    // Filtra los usuarios que tienen una IP antes de intentar compararla
+    const usuariosConIp = usuarios.filter((usuario) => usuario.ip);
+
+    const usuario = usuariosConIp.find((usuario) => {
+      return bcrypt.compare(ipParametro, usuario.ip);
+    });
 
     if (!usuario) {
-      console.log('NO ECONTRANDO');
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
     }
 
-    const esIgual = await bcrypt.compare(ipParametro, usuario.ip);
-
-    if (!esIgual) {
-      return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
-    }
-
-    console.log('ESIGUAL: '. esIgual);
+    // Si las IPs coinciden, actualiza el usuario
     const { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje, framework, haswonframework, rol } = req.body;
     const updatedUsuario = await Usuario.findOneAndUpdate(
       { ip: usuario.ip },
       { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje, framework, haswonframework, rol },
       { new: true }
     );
-    console.log('UPDATED USER: '. updatedUsuario);
 
     res.status(200).send({ ok: true, usuario: updatedUsuario });
   } catch (error) {
     res.status(500).send({ ok: false, error: "Error al actualizar el usuario" });
   }
 });
+
 
 //Personajessugerencia
 const sugerenciaSchema = new mongoose.Schema({
