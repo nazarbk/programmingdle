@@ -134,16 +134,21 @@ const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
 app.post('/Usuarios', async (req, res) => {
   const { userIP } = req.body;
 
+  console.log('USER IP: ', userIP);
+
   if (!userIP) {
     return res.status(400).json({ error: 'La dirección IP es requerida.' });
   }
 
   const encryptedIP = encryptIP(userIP);
+  console.log('ENCRYPTED IP: ', encryptedIP);
 
   try {
     const nuevoUsuario = new Usuario({
-      encryptedIP,
+      ip: encryptedIP,
     });
+
+    console.log('NUEVO USUARIO: ', nuevoUsuario);
 
     await nuevoUsuario.save();
 
