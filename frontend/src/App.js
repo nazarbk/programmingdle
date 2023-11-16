@@ -52,10 +52,10 @@ function App() {
             return response.json();
           })
           .then(data => {
-            if (data.ok) {
-              console.log('Usuario encontrado:', data.usuario);
+            if (data) {
+              console.log('Usuario encontrado:', data.usuariosCoincidentes);
             } else {
-              console.log('Usuario NO encontrado:', data.usuario);
+              console.log('Usuario NO encontrado:', data.usuariosCoincidentes);
             }
           })
           .catch(error => {

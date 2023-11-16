@@ -205,18 +205,16 @@ app.get("/Usuarios", (req, res) => {
 
 //actualizar usuario según ip
 app.put("/Usuarios/:ip", async (req, res) => {
-  const ipParametro = req.params.ip;
+  const { ip } = req.params;
 
   try {
     const usuarios = await Usuario.find();
 
-    // Filtra los usuarios que tienen una IP antes de intentar compararla
-    const usuariosConIp = usuarios.filter((usuario) => usuario.ip && usuario.ip !== null);
-
     console.log('USUARIOS CON IP', usuariosConIp);
 
     const usuario = usuariosConIp.find((usuario) => {
-      return bcrypt.compare(ipParametro, usuario.ip);
+      const decryptedIP = decryptIP(usuario.ip, secretKey);
+      return decryptedIP === ip;
     });
 
     console.log('USUARIO A ACTUALIZAR: ', usuario);
