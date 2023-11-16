@@ -152,9 +152,9 @@ app.get("/Usuarios/:ip", async (req, res) => {
 
   try {
     const usuarios = await Usuario.find();
-
+    console.log('USUARIO 1 : ', usuario);
     const usuarioEncontrado = usuarios.find((usuario) => {
-      console.log('USUARIO: ', usuario);
+      console.log('USUARIO 2: ', usuario);
       return bcrypt.compareSync(desencriptedIp, usuario.ip);
     });
 
