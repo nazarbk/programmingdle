@@ -14,6 +14,8 @@ function App() {
         const nuevoUsuario = {
           ip: data,
         };
+
+        console.log('IP A BUSCAR: ', data)
   
         const options = {
           method: 'POST',

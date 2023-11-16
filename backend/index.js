@@ -150,16 +150,12 @@ app.post("/Usuarios", async (req, res) => {
 app.get("/Usuarios/:ip", async (req, res) => {
   const desencriptedIp = req.params.ip;
 
-  console.log('IP a comparar: ', desencriptedIp);
-
   try {
     const usuarios = await Usuario.find();
 
-    const usuarioEncontrado = usuarios.find(async (usuario) => {
-      const comparacion = await bcrypt.compare(desencriptedIp, usuario.hashedIp);
-      return comparacion;
+    const usuarioEncontrado = usuarios.find((usuario) => {
+      return bcrypt.compare(desencriptedIp, usuario.ip);
     });
-    
 
     if (!usuarioEncontrado) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
