@@ -65,17 +65,17 @@ const Logro = () => {
           }
         })
         .then(data => {
-          if (data.ok) {
+          if (data.usuario) {
             console.log('Usuario encontrado:', data.usuario);
-            if(data.usuario.logro !== null && data.usuario.logro.length !== 0){
-              setPersonajeBuscado(data.usuario.logro);
-              setIntentos(data.usuario.logro.length);
+            if(data.usuario[0].logro !== null && data.usuario[0].logro.length !== 0){
+              setPersonajeBuscado(data.usuario[0].logro);
+              setIntentos(data.usuario[0].logro.length);
               setactualizarPersonajes(true);
             }
-            if(data.usuario.nombre != null && data.usuario.nombre.length !== 0){
-              setUsername(data.usuario.nombre)
+            if(data.usuario[0].nombre != null && data.usuario[0].nombre.length !== 0){
+              setUsername(data.usuario[0].nombre)
             }
-              setHasWon(data.usuario.haswonlogro);
+              setHasWon(data.usuario[0].haswonlogro);
           }
         })
         .catch(error => {
@@ -545,7 +545,6 @@ const Logro = () => {
       </div>
       </div>
       )}
-      <Footer/>
     </div>
   );
 }

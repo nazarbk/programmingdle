@@ -825,6 +825,7 @@ a {
 
 .ranking-container {
   position: relative;
+  margin-bottom: 35px;
 }
 
 .popup {
@@ -1219,7 +1220,14 @@ a {
   color: white;
   font-size: 17px;
 }
+#root {
+  flex: 1;
+}
 
-footer{
-  
+footer {
+  margin-top: auto;
+  text-align: center;
+  background-color: #0a1b25;
+  padding: 8px;
+  color: white;
 }

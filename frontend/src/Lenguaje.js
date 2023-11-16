@@ -60,17 +60,17 @@ const Lenguaje = () => {
           }
         })
         .then(data => {
-          if (data.ok) {
+          if (data.usuario) {
             console.log('Usuario encontrado:', data.usuario);
-            if(data.usuario.lenguaje !== null && data.usuario.lenguaje.length !== 0){
-              setLenguajeBuscado(data.usuario.lenguaje);
-              setIntentos(data.usuario.lenguaje.length);
+            if(data.usuario[0].lenguaje !== null && data.usuario[0].lenguaje.length !== 0){
+              setLenguajeBuscado(data.usuario[0].lenguaje);
+              setIntentos(data.usuario[0].lenguaje.length);
               setactualizarPersonajes(true);
             }
-            if(data.usuario.nombre != null && data.usuario.nombre.length != ''){
-                setUsername(data.usuario.nombre)
+            if(data.usuario[0].nombre != null && data.usuario[0].nombre.length != ''){
+                setUsername(data.usuario[0].nombre)
             }
-              setHasWon(data.usuario.haswonlenguaje);
+              setHasWon(data.usuario[0].haswonlenguaje);
           }
         })
         .catch(error => {
@@ -554,7 +554,6 @@ const Lenguaje = () => {
             </div>
             </div>
       )}
-      <Footer/>
     </div>
   );
 } 

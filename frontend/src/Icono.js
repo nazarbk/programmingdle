@@ -65,17 +65,17 @@ const Icono = () => {
           }
         })
         .then(data => {
-          if (data.ok) {
+          if (data.usuario) {
             console.log('Usuario encontrado:', data.usuario);
-            if(data.usuario.framework !== null && data.usuario.framework.length !== 0){
-              setPersonajeBuscado(data.usuario.framework);
-              setIntentos(data.usuario.framework.length);
+            if(data.usuario[0].framework !== null && data.usuario[0].framework.length !== 0){
+              setPersonajeBuscado(data.usuario[0].framework);
+              setIntentos(data.usuario[0].framework.length);
               setactualizarPersonajes(true);
             }
-            if(data.usuario.nombre != null && data.usuario.nombre.length !== 0){
-              setUsername(data.usuario.nombre)
+            if(data.usuario[0].nombre != null && data.usuario[0].nombre.length !== 0){
+              setUsername(data.usuario[0].nombre)
             }
-              setHasWon(data.usuario.haswonframework);
+              setHasWon(data.usuario[0].haswonframework);
           }
         })
         .catch(error => {
@@ -531,7 +531,6 @@ const Icono = () => {
       </div>
       </div>
       )}
-      <Footer/>
     </div>
   );
 }

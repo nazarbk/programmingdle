@@ -25,10 +25,6 @@ function App() {
           body: JSON.stringify(nuevoUsuario),
         };
 
-        const ipToSearch = data;
-
-        console.log('IP: ', ipToSearch);
-
         fetch(`https://programmingdle.onrender.com/Usuarios/${data}`)
           .then(response => {
             console.log('RESPONSE: ', response);
@@ -71,7 +67,6 @@ function App() {
       <div className="App">
         <Header />
         <Modos/>
-        <Footer/>
       </div>
   );
 }

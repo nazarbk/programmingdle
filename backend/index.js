@@ -210,9 +210,9 @@ app.put("/Usuarios/:ip", async (req, res) => {
   try {
     const usuarios = await Usuario.find();
 
-    console.log('USUARIOS CON IP', usuariosConIp);
+    console.log('USUARIOS CON IP', usuarios);
 
-    const usuario = usuariosConIp.find((usuario) => {
+    const usuario = usuarios.find((usuario) => {
       const decryptedIP = decryptIP(usuario.ip, secretKey);
       return decryptedIP === ip;
     });
@@ -223,7 +223,6 @@ app.put("/Usuarios/:ip", async (req, res) => {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
     }
 
-    // Si las IPs coinciden, actualiza el usuario
     const { nombre, clasico, haswonclasico, logro, haswonlogro, lenguaje, haswonlenguaje, framework, haswonframework, rol } = req.body;
     const updatedUsuario = await Usuario.findOneAndUpdate(
       { ip: usuario.ip },

@@ -64,17 +64,17 @@ const Clasico = () => {
           }
         })
         .then(data => {
-          if (data.ok) {
-            console.log('Usuario encontrado:', data);
-            if(data.usuario.clasico !== null && data.usuario.clasico.length !== 0){
-              setPersonajeBuscado(data.usuario.clasico);
-              setIntentos(data.usuario.clasico.length);
+          if (data.usuario) {
+            console.log('Usuario encontrado:', data.usuario[0]);
+            if(data.usuario[0].clasico !== null && data.usuario[0].clasico.length !== 0){
+              setPersonajeBuscado(data.usuario[0].clasico);
+              setIntentos(data.usuario[0].clasico.length);
               setactualizarPersonajes(true);
             }
-            if(data.usuario.nombre != null && data.usuario.nombre.length !== 0){
-              setUsername(data.usuario.nombre)
+            if(data.usuario[0].nombre != null && data.usuario[0].nombre.length !== 0){
+              setUsername(data.usuario[0].nombre)
             }
-              setHasWon(data.usuario.haswonclasico);
+              setHasWon(data.usuario[0].haswonclasico);
           }
         })
         .catch(error => {
@@ -233,7 +233,7 @@ const Clasico = () => {
         return response.json();
       })
       .then(data => {
-        if (data.ok) {
+        if (data) {
           cargarRanking();
           console.log('Usuario actualizado:', data.usuario);
         } else {
@@ -652,9 +652,8 @@ const Clasico = () => {
       </div>
       </div>
       )}
-
-      <Footer/>
     </div>
+    
   );
 }
 
