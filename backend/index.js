@@ -160,8 +160,8 @@ app.get("/Usuarios/:ip", async (req, res) => {
     console.log('USUARIOS CON IP: ', usuariosConIp);
 
     const usuarioEncontrado = usuariosConIp.find((usuario) => {
-      // Compara la IP desencriptada con el hash almacenado
-      return bcrypt.compare(desencriptedIp, usuario.ip);
+       const encontrado =  bcrypt.compare(desencriptedIp, usuario.ip);
+       console.log('ENCONTRADOOOO :', encontrado);
     });
 
     console.log('USUARIO ENCONTRADO: ', usuarioEncontrado);

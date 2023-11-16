@@ -29,6 +29,7 @@ function App() {
 
         fetch(`https://programmingdle.onrender.com/Usuarios/${ipToSearch}`)
           .then(response => {
+            console.log('RESPONSE: ', response);
             if (!response.ok) {
               fetch('https://programmingdle.onrender.com/Usuarios', options)
               .then(response => {
