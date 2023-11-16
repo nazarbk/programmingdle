@@ -132,7 +132,7 @@ const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
 
 //POST
 app.post('/Usuarios', async (req, res) => {
-  const { ip } = req.params.ip;
+  const { ip } = req.body;
 
   console.log('USER IP: ', ip);
 
