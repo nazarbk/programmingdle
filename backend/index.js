@@ -4,6 +4,7 @@ const cors = require("cors");
 const cron = require("node-cron");
 const { ObjectId } = require("mongodb");
 const bcrypt = require("bcrypt");
+const crypto = require('crypto');
 
 //mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/?retryWrites=true&w=majority");
 mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/Programmingdle");
@@ -130,19 +131,26 @@ const usuarioSchema = new mongoose.Schema({
 const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
 
 //POST
-app.post("/Usuarios", async (req, res) => {
-  const { ip } = req.body;
+app.post('/usuarios', async (req, res) => {
+  const { userIP } = req.body;
+
+  if (!userIP) {
+    return res.status(400).json({ error: 'La dirección IP es requerida.' });
+  }
+
+  const encryptedIP = encryptIP(userIP);
 
   try {
-    const hashedIp = await bcrypt.hash(ip, 10);
-
-    const nuevoUsuario = new Usuario({ ip: hashedIp });
+    const nuevoUsuario = new Usuario({
+      encryptedIP,
+    });
 
     await nuevoUsuario.save();
 
-    res.status(201).send({ ok: true, mensaje: "Usuario creado con éxito" });
+    res.status(201).json({ message: 'Dirección IP almacenada con éxito.' });
   } catch (error) {
-    res.status(500).send({ ok: false, error: "Error al crear el usuario" });
+    console.error(error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
   }
 });
 
@@ -298,6 +306,14 @@ app.get("/Frameworks", (req, res) => {
       res.status(500).send({ ok: false, error: "Error obteniendo el icono" });
     });
 });
+
+function encryptIP(ip) {
+  const secretKey = 'SecretKeyProgrammingdle';
+  const cipher = crypto.createCipher('aes-256-cbc', secretKey);
+  let encrypted = cipher.update(ip, 'utf-8', 'hex');
+  encrypted += cipher.final('hex');
+  return encrypted;
+}
 
 
 app.listen(3000, () => {
