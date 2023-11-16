@@ -193,13 +193,15 @@ app.put("/Usuarios/:ip", async (req, res) => {
     const usuarios = await Usuario.find();
 
     // Filtra los usuarios que tienen una IP antes de intentar compararla
-    const usuariosConIp = usuarios.filter((usuario) => usuario.ip);
+    const usuariosConIp = usuarios.filter((usuario) => usuario.ip && usuario.ip !== null);
+
+    console.log('USUARIOS CON IP', usuariosConIp);
 
     const usuario = usuariosConIp.find((usuario) => {
       return bcrypt.compare(ipParametro, usuario.ip);
     });
 
-    console.log('USUARIO A ACTUALIZAR: '. usuario);
+    console.log('USUARIO A ACTUALIZAR: ', usuario);
 
     if (!usuario) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
