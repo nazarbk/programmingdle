@@ -132,15 +132,15 @@ const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
 
 //POST
 app.post('/Usuarios', async (req, res) => {
-  const { userIP } = req.params.ip;
+  const { ip } = req.params.ip;
 
-  console.log('USER IP: ', userIP);
+  console.log('USER IP: ', ip);
 
-  if (!userIP) {
+  if (!ip) {
     return res.status(400).json({ error: 'La dirección IP es requerida.' });
   }
 
-  const encryptedIP = encryptIP(userIP);
+  const encryptedIP = encryptIP(ip);
   console.log('ENCRYPTED IP: ', encryptedIP);
 
   try {
