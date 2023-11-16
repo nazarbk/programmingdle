@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CountdownClock from './CountdownClock';
 import Header from './Header';
 import { Link } from 'react-router-dom';
+import Footer from './Footer';
 
 const Lenguaje = () => {
     const [lenguajes, setLenguajes] = useState([]);
@@ -553,6 +554,7 @@ const Lenguaje = () => {
             </div>
             </div>
       )}
+      <Footer/>
     </div>
   );
 } 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CountdownClock from './CountdownClock';
 import Header from './Header';
 import { Link } from 'react-router-dom';
+import Footer from './Footer';
 
 const Clasico = () => {
   const [personajes, setPersonajes] = useState([]);
@@ -650,6 +651,8 @@ const Clasico = () => {
       </div>
       </div>
       )}
+
+      <Footer/>
     </div>
   );
 }

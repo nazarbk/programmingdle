@@ -3,6 +3,7 @@ import Header from './Header';
 import { useState, useEffect } from 'react';
 import CountdownClock from './CountdownClock';
 import { Link } from 'react-router-dom';
+import Footer from './Footer';
 
 import { BiCodeBlock, BiLogoTypescript, BiLogoMongodb, BiLogoJava, BiLogoGoLang, BiLogoVisualStudio, BiLogoUnity, BiLogoPhp, BiLogoGithub, BiLogoAngular, BiLogoCodepen, BiLogoHtml5, BiLogoJavascript, BiLogoVuejs, BiLogoReact, BiLogoBootstrap, BiLogoBlender, BiLogoSpringBoot, BiLogoTux, BiLogoMarkdown, BiLogoPython, BiLogoFirebase, BiLogoCPlusPlus, BiLogoLess} from 'react-icons/bi';
 const Icono = () => {
@@ -530,6 +531,7 @@ const Icono = () => {
       </div>
       </div>
       )}
+      <Footer/>
     </div>
   );
 }

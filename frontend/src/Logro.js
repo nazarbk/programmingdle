@@ -3,6 +3,7 @@ import Header from './Header';
 import { useState, useEffect } from 'react';
 import CountdownClock from './CountdownClock';
 import { Link } from 'react-router-dom';
+import Footer from './Footer';
 
 const Logro = () => {
   const [personajes, setPersonajes] = useState([]);
@@ -544,6 +545,7 @@ const Logro = () => {
       </div>
       </div>
       )}
+      <Footer/>
     </div>
   );
 }

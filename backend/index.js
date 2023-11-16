@@ -199,6 +199,8 @@ app.put("/Usuarios/:ip", async (req, res) => {
       return bcrypt.compare(ipParametro, usuario.ip);
     });
 
+    console.log('USUARIO A ACTUALIZAR: '. usuario);
+
     if (!usuario) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
     }

@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './Header';
 import Modos from './Modos';
 import { useEffect } from 'react';
+import Footer from './Footer';
 
 function App() {
 
@@ -65,6 +66,7 @@ function App() {
       <div className="App">
         <Header />
         <Modos/>
+        <Footer/>
       </div>
   );
 }
