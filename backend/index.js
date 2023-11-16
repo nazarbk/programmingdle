@@ -146,26 +146,17 @@ app.post("/Usuarios", async (req, res) => {
   }
 });
 
+// Buscar usuario por IP
 app.get("/Usuarios/:ip", async (req, res) => {
   const desencriptedIp = req.params.ip;
 
-  console.log('IP a buscar: ', desencriptedIp);
-
   try {
     const usuarios = await Usuario.find();
-    console.log('USUARIOS ALMACENADOS: ', usuarios);
 
-    // Filtra los usuarios que tienen una IP no nula
-    const usuariosConIp = usuarios.filter((usuario) => usuario.ip !== null);
-    console.log('USUARIOS CON IP: ', usuariosConIp);
-
-    const usuarioEncontrado = usuariosConIp.find((usuario) => {
-       const encontrado =  bcrypt.compare(desencriptedIp, usuario.ip);
-       console.log('ENCONTRADOOOO :', encontrado);
-       return encontrado;
+    // Iterar sobre los usuarios y verificar la dirección IP desencriptada
+    const usuarioEncontrado = usuarios.find((usuario) => {
+      return bcrypt.compare(desencriptedIp, usuario.ip);
     });
-
-    console.log('USUARIO ENCONTRADO: ', usuarioEncontrado);
 
     if (!usuarioEncontrado) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
@@ -176,6 +167,7 @@ app.get("/Usuarios/:ip", async (req, res) => {
     res.status(500).send({ ok: false, error: "Error al buscar el usuario" });
   }
 });
+
 
 
 
