@@ -148,18 +148,22 @@ app.post("/Usuarios", async (req, res) => {
 
 // Buscar usuario por IP
 app.get("/Usuarios/:ip", async (req, res) => {
-  const desencriptedIp = req.params.ip;
+  let desencriptedIp = req.params.ip;
+  var existe = false;
 
   console.log('USUARIO 1 : ', usuario);
   console.log('desencrypted : ', req.params.ip);
   try {
-    const usuarios = await Usuario.find();
-    console.log('USUARIO 2 : ', usuario);
-    const usuarioEncontrado = usuarios.find((usuario) => {
-      return bcrypt.compareSync(desencriptedIp, usuario.ip);
-    });
+    let usuarios = await Usuario.find();
 
-    if (!usuarioEncontrado) {
+    for (var i = 0; i < usuarios.length; i++) {
+      if (bcrypt.compareSync(desencriptedIp, usuarios[i].ip)) {
+          existe = true;
+          break;
+      }
+    }
+
+    if (!existe) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
     }
 
