@@ -53,9 +53,9 @@ function App() {
           })
           .then(data => {
             if (data) {
-              console.log('Usuario encontrado:', data.usuariosCoincidentes);
+              console.log('Usuario encontrado:', data.usuario);
             } else {
-              console.log('Usuario NO encontrado:', data.usuariosCoincidentes);
+              console.log('Usuario NO encontrado:', data.usuario);
             }
           })
           .catch(error => {

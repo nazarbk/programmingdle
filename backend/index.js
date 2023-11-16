@@ -173,13 +173,13 @@ app.get('/Usuarios/:ip', async (req, res) => {
   try {
     const usuarios = await Usuario.find();
 
-    const usuariosCoincidentes = usuarios.filter(usuario => {
+    const usuario = usuarios.filter(usuario => {
       const decryptedIP = decryptIP(usuario.ip, secretKey);
       return decryptedIP === ip;
     });
 
-    if (usuariosCoincidentes.length > 0) {
-      res.status(200).json({ message: 'Dirección IP encontrada en usuarios:', usuariosCoincidentes });
+    if (usuario.length > 0) {
+      res.status(200).json({ message: 'Dirección IP encontrada en usuarios:', usuario });
     } else {
       res.status(404).json({ message: 'Dirección IP no encontrada en usuarios.' });
     }

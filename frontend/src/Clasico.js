@@ -58,13 +58,14 @@ const Clasico = () => {
         fetch(`https://programmingdle.onrender.com/Usuarios/${ipToSearch}`)
         .then(response => {
           if (!response.ok) {
+            console.log('Usuario encontrado:', response);
           } else {
             return response.json();
           }
         })
         .then(data => {
           if (data.ok) {
-            console.log('Usuario encontrado:', data.usuario);
+            console.log('Usuario encontrado:', data);
             if(data.usuario.clasico !== null && data.usuario.clasico.length !== 0){
               setPersonajeBuscado(data.usuario.clasico);
               setIntentos(data.usuario.clasico.length);
