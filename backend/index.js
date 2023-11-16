@@ -154,7 +154,8 @@ app.get("/Usuarios/:ip", async (req, res) => {
     const usuarios = await Usuario.find();
 
     const usuarioEncontrado = usuarios.find((usuario) => {
-      return bcrypt.compare(desencriptedIp, usuario.ip);
+      console.log('USUARIO: ', usuario);
+      return bcrypt.compareSync(desencriptedIp, usuario.ip);
     });
 
     if (!usuarioEncontrado) {
@@ -166,9 +167,6 @@ app.get("/Usuarios/:ip", async (req, res) => {
     res.status(500).send({ ok: false, error: "Error al buscar el usuario" });
   }
 });
-
-
-
 
 //Ranking de clasico
 app.get("/Usuarios", (req, res) => {

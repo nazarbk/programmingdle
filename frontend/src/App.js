@@ -25,11 +25,11 @@ function App() {
           body: JSON.stringify(nuevoUsuario),
         };
 
-        const ipToSearch = data.toString();
+        const ipToSearch = data;
 
         console.log('IP: ', ipToSearch);
 
-        fetch(`https://programmingdle.onrender.com/Usuarios/${ipToSearch}`)
+        fetch(`https://programmingdle.onrender.com/Usuarios/${'hola'}`)
           .then(response => {
             console.log('RESPONSE: ', response);
             if (!response.ok) {
