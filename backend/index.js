@@ -161,7 +161,6 @@ app.post('/Usuarios', async (req, res) => {
 });
 
 // Buscar usuario por IP
-// GET para comparar una dirección IP sin encriptar con las IP encriptadas en la base de datos
 app.get('/Usuarios/:ip', async (req, res) => {
   const { ip } = req.params;
 
@@ -172,10 +171,8 @@ app.get('/Usuarios/:ip', async (req, res) => {
   }
 
   try {
-    // Buscar todos los usuarios con sus IP encriptadas
     const usuarios = await Usuario.find();
 
-    // Realizar la comparación con cada usuario
     const usuariosCoincidentes = usuarios.filter(usuario => {
       const decryptedIP = decryptIP(usuario.ip, secretKey);
       return decryptedIP === ip;
