@@ -29,7 +29,7 @@ function App() {
 
         console.log('IP: ', ipToSearch);
 
-        fetch(`https://programmingdle.onrender.com/Usuarios/${'hola'}`)
+        fetch(`https://programmingdle.onrender.com/Usuarios/${data}`)
           .then(response => {
             console.log('RESPONSE: ', response);
             if (!response.ok) {

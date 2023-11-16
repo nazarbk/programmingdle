@@ -150,11 +150,12 @@ app.post("/Usuarios", async (req, res) => {
 app.get("/Usuarios/:ip", async (req, res) => {
   const desencriptedIp = req.params.ip;
 
+  console.log('USUARIO 1 : ', usuario);
+  console.log('desencrypted : ', req.params.ip);
   try {
     const usuarios = await Usuario.find();
-    console.log('USUARIO 1 : ', usuario);
+    console.log('USUARIO 2 : ', usuario);
     const usuarioEncontrado = usuarios.find((usuario) => {
-      console.log('USUARIO 2: ', usuario);
       return bcrypt.compareSync(desencriptedIp, usuario.ip);
     });
 
