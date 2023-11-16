@@ -32,6 +32,8 @@ function App() {
             if (!response.ok) {
               fetch('https://programmingdle.onrender.com/Usuarios', options)
               .then(response => {
+                console.log('RESPONSE: ', response);
+
                 if (!response.ok) {
                   throw new Error('La solicitud no pudo ser completada.');
                 }
