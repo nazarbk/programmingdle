@@ -150,10 +150,10 @@ app.post("/Usuarios", async (req, res) => {
 app.get("/Usuarios/:ip", async (req, res) => {
   let desencriptedIp = req.params.ip;
   var existe = false;
-  
+
   try {
     let usuarios = await Usuario.find();
-
+    console.log('IP USUARIO 1: ', usuarios[0].ip);
     for (var i = 0; i < usuarios.length; i++) {
       if (bcrypt.compareSync(desencriptedIp, usuarios[i].ip)) {
           existe = true;
