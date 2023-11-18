@@ -138,6 +138,12 @@ cron.schedule('* * * * *', async () => {
 
     await Personaje.updateMany({}, { $set: { deldia: false, deldialogro: false } });
     console.log('Campos "deldia" y "deldialogro" actualizados para todos los personajes.');
+
+    const personajes = await Personaje.aggregate([{ $sample: { size: 2 } }]);
+    
+    await Personaje.updateOne({ _id: personajes[0]._id }, { $set: { deldia: true } });
+    
+    await Personaje.updateOne({ _id: personajes[1]._id }, { $set: { deldialogro: true } });
   } catch (error) {
     console.error('Error al eliminar usuarios:', error);
   }
