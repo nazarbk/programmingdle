@@ -10,18 +10,6 @@ const secretKey = 'SecretKeyProgrammingdle';
 //mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/?retryWrites=true&w=majority");
 mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/Programmingdle");
 
-cron.schedule('0 0 * * *', async () => {
-  try {
-    // Eliminar todos los usuarios de la colección
-    await Usuario.deleteMany({});
-    console.log('Usuarios eliminados exitosamente.');
-  } catch (error) {
-    console.error('Error al eliminar usuarios:', error);
-  }
-});
-setInterval(() => {}, 1000);
-
-
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -141,6 +129,18 @@ const usuarioSchema = new mongoose.Schema({
 });
 
 const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
+
+cron.schedule('* * * * *', async () => {
+  console.log('ME EJECUTO PUTO');
+  try {
+    await Usuario.deleteMany({});
+    console.log('Usuarios eliminados exitosamente.');
+  } catch (error) {
+    console.error('Error al eliminar usuarios:', error);
+  }
+});
+
+
 
 //POST
 app.post('/Usuarios', async (req, res) => {
