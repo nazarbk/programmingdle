@@ -139,13 +139,32 @@ cron.schedule('* * * * *', async () => {
     await Personaje.updateMany({}, { $set: { deldia: false, deldialogro: false } });
     console.log('Campos "deldia" y "deldialogro" actualizados para todos los personajes.');
 
+    //Seleccionar un personaje random para clasico y para logro 
     const personajes = await Personaje.aggregate([{ $sample: { size: 2 } }]);
-
-    console.log('Personajes: ', personajes);
 
     await Personaje.updateOne({ nombre: personajes[0].nombre }, { $set: { deldia: true } });
     
     await Personaje.updateOne({ nombre: personajes[1].nombre }, { $set: { deldialogro: true } });
+
+    console.log('Personajes: ', personajes);
+    
+    //Seleccionar un lenguaje random
+    await Lenguaje.updateMany({}, { $set: { deldia: false } });
+
+    const lenguajes = await Lenguaje.aggregate([{ $sample: { size: 1 } }]);
+
+    await Lenguaje.updateOne({ nombre: lenguajes[0].nombre }, { $set: { deldia: true } });
+
+    console.log('Lenguaje: ', lenguajes);
+
+    //Seleccionar un icono random
+    await Framework.updateMany({}, { $set: { deldia: false } });
+
+    const iconos = await Framework.aggregate([{ $sample: { size: 1 } }]);
+
+    await Framework.updateOne({ nombre: iconos[0].nombre }, { $set: { deldia: true } });
+
+    console.log('Icono: ', iconos);
   } catch (error) {
     console.error('Error al eliminar usuarios:', error);
   }
