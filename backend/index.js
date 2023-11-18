@@ -130,7 +130,7 @@ const usuarioSchema = new mongoose.Schema({
 
 const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('0 0 * * *', async () => {
   console.log('ME EJECUTO PUTO');
   try {
     await Usuario.deleteMany({});
@@ -165,6 +165,7 @@ cron.schedule('* * * * *', async () => {
     await Framework.updateOne({ nombre: iconos[0].nombre }, { $set: { deldia: true } });
 
     console.log('Icono: ', iconos);
+
   } catch (error) {
     console.error('Error al eliminar usuarios:', error);
   }
