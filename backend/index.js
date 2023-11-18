@@ -141,7 +141,11 @@ cron.schedule('* * * * *', async () => {
 
     const personajes = await Personaje.aggregate([{ $sample: { size: 2 } }]);
 
-    console.log('Personajes: ', personajes)
+    console.log('Personajes: ', personajes);
+
+    await Personaje.updateOne({ nombre: personajes[0].nombre }, { $set: { deldia: true } });
+    
+    await Personaje.updateOne({ nombre: personajes[1].nombre }, { $set: { deldialogro: true } });
   } catch (error) {
     console.error('Error al eliminar usuarios:', error);
   }
