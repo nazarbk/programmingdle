@@ -11,6 +11,7 @@ import Logro from './Logro';
 import Lenguaje from './Lenguaje';
 import Sugerencia from './Sugerencia';
 import Icono from './Icono';
+import Gestion from './Gestion';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "/sugerencia",
     element: <Sugerencia/>
+  },
+  {
+    path: "/gestion",
+    element: <Gestion/>
   }
 ]);
 

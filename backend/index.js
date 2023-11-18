@@ -10,6 +10,17 @@ const secretKey = 'SecretKeyProgrammingdle';
 //mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/?retryWrites=true&w=majority");
 mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/Programmingdle");
 
+cron.schedule('0 0 * * *', async () => {
+  try {
+    // Eliminar todos los usuarios de la colección
+    await Usuario.deleteMany({});
+    console.log('Usuarios eliminados exitosamente.');
+  } catch (error) {
+    console.error('Error al eliminar usuarios:', error);
+  }
+});
+setInterval(() => {}, 1000);
+
 
 const app = express();
 app.use(express.json());
@@ -236,6 +247,7 @@ app.put("/Usuarios/:ip", async (req, res) => {
   }
 });
 
+//SUGERENCIAS
 
 //Personajessugerencia
 const sugerenciaSchema = new mongoose.Schema({
@@ -294,6 +306,8 @@ app.post("/Sugerencias", async (req, res) => {
     res.status(500).send({ ok: false, error: "Error al crear la sugerencia", detalle: error.message });
   }
 });
+
+//ICONOS
 
 const frameworkSchema = new mongoose.Schema({
   nombre: String ,

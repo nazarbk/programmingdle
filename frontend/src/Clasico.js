@@ -233,7 +233,7 @@ const Clasico = () => {
         return response.json();
       })
       .then(data => {
-        if (data) {
+        if (data.ok) {
           cargarRanking();
           console.log('Usuario actualizado:', data.usuario);
         } else {
@@ -555,7 +555,7 @@ const Clasico = () => {
             </thead>
             <tbody>
               {personajeBuscado.map((buscado, index) => (
-                <tr className='intentostabla'>
+                <tr className='intentostabla' id='intentodetabla'>
                   <td className={buscado.coincidencias.nombre ? 'blue_cell' : 'blue_cell'}>{buscado.personaje.nombre}</td>
                   <td className={buscado.coincidencias.genero ? 'green_cell' : 'red_cell'}>{buscado.personaje.genero}</td>
                   <td className={buscado.coincidencias.ambito ? 'green_cell' : (buscado.coincidencias.ambito === false && (personajeDelDia.ambito.toLowerCase().includes(buscado.personaje.ambito.toLowerCase()) || buscado.personaje.ambito.toLowerCase().includes(personajeDelDia.ambito.toLowerCase()))) ? 'yellow_cell' : 'red_cell'}>{buscado.personaje.ambito}</td>
