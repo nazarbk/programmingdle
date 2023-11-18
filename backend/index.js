@@ -135,12 +135,13 @@ cron.schedule('* * * * *', async () => {
   try {
     await Usuario.deleteMany({});
     console.log('Usuarios eliminados exitosamente.');
+
+    await Personaje.updateMany({}, { $set: { deldia: false, deldialogro: false } });
+    console.log('Campos "deldia" y "deldialogro" actualizados para todos los personajes.');
   } catch (error) {
     console.error('Error al eliminar usuarios:', error);
   }
 });
-
-
 
 //POST
 app.post('/Usuarios', async (req, res) => {
