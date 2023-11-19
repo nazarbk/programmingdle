@@ -39,8 +39,6 @@ const Gestion = () => {
 
     const handleAddClick = async (index) => {
         const personajeToAdd = personajes[index];
-
-        console.log('HOLA');
     
         try {
           const response = await fetch('https://programmingdle.onrender.com/Personajes', {
@@ -56,10 +54,8 @@ const Gestion = () => {
             throw new Error('La solicitud POST para agregar el personaje no fue exitosa.');
           }
 
-            const responseData = await response.json();
-            const nuevoPersonajeId = responseData.id;
-
-            // Realizar una solicitud DELETE para eliminar la sugerencia por su ID
+            const nuevoPersonajeId = personajeToAdd._id;
+            console.log('PERSONAJE ID: ', personajeToAdd._id);
             const deleteResponse = await fetch(`https://programmingdle.onrender.com/Sugerencias/${nuevoPersonajeId}`, {
                 method: 'DELETE',
             });

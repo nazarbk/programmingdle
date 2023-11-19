@@ -370,23 +370,22 @@ app.post("/Sugerencias", async (req, res) => {
 });
 
 app.delete("/Sugerencias/:id", async (req, res) => {
-  const idSugerencia = req.params.id;
+  const sugerenciaId = req.params.id;
 
   try {
-    const sugerencia = await Sugerencia.findById(idSugerencia);
+      const resultado = await Sugerencia.deleteOne({ _id: sugerenciaId });
 
-    if (!sugerencia) {
-      return res.status(404).send({ ok: false, error: "Sugerencia no encontrada" });
-    }
-
-    await sugerencia.remove();
-
-    res.status(200).send({ ok: true, mensaje: "Sugerencia eliminada con éxito" });
+      if (resultado.deletedCount === 0) {
+          res.status(404).send({ ok: false, error: "Sugerencia no encontrada" });
+      } else {
+          res.status(200).send({ ok: true, mensaje: "Sugerencia eliminada con éxito" });
+      }
   } catch (error) {
-    console.error("Error al eliminar la sugerencia:", error);
-    res.status(500).send({ ok: false, error: "Error al eliminar la sugerencia", detalle: error.message });
+      console.error("Error al eliminar la sugerencia:", error);
+      res.status(500).send({ ok: false, error: "Error al eliminar la sugerencia", detalle: error.message });
   }
 });
+
 
 //ICONOS
 
