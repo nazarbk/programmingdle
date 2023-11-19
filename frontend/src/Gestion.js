@@ -39,6 +39,8 @@ const Gestion = () => {
 
     const handleAddClick = async (index) => {
         const personajeToAdd = personajes[index];
+
+        console.log('HOLA');
     
         try {
           const response = await fetch('https://programmingdle.onrender.com/Personajes', {
@@ -50,6 +52,7 @@ const Gestion = () => {
           });
     
           if (!response.ok) {
+            console.log('RESPONSE: ', response);
             throw new Error('La solicitud POST para agregar el personaje no fue exitosa.');
           }
 
@@ -81,7 +84,7 @@ const Gestion = () => {
             
             {showContent ? (
                 <div>
-                    <h2 className='gestiontitle'><i class='bx bx-user-pin'></i> Últimos personajes sugeridos</h2>
+                    <h2 className='gestiontitle'><i className='bx bx-user-pin'></i> Últimos personajes sugeridos</h2>
                     <div className="personajes-row">
                     {personajes.slice(0, 6).map((personaje, index) => (
                     <div key={index} className="personaje-card">
@@ -134,7 +137,7 @@ const Gestion = () => {
                         />
                         
                         <div className='botones-container'>
-                            <button className='delete' type="button" onClick={handleAddClick}><i className='bx bx-trash'></i></button>
+                            <button className='delete' type="button" onClick={() => handleAddClick(index)}><i className='bx bx-trash'></i></button>
                             <button className='add' type="button"><i className='bx bxs-user-plus'></i></button>
                         </div>
                     </div>

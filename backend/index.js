@@ -18,7 +18,6 @@ app.set('trust proxy', true);
 
 //Personajes
 const personajeSchema = new mongoose.Schema({
-_id: Number,
 nombre: String ,
 genero: String,
 ambito: String,
