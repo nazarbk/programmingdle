@@ -37,6 +37,43 @@ const Gestion = () => {
         setPersonajes(updatedPersonajes);
     };
 
+    const handleAddClick = async (index) => {
+        const personajeToAdd = personajes[index];
+    
+        try {
+          const response = await fetch('https://programmingdle.onrender.com/Personajes', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(personajeToAdd),
+          });
+    
+          if (!response.ok) {
+            throw new Error('La solicitud POST para agregar el personaje no fue exitosa.');
+          }
+
+            const responseData = await response.json();
+            const nuevoPersonajeId = responseData.id;
+
+            // Realizar una solicitud DELETE para eliminar la sugerencia por su ID
+            const deleteResponse = await fetch(`https://programmingdle.onrender.com/Sugerencias/${nuevoPersonajeId}`, {
+                method: 'DELETE',
+            });
+
+            if (!deleteResponse.ok) {
+                console.error('Error al eliminar la sugerencia después de agregar el personaje:', deleteResponse.status);
+            }
+    
+            // Eliminar el personaje de la lista local
+            const updatedPersonajes = [...personajes];
+            updatedPersonajes.splice(index, 1);
+            setPersonajes(updatedPersonajes);
+        } catch (error) {
+          console.error('Error al agregar el personaje:', error);
+        }
+      };
+
     return(
         <div className='clasico'>
             <Header/>
@@ -97,7 +134,7 @@ const Gestion = () => {
                         />
                         
                         <div className='botones-container'>
-                            <button className='delete' type="button"><i className='bx bx-trash'></i></button>
+                            <button className='delete' type="button" onClick={handleAddClick}><i className='bx bx-trash'></i></button>
                             <button className='add' type="button"><i className='bx bxs-user-plus'></i></button>
                         </div>
                     </div>

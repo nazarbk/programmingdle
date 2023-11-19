@@ -50,6 +50,40 @@ app.get("/Personajes", (req, res) => {
     });
 });
 
+//post
+app.post("/Personajes", async (req, res) => {
+  const {
+    nombre,
+    genero,
+    ambito,
+    adjetivo,
+    año,
+    dato,
+    pista,
+    pais
+  } = req.body;
+
+  try {
+    const nuevoPersonaje = new Personaje({
+      nombre,
+      genero,
+      ambito,
+      adjetivo,
+      año,
+      dato,
+      pista,
+      pais
+    });
+
+    await nuevoPersonaje.save();
+
+    res.status(201).send({ ok: true, mensaje: "Personaje creada con éxito" });
+  } catch (error) {
+    console.error("Error al crear el personaje:", error);
+    res.status(500).send({ ok: false, error: "Error al crear el personaje", detalle: error.message });
+  }
+});
+
 //Lenguajes
 const lenguajeSchema = new mongoose.Schema({
   _id: Number,
@@ -333,6 +367,25 @@ app.post("/Sugerencias", async (req, res) => {
   } catch (error) {
     console.error("Error al crear la sugerencia:", error);
     res.status(500).send({ ok: false, error: "Error al crear la sugerencia", detalle: error.message });
+  }
+});
+
+app.delete("/Sugerencias/:id", async (req, res) => {
+  const idSugerencia = req.params.id;
+
+  try {
+    const sugerencia = await Sugerencia.findById(idSugerencia);
+
+    if (!sugerencia) {
+      return res.status(404).send({ ok: false, error: "Sugerencia no encontrada" });
+    }
+
+    await sugerencia.remove();
+
+    res.status(200).send({ ok: true, mensaje: "Sugerencia eliminada con éxito" });
+  } catch (error) {
+    console.error("Error al eliminar la sugerencia:", error);
+    res.status(500).send({ ok: false, error: "Error al eliminar la sugerencia", detalle: error.message });
   }
 });
 

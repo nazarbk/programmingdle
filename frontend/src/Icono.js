@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './Header';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import CountdownClock from './CountdownClock';
 import { Link } from 'react-router-dom';
 import Footer from './Footer';
@@ -28,6 +28,7 @@ const Icono = () => {
   const [showContent, setShowContent] = useState(false);
   const [loading, setLoading] = useState(true);
   const [popupVisible, setPopupVisible] = useState(false);
+  const containerRef = useRef(null);
 
   const iconComponents = {
     BiCodeBlock, BiLogoTypescript, BiLogoMongodb, BiLogoJava, BiLogoGoLang, BiLogoVisualStudio, BiLogoUnity, BiLogoPhp, BiLogoGithub, BiLogoAngular, BiLogoCodepen, BiLogoHtml5, BiLogoJavascript, BiLogoVuejs, BiLogoReact, BiLogoBootstrap, BiLogoBlender, BiLogoSpringBoot, BiLogoTux, BiLogoMarkdown, BiLogoPython, BiLogoFirebase, BiLogoCPlusPlus, BiLogoLess
@@ -111,9 +112,11 @@ const Icono = () => {
       setPersonajeBuscado([...personajeBuscado, { personaje, coincidencias }]);
       setCoincidencias(coincidencias);
       eliminarPersonaje(busqueda);
-      setaactualizarUser(true);
+      setaactualizarUser(true); 
 
-      console.log('COINCIDENCIA: ', coincidencias);
+      if (containerRef.current) {
+        containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
 
       if(coincidencias.nombre === true){
         setHasWon(true);
@@ -249,41 +252,46 @@ const Icono = () => {
       return response.json();
     })
     .then(data => {
-        const nombreUsuarioExistente = data.usuarios.some(usuario => usuario.nombre === nombreusuario);
-
-        if(!nombreUsuarioExistente){
-          setUsername(nombreusuario);
-
-          const datosActualizacion = {
-            nombre: nombreusuario
-          };
-
-          fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(datosActualizacion),
-          })
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('La solicitud no pudo ser completada.');
-              }
-              return response.json();
-            })
-            .then(data => {
-              if (data.ok) {
-                console.log('Usuario actualizado:', data.usuario);
-                cargarRanking();
-              } else {
-                console.log('Usuario no encontrado:', data.mensaje);
-              }
-            })
-            .catch(error => {
-              console.error('Error al actualizar el usuario:', error);
-            });
+      console.log('NOMBRE USUARIO: ', nombreusuario)
+        if(nombreusuario === null || nombreusuario.length === 0){
+          alert('El nombre de usuario no puede ser vacío');
         }else{
-          alert('El nombre de usuario ya existe');
+          const nombreUsuarioExistente = data.usuarios.some(usuario => usuario.nombre === nombreusuario);
+
+          if(!nombreUsuarioExistente){
+            setUsername(nombreusuario);
+  
+            const datosActualizacion = {
+              nombre: nombreusuario
+            };
+  
+            fetch(`https://programmingdle.onrender.com/Usuarios/${ipToUpdate}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(datosActualizacion),
+            })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('La solicitud no pudo ser completada.');
+                }
+                return response.json();
+              })
+              .then(data => {
+                if (data.ok) {
+                  console.log('Usuario actualizado:', data.usuario);
+                  cargarRanking();
+                } else {
+                  console.log('Usuario no encontrado:', data.mensaje);
+                }
+              })
+              .catch(error => {
+                console.error('Error al actualizar el usuario:', error);
+              });
+          }else{
+            alert('El nombre de usuario ya existe');
+          }
         }
     })
     .catch(error => {
@@ -459,7 +467,7 @@ const Icono = () => {
         </div>
 
         {personajeBuscado.length > 0 && (
-          <div className="tabla">
+          <div className="tabla" ref={containerRef}>
             <table className='tablaresultados'>
               <thead>
                 <tr>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import CountdownClock from './CountdownClock';
 import Header from './Header';
 import { Link } from 'react-router-dom';
@@ -26,6 +26,7 @@ const Lenguaje = () => {
     const [showContent, setShowContent] = useState(false);
     const [loading, setLoading] = useState(true);
     const [popupVisible, setPopupVisible] = useState(false);
+    const containerRef = useRef(null);
 
     useEffect(() => {
         fetch('https://programmingdle.onrender.com/Lenguajes')
@@ -112,7 +113,9 @@ const Lenguaje = () => {
             eliminarLenguaje(busqueda);
             setaactualizarUser(true);
 
-            console.log('COINCIDENCIA: ', coincidencias);
+            if (containerRef.current) {
+              containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
 
             if(coincidencias.lenguaje === true){
               setHasWon(true);
@@ -238,20 +241,24 @@ const Lenguaje = () => {
 
     const actualizarNombreUsuario = () => {
       fetch('https://programmingdle.onrender.com/Usuarios', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('La solicitud no pudo ser completada.');
-        }
-        return response.json();
-      })
-      .then(data => {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('La solicitud no pudo ser completada.');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('NOMBRE USUARIO: ', nombreusuario)
+        if(nombreusuario === null || nombreusuario.length === 0){
+          alert('El nombre de usuario no puede ser vacío');
+        }else{
           const nombreUsuarioExistente = data.usuarios.some(usuario => usuario.nombre === nombreusuario);
-  
+
           if(!nombreUsuarioExistente){
             setUsername(nombreusuario);
   
@@ -286,10 +293,11 @@ const Lenguaje = () => {
           }else{
             alert('El nombre de usuario ya existe');
           }
-      })
-      .catch(error => {
-        console.error('Error al obtener usuarios:', error);
-      });
+        }
+    })
+    .catch(error => {
+      console.error('Error al obtener usuarios:', error);
+    });
     };
 
     if(actualizarUser){
@@ -482,7 +490,7 @@ const Lenguaje = () => {
             </div>
 
             {lenguajeBuscado.length > 0 && (
-            <div className="tabla">
+            <div className="tabla" ref={containerRef}>
                 <table className='tablaresultados'>
                 <thead>
                     <tr>

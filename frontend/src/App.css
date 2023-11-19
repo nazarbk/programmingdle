@@ -851,6 +851,7 @@ a {
   background-color: #0E3650;
   border: 4px solid #419197;
   border-radius: 15px;
+  transition: .3s ease;
 }
 
 .popup input::placeholder{
@@ -1243,11 +1244,18 @@ footer {
 }
 
 .personajes-row {
-  display: flex;
-  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  gap: 45px;
 }
 
 .personaje-card {
+
+  position: relative;
+  overflow: hidden;
+  display: flex;
+
   flex: 1;
   margin-right: 20px; 
   margin-left: 20px;
@@ -1293,13 +1301,15 @@ footer {
 .botones-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px; /* Ajusta el margen según sea necesario */
+  margin-top: 10px;
 }
 
 .botones-container button{
   padding: 10px;
   font-size: 22px;
   text-align: center;
+
+  transition: .3s ease;
 }
 
 .delete{
