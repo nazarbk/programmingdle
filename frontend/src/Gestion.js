@@ -322,8 +322,8 @@ const Gestion = () => {
           const nuevoLenguaje = {
             lenguaje,
             codigo,
-            dato,
-            pista,
+            datocodigo,
+            pistacodigo,
           };
     
           fetch('https://programmingdle.onrender.com/Lenguajes', {

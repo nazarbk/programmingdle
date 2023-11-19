@@ -112,16 +112,16 @@ app.post("/Lenguajes", async (req, res) => {
   const {
     lenguaje,
     codigo,
-    dato,
-    pista
+    datocodigo,
+    pistacodigo 
   } = req.body;
 
   try {
     const nuevoLenguaje = new Lenguaje({
       lenguaje,
       codigo,
-      dato,
-      pista
+      dato: datocodigo,
+      pista: pistacodigo 
     });
 
     await nuevoLenguaje.save();
@@ -439,16 +439,16 @@ app.get("/Frameworks", (req, res) => {
 
 app.post("/Frameworks", async (req, res) => {
   const {
-    nombre,
+    nombretecnologia,
     icono,
-    dato
+    datoicono,
   } = req.body;
 
   try {
     const nuevoIcono = new Framework({
-      nombre,
+      nombre: nombretecnologia,
       icono,
-      dato
+      dato: datoicono
     });
 
     await nuevoIcono.save();
