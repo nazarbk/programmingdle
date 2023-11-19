@@ -1245,7 +1245,7 @@ footer {
 
 .personajes-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   align-items: center;
   gap: 45px;
 }
@@ -1281,6 +1281,7 @@ footer {
   margin: 20px;
   border-bottom: 2px solid white;
   padding-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .personaje-card label {
@@ -1289,13 +1290,19 @@ footer {
   color: #F5FCCD;
 }
 
-.personaje-card input {
+.personaje-card input,
+.personaje-card select{
   font-size: 20px;
   margin-bottom: 10px;
   padding: 5px;
 
   border: 3.5px solid #0E3650;
   border-radius: 12px;
+}
+
+.personaje-card h3{
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .botones-container {
@@ -1336,4 +1343,56 @@ footer {
   background-color: #296445;
   border: 3.5px solid #5CB988;
   cursor: pointer;
+}
+
+.personaje-card2 {
+
+  position: relative;
+  overflow: hidden;
+  display: flex;
+
+  flex: 1;
+  margin-right: 20px; 
+  margin-left: 20px;
+  border: 1px solid #ddd; 
+  padding: 20px; 
+
+  border: 4px solid #419197;
+  border-radius: 15px;
+  background-color: #0a1b25;
+  
+  font-size: 20px;
+
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+
+  box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.7);
+}
+
+.personaje-card2 > * {
+  flex: 1;
+}
+
+.personaje-card2 label {
+  margin-bottom: 5px;
+  text-align: left;
+  color: #F5FCCD;
+}
+
+.personaje-card2 input,
+.personaje-card2 select,
+.personaje-card2 textarea{
+  font-size: 20px;
+  margin-bottom: 10px;
+  padding: 5px;
+
+  border: 3.5px solid #419197;
+  border-radius: 12px;
+}
+
+.personaje-card2 h3{
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-align: left;
 }

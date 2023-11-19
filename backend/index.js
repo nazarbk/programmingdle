@@ -85,8 +85,8 @@ app.post("/Personajes", async (req, res) => {
 
 //Lenguajes
 const lenguajeSchema = new mongoose.Schema({
-  _id: Number,
   lenguaje: String ,
+  codigo: String,
   dato: String,
   pista: String,
   deldia: {
@@ -106,6 +106,31 @@ app.get("/Lenguajes", (req, res) => {
     .catch((error) => {
       res.status(500).send({ ok: false, error: "Error obteniendo lenguajes" });
     });
+});
+
+app.post("/Lenguajes", async (req, res) => {
+  const {
+    lenguaje,
+    codigo,
+    dato,
+    pista
+  } = req.body;
+
+  try {
+    const nuevoLenguaje = new Lenguaje({
+      lenguaje,
+      codigo,
+      dato,
+      pista
+    });
+
+    await nuevoLenguaje.save();
+
+    res.status(201).send({ ok: true, mensaje: "Icono creada con éxito" });
+  } catch (error) {
+    console.error("Error al crear el icono:", error);
+    res.status(500).send({ ok: false, error: "Error al crear el icono", detalle: error.message });
+  }
 });
 
 //IP 
@@ -410,6 +435,29 @@ app.get("/Frameworks", (req, res) => {
     .catch((error) => {
       res.status(500).send({ ok: false, error: "Error obteniendo el icono" });
     });
+});
+
+app.post("/Frameworks", async (req, res) => {
+  const {
+    nombre,
+    icono,
+    dato
+  } = req.body;
+
+  try {
+    const nuevoIcono = new Framework({
+      nombre,
+      icono,
+      dato
+    });
+
+    await nuevoIcono.save();
+
+    res.status(201).send({ ok: true, mensaje: "Icono creada con éxito" });
+  } catch (error) {
+    console.error("Error al crear el icono:", error);
+    res.status(500).send({ ok: false, error: "Error al crear el icono", detalle: error.message });
+  }
 });
 
 function encryptIP(ip, key) {
