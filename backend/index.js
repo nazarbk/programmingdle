@@ -506,6 +506,27 @@ app.post("/Frameworks", async (req, res) => {
   }
 });
 
+//put
+app.put('/Frameworks', async (req, res) => {
+  try {
+      const { iconoDelDia, iconoDelDiaNuevo } = req.body;
+
+      if (lenguajeDelDia && lenguajeDelDiaNuevo) {
+          await Framework.findByIdAndUpdate(iconoDelDia._id, { deldia: false });
+
+          await Framework.findByIdAndUpdate(iconoDelDiaNuevo._id, { deldia: true });
+
+          res.status(200).json({ ok: true, mensaje: 'Iconos del dia actualizados con éxito' });
+      }else {
+          res.status(400).json({ ok: false, mensaje: 'Iconos no definidos correctamente' });
+      }
+  } catch (error) {
+      console.error('Error al actualizar iconos:', error);
+      res.status(500).json({ ok: false, error: 'Error al actualizar iconos' });
+  }
+});
+
+
 function encryptIP(ip, key) {
   const cipher = crypto.createCipher('aes-256-cbc', secretKey);
   let encrypted = cipher.update(ip, 'utf-8', 'hex');

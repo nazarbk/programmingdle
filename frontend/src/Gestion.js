@@ -14,6 +14,9 @@ const Gestion = () => {
     const [lenguajesbd, setLenguajesbd] = useState([]);
     const [lenguajeDelDiaNuevo, setLenguajeDelDiaNuevo] = useState(null);
 
+    const [iconosbd, setIconosbd] = useState([]);
+    const [iconoDelDiaNuevo, setIconoDelDiaNuevo] = useState(null);
+
     const [showContent, setShowContent] = useState(false);
     const [loading, setLoading] = useState(true);
     const [personajedeldia, setpersonajedeldia] = useState([]);
@@ -186,6 +189,8 @@ const Gestion = () => {
           return response.json();
         })
         .then(data => {
+            setIconosbd(data.resultado);
+
             const iconoDelDia = data.resultado.find(icono => icono.deldia === true);
 
             console.log('Lenguaje DL DIA: ', iconoDelDia)
@@ -460,15 +465,15 @@ const Gestion = () => {
 
     const handleSaveLenguajeClick = async () => {
         try {
-            if (personajedeldialogro && personajeDelDiaNuevoLogro) {
+            if (lenguajedeldia && lenguajeDelDiaNuevo) {
                 const response = await fetch('https://programmingdle.onrender.com/Lenguajes', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        personajeDelDiaLogro: personajedeldialogro,
-                        personajeDelDiaNuevoLogro: personajeDelDiaNuevoLogro,
+                        lenguajeDelDia: lenguajedeldia,
+                        lenguajeDelDiaNuevo: lenguajeDelDiaNuevo,
                     }),
                 });
     
@@ -478,7 +483,34 @@ const Gestion = () => {
                 setEnviadoConExito(true);
                 console.log('Solicitud PUT exitosa');
             } else {
-                console.error('Los personajes no están definidos correctamente');
+                console.error('Los lenguajes no están definidos correctamente');
+            }
+        } catch (error) {
+            console.error('Error al hacer la solicitud PUT:', error);
+        }
+    };
+
+    const handleSaveIconoClick = async () => {
+        try {
+            if (iconodeldia && iconoDelDiaNuevo) {
+                const response = await fetch('https://programmingdle.onrender.com/Frameworks', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        iconoDelDia: iconodeldia,
+                        iconoDelDiaNuevo: iconoDelDiaNuevo,
+                    }),
+                });
+    
+                if (!response.ok) {
+                    throw new Error('La solicitud PUT no fue exitosa.');
+                }
+                setEnviadoConExito(true);
+                console.log('Solicitud PUT exitosa');
+            } else {
+                console.error('Los lenguajes no están definidos correctamente');
             }
         } catch (error) {
             console.error('Error al hacer la solicitud PUT:', error);
@@ -818,6 +850,46 @@ const Gestion = () => {
                         </div>
 
                         <label htmlFor="selectPersonajes">Selecciona un lenguaje:</label>
+                            <select
+                                id="selectPersonajes"
+                                value={personajeSeleccionado ? personajeSeleccionado.nombre : ''}
+                                onChange={(e) => {
+                                const selectedPersonaje = personajesbd.find((p) => p.nombre === e.target.value);
+                                setPersonajeSeleccionado(selectedPersonaje);
+                                }}
+                            >
+                                <option value="">Selecciona un personaje...</option>
+                                {personajesbd.map((personaje) => (
+                                <option key={personaje.id} value={personaje.nombre}>
+                                    {personaje.nombre}
+                                </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="personaje-card2">
+                        <h3>Icono</h3>
+                        
+                        <label>Icono del día:</label>
+                        <select
+                            id="selectIconosDelDia"
+                            value={iconoDelDiaNuevo ? iconoDelDiaNuevo.nombre : iconodeldia ? iconodeldia.nombre : ''}
+                            onChange={(e) => {
+                            const selectedIcono = iconosbd.find((p) => p.nombre === e.target.value);
+                            setIconoDelDiaNuevo(selectedIcono);
+                            }}
+                        >
+                            {iconosbd.map((icono) => (
+                            <option key={icono.id} value={icono.nombre}>
+                                {icono.nombre}
+                            </option>
+                            ))}
+                        </select>
+                        <div className='botones-container'>
+                            <button className='save' type="button" onClick={handleSaveLenguajeClick}><i className='bx bx-save'></i></button>
+                        </div>
+
+                        <label htmlFor="selectPersonajes">Selecciona un Icono:</label>
                             <select
                                 id="selectPersonajes"
                                 value={personajeSeleccionado ? personajeSeleccionado.nombre : ''}
