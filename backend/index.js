@@ -93,11 +93,15 @@ app.put('/Personajes', async (req, res) => {
 
           await Personaje.findByIdAndUpdate(personajeDelDiaNuevo._id, { deldia: true });
 
+          await Usuario.deleteMany({});
+
           res.status(200).json({ ok: true, mensaje: 'Personajes del dia clasico actualizados con éxito' });
       }else if(personajeDelDiaLogro && personajeDelDiaNuevoLogro){
         await Personaje.findByIdAndUpdate(personajeDelDiaLogro._id, { deldialogro: false });
 
         await Personaje.findByIdAndUpdate(personajeDelDiaNuevoLogro._id, { deldialogro: true });
+
+        await Usuario.deleteMany({});
 
         res.status(200).json({ ok: true, mensaje: 'Personajes del dia logro actualizados con éxito' });
       }else {
@@ -168,6 +172,8 @@ app.put('/Lenguajes', async (req, res) => {
           await Lenguaje.findByIdAndUpdate(lenguajeDelDia._id, { deldia: false });
 
           await Lenguaje.findByIdAndUpdate(lenguajeDelDiaNuevo._id, { deldia: true });
+          
+          await Usuario.deleteMany({});
 
           res.status(200).json({ ok: true, mensaje: 'Lenguajes del dia actualizados con éxito' });
       }else {
@@ -515,6 +521,8 @@ app.put('/Frameworks', async (req, res) => {
           await Framework.findByIdAndUpdate(iconoDelDia._id, { deldia: false });
 
           await Framework.findByIdAndUpdate(iconoDelDiaNuevo._id, { deldia: true });
+
+          await Usuario.deleteMany({});
 
           res.status(200).json({ ok: true, mensaje: 'Iconos del dia actualizados con éxito' });
       }else {
