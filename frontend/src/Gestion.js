@@ -8,6 +8,8 @@ const Gestion = () => {
     const [personajesbd, setPersonajesbd] = useState([]);
     const [personajeSeleccionado, setPersonajeSeleccionado] = useState(null);
     const [personajeDelDiaNuevo, setPersonajeDelDiaNuevo] = useState(null);
+    const [personajeSeleccionado2, setPersonajeSeleccionado2] = useState(null);
+    const [personajeDelDiaNuevoLogro, setPersonajeDelDiaNuevoLogro] = useState(null);
 
     const [showContent, setShowContent] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -648,6 +650,25 @@ const Gestion = () => {
                             <button className='save' type="button" onClick={handleSaveClick}><i className='bx bx-save'></i></button>
                         </div>
 
+                        <label>Personaje del día modo Logro:</label>
+                        <select
+                            id="selectPersonajesDelDia"
+                            value={personajeDelDiaNuevo ? personajeDelDiaNuevo.nombre : personajedeldialogro ? personajedeldialogro.nombre : ''}
+                            onChange={(e) => {
+                            const selectedPersonaje = personajesbd.find((p) => p.nombre === e.target.value);
+                            setPersonajeDelDiaNuevoLogro(selectedPersonaje);
+                            }}
+                        >
+                            {personajesbd.map((personaje) => (
+                            <option key={personaje.id} value={personaje.nombre}>
+                                {personaje.nombre}
+                            </option>
+                            ))}
+                        </select>
+                        <div className='botones-container'>
+                            <button className='save' type="button" onClick={handleSaveClick}><i className='bx bx-save'></i></button>
+                        </div>
+
                         <label htmlFor="selectPersonajes">Selecciona un personaje:</label>
                             <select
                                 id="selectPersonajes"
@@ -722,7 +743,7 @@ const Gestion = () => {
                             <button className="close-button" onClick={handlePopupToggle}>
                                 <i className="bx bx-x"></i>
                             </button>
-                            <h2>Almacenado con éxito</h2>
+                            <h2>Operación Exitosa</h2>
                             </div>
                         </div>
                     )}
