@@ -511,7 +511,7 @@ app.put('/Frameworks', async (req, res) => {
   try {
       const { iconoDelDia, iconoDelDiaNuevo } = req.body;
 
-      if (lenguajeDelDia && lenguajeDelDiaNuevo) {
+      if (iconoDelDia && iconoDelDiaNuevo) {
           await Framework.findByIdAndUpdate(iconoDelDia._id, { deldia: false });
 
           await Framework.findByIdAndUpdate(iconoDelDiaNuevo._id, { deldia: true });

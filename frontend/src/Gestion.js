@@ -886,7 +886,7 @@ const Gestion = () => {
                             ))}
                         </select>
                         <div className='botones-container'>
-                            <button className='save' type="button" onClick={handleSaveLenguajeClick}><i className='bx bx-save'></i></button>
+                            <button className='save' type="button" onClick={handleSaveIconoClick}><i className='bx bx-save'></i></button>
                         </div>
 
                         <label htmlFor="selectPersonajes">Selecciona un Icono:</label>
