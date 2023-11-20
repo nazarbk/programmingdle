@@ -95,9 +95,9 @@ app.put('/Personajes', async (req, res) => {
 
           res.status(200).json({ ok: true, mensaje: 'Personajes del dia clasico actualizados con éxito' });
       }else if(personajeDelDiaLogro && personajeDelDiaNuevoLogro){
-        await Personaje.findByIdAndUpdate(personajeDelDia._id, { deldialogro: false });
+        await Personaje.findByIdAndUpdate(personajeDelDiaLogro._id, { deldialogro: false });
 
-        await Personaje.findByIdAndUpdate(personajeDelDiaNuevo._id, { deldialogro: true });
+        await Personaje.findByIdAndUpdate(personajeDelDiaNuevoLogro._id, { deldialogro: true });
 
         res.status(200).json({ ok: true, mensaje: 'Personajes del dia logro actualizados con éxito' });
       }else {

@@ -435,8 +435,8 @@ const Gestion = () => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        personajeDelDia: personajedeldialogro,
-                        personajeDelDiaNuevo: personajeDelDiaNuevoLogro,
+                        personajeDelDiaLogro: personajedeldialogro,
+                        personajeDelDiaNuevoLogro: personajeDelDiaNuevoLogro,
                     }),
                 });
     
