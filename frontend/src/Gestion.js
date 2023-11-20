@@ -680,7 +680,7 @@ const Gestion = () => {
                         <label>Personaje del día modo Logro:</label>
                         <select
                             id="selectPersonajesDelDia"
-                            value={personajeDelDiaNuevo ? personajeDelDiaNuevo.nombre : personajedeldialogro ? personajedeldialogro.nombre : ''}
+                            value={personajeDelDiaNuevoLogro ? personajeDelDiaNuevoLogro.nombre : personajedeldialogro ? personajedeldialogro.nombre : ''}
                             onChange={(e) => {
                             const selectedPersonaje = personajesbd.find((p) => p.nombre === e.target.value);
                             setPersonajeDelDiaNuevoLogro(selectedPersonaje);
@@ -693,7 +693,7 @@ const Gestion = () => {
                             ))}
                         </select>
                         <div className='botones-container'>
-                            <button className='save' type="button" onClick={handleSaveClick}><i className='bx bx-save'></i></button>
+                            <button className='save' type="button" onClick={handleSave2Click}><i className='bx bx-save'></i></button>
                         </div>
 
                         <label htmlFor="selectPersonajes">Selecciona un personaje:</label>
