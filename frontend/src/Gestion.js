@@ -11,6 +11,9 @@ const Gestion = () => {
     const [personajeSeleccionado2, setPersonajeSeleccionado2] = useState(null);
     const [personajeDelDiaNuevoLogro, setPersonajeDelDiaNuevoLogro] = useState(null);
 
+    const [lenguajesbd, setLenguajesbd] = useState([]);
+    const [lenguajeDelDiaNuevo, setLenguajeDelDiaNuevo] = useState(null);
+
     const [showContent, setShowContent] = useState(false);
     const [loading, setLoading] = useState(true);
     const [personajedeldia, setpersonajedeldia] = useState([]);
@@ -160,6 +163,8 @@ const Gestion = () => {
           return response.json();
         })
         .then(data => {
+            setLenguajesbd(data.resultado);
+
             const lenguajeDelDia = data.resultado.find(lenguaje => lenguaje.deldia === true);
 
             console.log('Lenguaje DL DIA: ', lenguajeDelDia)
@@ -430,6 +435,33 @@ const Gestion = () => {
         try {
             if (personajedeldialogro && personajeDelDiaNuevoLogro) {
                 const response = await fetch('https://programmingdle.onrender.com/Personajes', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        personajeDelDiaLogro: personajedeldialogro,
+                        personajeDelDiaNuevoLogro: personajeDelDiaNuevoLogro,
+                    }),
+                });
+    
+                if (!response.ok) {
+                    throw new Error('La solicitud PUT no fue exitosa.');
+                }
+                setEnviadoConExito(true);
+                console.log('Solicitud PUT exitosa');
+            } else {
+                console.error('Los personajes no están definidos correctamente');
+            }
+        } catch (error) {
+            console.error('Error al hacer la solicitud PUT:', error);
+        }
+    };
+
+    const handleSaveLenguajeClick = async () => {
+        try {
+            if (personajedeldialogro && personajeDelDiaNuevoLogro) {
+                const response = await fetch('https://programmingdle.onrender.com/Lenguajes', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -761,6 +793,46 @@ const Gestion = () => {
                             </div>
                             </>
                             )}
+                        </div>
+
+                        <div className="personaje-card2">
+                        <h3>Lenguaje</h3>
+                        
+                        <label>Lenguaje del día:</label>
+                        <select
+                            id="selectLenguajesDelDia"
+                            value={lenguajeDelDiaNuevo ? lenguajeDelDiaNuevo.lenguaje : lenguajedeldia ? lenguajedeldia.lenguaje : ''}
+                            onChange={(e) => {
+                            const selectedLenguaje = lenguajesbd.find((p) => p.lenguaje === e.target.value);
+                            setLenguajeDelDiaNuevo(selectedLenguaje);
+                            }}
+                        >
+                            {lenguajesbd.map((lenguaje) => (
+                            <option key={lenguaje.id} value={lenguaje.lenguaje}>
+                                {lenguaje.lenguaje}
+                            </option>
+                            ))}
+                        </select>
+                        <div className='botones-container'>
+                            <button className='save' type="button" onClick={handleSaveLenguajeClick}><i className='bx bx-save'></i></button>
+                        </div>
+
+                        <label htmlFor="selectPersonajes">Selecciona un lenguaje:</label>
+                            <select
+                                id="selectPersonajes"
+                                value={personajeSeleccionado ? personajeSeleccionado.nombre : ''}
+                                onChange={(e) => {
+                                const selectedPersonaje = personajesbd.find((p) => p.nombre === e.target.value);
+                                setPersonajeSeleccionado(selectedPersonaje);
+                                }}
+                            >
+                                <option value="">Selecciona un personaje...</option>
+                                {personajesbd.map((personaje) => (
+                                <option key={personaje.id} value={personaje.nombre}>
+                                    {personaje.nombre}
+                                </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
 

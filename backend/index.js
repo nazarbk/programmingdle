@@ -159,6 +159,26 @@ app.post("/Lenguajes", async (req, res) => {
   }
 });
 
+//put
+app.put('/Lenguajes', async (req, res) => {
+  try {
+      const { lenguajeDelDia, lenguajeDelDiaNuevo } = req.body;
+
+      if (lenguajeDelDia && lenguajeDelDiaNuevo) {
+          await Lenguaje.findByIdAndUpdate(lenguajeDelDia._id, { deldia: false });
+
+          await Lenguaje.findByIdAndUpdate(lenguajeDelDiaNuevo._id, { deldia: true });
+
+          res.status(200).json({ ok: true, mensaje: 'Lenguajes del dia actualizados con éxito' });
+      }else {
+          res.status(400).json({ ok: false, mensaje: 'Lenguajes no definidos correctamente' });
+      }
+  } catch (error) {
+      console.error('Error al actualizar lenguajes:', error);
+      res.status(500).json({ ok: false, error: 'Error al actualizar lenguajes' });
+  }
+});
+
 //IP 
 
 app.get('/', (req, res) => {
