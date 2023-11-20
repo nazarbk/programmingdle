@@ -426,6 +426,33 @@ const Gestion = () => {
         }
     };
 
+    const handleSave2Click = async () => {
+        try {
+            if (personajedeldialogro && personajeDelDiaNuevoLogro) {
+                const response = await fetch('https://programmingdle.onrender.com/Personajes', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        personajeDelDia: personajedeldialogro,
+                        personajeDelDiaNuevo: personajeDelDiaNuevoLogro,
+                    }),
+                });
+    
+                if (!response.ok) {
+                    throw new Error('La solicitud PUT no fue exitosa.');
+                }
+                setEnviadoConExito(true);
+                console.log('Solicitud PUT exitosa');
+            } else {
+                console.error('Los personajes no están definidos correctamente');
+            }
+        } catch (error) {
+            console.error('Error al hacer la solicitud PUT:', error);
+        }
+    };
+
     return(
         <div className='clasico'>
             <Header/>

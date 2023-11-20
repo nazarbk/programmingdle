@@ -86,7 +86,7 @@ app.post("/Personajes", async (req, res) => {
 //put
 app.put('/Personajes', async (req, res) => {
   try {
-      const { personajeDelDia, personajeDelDiaNuevo, personajeDelDiaLogro, personajeDelDiaNuevoLogro } = req.body;
+      const { personajeDelDia, personajeDelDiaNuevo} = req.body;
 
       if (personajeDelDia && personajeDelDiaNuevo) {
           await Personaje.findByIdAndUpdate(personajeDelDia._id, { deldia: false });
@@ -94,12 +94,6 @@ app.put('/Personajes', async (req, res) => {
           await Personaje.findByIdAndUpdate(personajeDelDiaNuevo._id, { deldia: true });
 
           res.status(200).json({ ok: true, mensaje: 'Personajes del dia clasico actualizados con éxito' });
-      }else if(personajeDelDiaLogro && personajeDelDiaNuevoLogro){
-        await Personaje.findByIdAndUpdate(personajeDelDia._id, { deldialogro: false });
-
-        await Personaje.findByIdAndUpdate(personajeDelDiaNuevo._id, { deldialogro: true });
-
-        res.status(200).json({ ok: true, mensaje: 'Personajes del dia logro actualizados con éxito' });
       }else {
           res.status(400).json({ ok: false, mensaje: 'Personajes no definidos correctamente' });
       }
