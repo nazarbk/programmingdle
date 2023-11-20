@@ -87,7 +87,7 @@ const Header = () => {
 
           <div className="settings">
             <Link to="/sugerencia">
-              <i className='bx bx-add-to-queue'></i>
+            <i className='bx bx-message-alt-add'></i>
             </Link>
           </div>
         </header>

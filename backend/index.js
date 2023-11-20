@@ -83,6 +83,27 @@ app.post("/Personajes", async (req, res) => {
   }
 });
 
+//put
+app.put('/Personajes', async (req, res) => {
+  try {
+      const { personajeDelDia, personajeDelDiaNuevo } = req.body;
+
+      if (personajeDelDia && personajeDelDiaNuevo) {
+          await Personaje.findByIdAndUpdate(personajeDelDia._id, { deldia: false });
+
+          // Actualiza personajeDelDiaNuevo a deldia: true
+          await Personaje.findByIdAndUpdate(personajeDelDiaNuevo._id, { deldia: true });
+
+          res.status(200).json({ ok: true, mensaje: 'Personajes actualizados con éxito' });
+      } else {
+          res.status(400).json({ ok: false, mensaje: 'Personajes no definidos correctamente' });
+      }
+  } catch (error) {
+      console.error('Error al actualizar personajes:', error);
+      res.status(500).json({ ok: false, error: 'Error al actualizar personajes' });
+  }
+});
+
 //Lenguajes
 const lenguajeSchema = new mongoose.Schema({
   lenguaje: String ,
@@ -447,7 +468,7 @@ app.post("/Frameworks", async (req, res) => {
   try {
     const nuevoIcono = new Framework({
       nombre: nombretecnologia,
-      icono,
+      icon: icono,
       dato: datoicono
     });
 

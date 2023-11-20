@@ -1308,14 +1308,14 @@ footer {
 .botones-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  
 }
 
 .botones-container button{
   padding: 10px;
   font-size: 22px;
   text-align: center;
-
+  margin-bottom: 10px;
   transition: .3s ease;
 }
 
@@ -1331,6 +1331,19 @@ footer {
   background-color: #5CB988;
   border: 3.5px solid #296445;
   border-radius: 10px;
+}
+
+.save{
+  color: white;
+  background-color: #1f6797;
+  border: 3.5px solid #12486B;
+  border-radius: 10px;
+}
+
+.save:hover{
+  background-color: #12486B;
+  border: 3.5px solid #1f6797;
+  cursor: pointer;
 }
 
 .delete:hover{

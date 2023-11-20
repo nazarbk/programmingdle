@@ -5,6 +5,10 @@ import { useEffect, useState } from 'react';
 
 const Gestion = () => {
     const [personajes, setPersonajes] = useState([]);
+    const [personajesbd, setPersonajesbd] = useState([]);
+    const [personajeSeleccionado, setPersonajeSeleccionado] = useState(null);
+    const [personajeDelDiaNuevo, setPersonajeDelDiaNuevo] = useState(null);
+
     const [showContent, setShowContent] = useState(false);
     const [loading, setLoading] = useState(true);
     const [personajedeldia, setpersonajedeldia] = useState([]);
@@ -124,17 +128,18 @@ const Gestion = () => {
           return response.json();
         })
         .then(data => {
+            setPersonajesbd(data.resultado);
+
             const personajeDelDia = data.resultado.find(personaje => personaje.deldia === true);
             const personajeDelDiaLogro = data.resultado.find(personaje => personaje.deldialogro === true);
 
-            console.log('PERSONAJDE DL DIA: ', personajeDelDia)
             if (personajeDelDia) {
                 setpersonajedeldia(personajeDelDia);
+
             } else {
                 console.warn('No se encontró un personaje del día en los resultados.');
             }
 
-            console.log('PERSONAJDE DL DIA: ', personajeDelDiaLogro)
             if (personajeDelDiaLogro) {
                 setpersonajedeldialogro(personajeDelDiaLogro);
             } else {
@@ -391,6 +396,34 @@ const Gestion = () => {
             alert('Debes rellenar todos los campos');
         }
       };
+
+      const handleSaveClick = async () => {
+        try {
+            if (personajedeldia && personajeDelDiaNuevo) {
+                const response = await fetch('https://programmingdle.onrender.com/Personajes', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        personajeDelDia: personajedeldia,
+                        personajeDelDiaNuevo: personajeDelDiaNuevo,
+                    }),
+                });
+    
+                if (!response.ok) {
+                    throw new Error('La solicitud PUT no fue exitosa.');
+                }
+                setEnviadoConExito(true);
+                console.log('Solicitud PUT exitosa');
+            } else {
+                console.error('Los personajes no están definidos correctamente');
+            }
+        } catch (error) {
+            console.error('Error al hacer la solicitud PUT:', error);
+        }
+    };
+
     return(
         <div className='clasico'>
             <Header/>
@@ -474,7 +507,7 @@ const Gestion = () => {
                     ))}
                     </div>
 
-                    <h2 className='gestiontitle'><i className='bx bx-notepad'></i> Añadir </h2>
+                    <h2 className='gestiontitle'><i className='bx bx-folder-plus'></i> Añadir </h2>
                     <div className="personajes-row">
                     
                         <div className="personaje-card2">
@@ -545,7 +578,7 @@ const Gestion = () => {
                             <textarea
                                 value={codigo}
                                 onChange={handleCodigoChange}
-                                style={{ minHeight: '30px', maxHeight: '200px', overflow: 'auto' }}
+                                style={{ minHeight: '30px', maxHeight: '400px', overflow: 'auto' }}
                             />
 
                             <label>Dato:</label>
@@ -587,6 +620,99 @@ const Gestion = () => {
                             <div className='botones-container'>
                                 <button className='add' type="button" onClick={handleEnviarIconoClick}><i className='bx bxs-user-plus'></i></button>
                             </div>
+                        </div>
+                    </div>
+
+                    <h2 className='gestiontitle'><i className='bx bx-edit' ></i> Editar/Eliminar </h2>
+                    <div className="personajes-row">
+                    
+                        <div className="personaje-card2">
+                        <h3>Personaje</h3>
+                        
+                        <label>Personaje del día modo Clásico:</label>
+                        <select
+                            id="selectPersonajesDelDia"
+                            value={personajeDelDiaNuevo ? personajeDelDiaNuevo.nombre : personajedeldia ? personajedeldia.nombre : ''}
+                            onChange={(e) => {
+                            const selectedPersonaje = personajesbd.find((p) => p.nombre === e.target.value);
+                            setPersonajeDelDiaNuevo(selectedPersonaje);
+                            }}
+                        >
+                            {personajesbd.map((personaje) => (
+                            <option key={personaje.id} value={personaje.nombre}>
+                                {personaje.nombre}
+                            </option>
+                            ))}
+                        </select>
+                        <div className='botones-container'>
+                            <button className='save' type="button" onClick={handleSaveClick}><i className='bx bx-save'></i></button>
+                        </div>
+
+                        <label htmlFor="selectPersonajes">Selecciona un personaje:</label>
+                            <select
+                                id="selectPersonajes"
+                                value={personajeSeleccionado ? personajeSeleccionado.nombre : ''}
+                                onChange={(e) => {
+                                const selectedPersonaje = personajesbd.find((p) => p.nombre === e.target.value);
+                                setPersonajeSeleccionado(selectedPersonaje);
+                                }}
+                            >
+                                <option value="">Selecciona un personaje...</option>
+                                {personajesbd.map((personaje) => (
+                                <option key={personaje.id} value={personaje.nombre}>
+                                    {personaje.nombre}
+                                </option>
+                                ))}
+                            </select>
+                            {personajeSeleccionado && (
+                            <>
+                            <label>Género:</label>
+                            <select value={personajeSeleccionado.genero} onChange={handleGeneroChange}>
+                                <option value="">Selecciona...</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+
+                            <label>Ámbito:</label>
+                            <input multiple value={personajeSeleccionado.ambito} onChange={handleAmbitoChange}>
+                            </input>
+
+                            <label>Adjetivo:</label>
+                            <input
+                                type="text"
+                                value={personajeSeleccionado.adjetivo} onChange={handleAdjetivoChange}
+                            />
+
+                            <label>Año:</label>
+                            <input
+                                type="text"
+                                value={personajeSeleccionado.año} onChange={handleanioChange}
+                            />
+
+                            <label>Dato:</label>
+                            <input
+                                type="text"
+                                value={personajeSeleccionado.dato} onChange={handleDatoChange}
+                            />
+
+                            <label>Pista:</label>
+                            <input
+                                type="text"
+                                value={personajeSeleccionado.pista} onChange={handlePistaChange}
+                            />
+
+                            <label>País:</label>
+                            <input
+                                type="text"
+                                value={personajeSeleccionado.pais} onChange={handlePaisChange}
+                            />
+                            
+                            <div className='botones-container'>
+                                <button className='add' type="button" onClick={handleEnviarClick}><i className='bx bxs-user-plus'></i></button>
+                            </div>
+                            </>
+                            )}
                         </div>
                     </div>
 
