@@ -554,6 +554,8 @@ const Gestion = () => {
     };
 
     const handleUpdateCodigo= () => {
+        console.log('HOLIII: ', lenguajeSeleccionado);
+
         if (
             lenguajeSeleccionado.lenguaje.trim() !== '' &&
             lenguajeSeleccionado.codigo.trim() !== '' &&
