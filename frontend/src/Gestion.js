@@ -121,10 +121,10 @@ const Gestion = () => {
 
     const handleLenguajeUpdate = (e) => {
         setLenguajeSeleccionado({
-          ...lenguajeSeleccionado,
-          lenguaje: e.target.value,
+            ...lenguajeSeleccionado,
+            lenguaje: e.target.value,
         });
-      };
+    };
     
       const handleCodigoUpdate = (e) => {
         setLenguajeSeleccionado({
@@ -144,6 +144,27 @@ const Gestion = () => {
         setLenguajeSeleccionado({
           ...lenguajeSeleccionado,
           pista: e.target.value,
+        });
+      };
+
+      const handleIconoUpdate = (e) => {
+        setIconoSeleccionado({
+            ...iconoSeleccionado,
+            nombre: e.target.value,
+        });
+    };
+    
+      const handleDatoIconoCodigoUpdate = (e) => {
+        setIconoSeleccionado({
+          ...iconoSeleccionado,
+          dato: e.target.value,
+        });
+      };
+    
+      const handleIconIconoUpdate = (e) => {
+        setIconoSeleccionado({
+          ...iconoSeleccionado,
+          icon: e.target.value,
         });
       };
 
@@ -562,14 +583,14 @@ const Gestion = () => {
             lenguajeSeleccionado.dato.trim() !== '' &&
             lenguajeSeleccionado.pista.trim() !== ''
         ) {
-          const actualizarLenguaje = lenguajeSeleccionado
-    
           fetch('https://programmingdle.onrender.com/Lenguajes', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(actualizarLenguaje),
+            body: JSON.stringify({
+                actualizarLenguaje: lenguajeSeleccionado,
+            }),
           })
             .then(response => response.json())
             .then(data => {
@@ -922,11 +943,11 @@ const Gestion = () => {
 
                         <label htmlFor="selectLenguajes">Selecciona un lenguaje:</label>
                             <select
-                                id="selectLenguajes"
-                                value={lenguajeSeleccionado ? lenguajeSeleccionado.lenguaje : ''}
-                                onChange={(e) => {
-                                const selectedPersonaje = lenguajesbd.find((p) => p.lenguaje === e.target.value);
-                                setLenguajeSeleccionado(selectedPersonaje);
+                                    id="selectLenguajes"
+                                    value={lenguajeSeleccionado ? lenguajeSeleccionado.lenguaje : ''}
+                                    onChange={(e) => {
+                                    const selectedPersonaje = lenguajesbd.find((p) => p.lenguaje === e.target.value);
+                                    setLenguajeSeleccionado(selectedPersonaje);
                                 }}
                             >
                                 <option value="">-</option>
@@ -1016,10 +1037,16 @@ const Gestion = () => {
 
                             {iconoSeleccionado && (
                             <>
+                                <label>Nombre:</label>
+                                <input
+                                    type="text"
+                                    value={iconoSeleccionado.nombre} onChange={handleIconoUpdate}
+                                />
+
                                 <label>Icon:</label>
                                 <input
                                     type="text"
-                                    value={iconoSeleccionado.icon} onChange={handleIcono}
+                                    value={iconoSeleccionado.icon} onChange={handleIconIconoUpdate}
                                 />
 
                                 <label>Dato:</label>

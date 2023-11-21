@@ -527,7 +527,7 @@ app.post("/Frameworks", async (req, res) => {
 //put
 app.put('/Frameworks', async (req, res) => {
   try {
-      const { iconoDelDia, iconoDelDiaNuevo } = req.body;
+      const { iconoDelDia, iconoDelDiaNuevo, actualizarIcono} = req.body;
 
       if (iconoDelDia && iconoDelDiaNuevo) {
           await Framework.findByIdAndUpdate(iconoDelDia._id, { deldia: false });
@@ -537,6 +537,18 @@ app.put('/Frameworks', async (req, res) => {
           await Usuario.deleteMany({});
 
           res.status(200).json({ ok: true, mensaje: 'Iconos del dia actualizados con éxito' });
+      }else if(actualizarIcono){
+        const iconoActualizado = await Framework.findByIdAndUpdate(
+          actualizarIcono._id,
+          actualizarIcono,
+          { new: true }
+        );
+
+        if (!iconoActualizado) {
+          return res.status(404).json({ ok: false, mensaje: 'Icono no encontrado para actualizar' });
+        }
+
+        res.status(200).json({ ok: true, mensaje: 'Icono actualizado con éxito' });
       }else {
           res.status(400).json({ ok: false, mensaje: 'Iconos no definidos correctamente' });
       }
