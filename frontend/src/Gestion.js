@@ -8,7 +8,6 @@ const Gestion = () => {
     const [personajesbd, setPersonajesbd] = useState([]);
     const [personajeSeleccionado, setPersonajeSeleccionado] = useState(null);
     const [personajeDelDiaNuevo, setPersonajeDelDiaNuevo] = useState(null);
-    const [personajeSeleccionado2, setPersonajeSeleccionado2] = useState(null);
     const [personajeDelDiaNuevoLogro, setPersonajeDelDiaNuevoLogro] = useState(null);
 
     const [lenguajesbd, setLenguajesbd] = useState([]);
@@ -113,6 +112,7 @@ const Gestion = () => {
         setEnviadoConExito(!enviadoConExito);
     };
 
+    //Lenguaje
 
     const handleLenguajeUpdate = (e) => {
         setLenguajeSeleccionado({
@@ -142,6 +142,8 @@ const Gestion = () => {
         });
       };
 
+      //Icono
+
       const handleIconoUpdate = (e) => {
         setIconoSeleccionado({
             ...iconoSeleccionado,
@@ -149,7 +151,7 @@ const Gestion = () => {
         });
     };
     
-      const handleDatoIconoCodigoUpdate = (e) => {
+      const handleDatoIconoUpdate = (e) => {
         setIconoSeleccionado({
           ...iconoSeleccionado,
           dato: e.target.value,
@@ -162,6 +164,63 @@ const Gestion = () => {
           icon: e.target.value,
         });
       };
+
+      //Personaje
+        const handlePersonajeUpdate = (e) => {
+            setPersonajeSeleccionado({
+                ...personajeSeleccionado,
+                nombre: e.target.value,
+            });
+        };
+
+        const handleGeneroUpdate = (e) => {
+            setPersonajeSeleccionado({
+                ...personajeSeleccionado,
+                genero: e.target.value,
+            });
+        };
+
+        const handleAmbitoUpdate = (e) => {
+            setPersonajeSeleccionado({
+                ...personajeSeleccionado,
+                ambito: e.target.value,
+            });
+        };
+
+        const handleAdjetivoUpdate = (e) => {
+            setPersonajeSeleccionado({
+                ...personajeSeleccionado,
+                adjetivo: e.target.value,
+            });
+        };
+
+        const handleAñoUpdate = (e) => {
+            setPersonajeSeleccionado({
+                ...personajeSeleccionado,
+                año: e.target.value,
+            });
+        };
+
+        const handleDatoUpdate = (e) => {
+            setPersonajeSeleccionado({
+                ...personajeSeleccionado,
+                dato: e.target.value,
+            });
+        };
+
+        const handlePistaUpdate = (e) => {
+            setPersonajeSeleccionado({
+                ...personajeSeleccionado,
+                pista: e.target.value,
+            });
+        };
+
+        const handlePaisUpdate = (e) => {
+            setPersonajeSeleccionado({
+                ...personajeSeleccionado,
+                pais: e.target.value,
+            });
+        };
 
     useEffect(() => {
         //Personajes
@@ -569,6 +628,46 @@ const Gestion = () => {
         }
     };
 
+    const handleUpdatePersonaje= () => {
+        console.log('Personaje sleeccionado :', personajeSeleccionado);
+
+        if (
+            personajeSeleccionado.nombre.trim() !== '' &&
+            personajeSeleccionado.genero.trim() !== '' &&
+            personajeSeleccionado.ambito.trim() !== '' &&
+            personajeSeleccionado.adjetivo.trim() !== '' &&
+            personajeSeleccionado.año.trim() !== '' &&
+            personajeSeleccionado.dato.trim() !== '' &&
+            personajeSeleccionado.pista.trim() !== '' &&
+            personajeSeleccionado.pais.trim() !== ''
+        ) {
+          fetch('https://programmingdle.onrender.com/Personajes', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                actualizarPersonaje: personajeSeleccionado,
+            }),
+          })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    actualizarPersonaje();
+                    setPersonajeSeleccionado('');
+                    setEnviadoConExito(true);
+                  } else {
+                    setEnviadoConExito(false);
+                  }
+            })
+            .catch(error => {
+              console.error('Error al hacer la solicitud:', error);
+            });
+        } else {
+            alert('No puedes dejar ningun campo vacío');
+        }
+      };
+
     const handleUpdateCodigo= () => {
         console.log('HOLIII: ', lenguajeSeleccionado);
 
@@ -650,6 +749,13 @@ const Gestion = () => {
             lenguaje._id === lenguajeSeleccionado._id ? lenguajeSeleccionado : lenguaje
         );
         setLenguajesbd(nuevosLenguajes);
+    }
+
+    const actualizarPersonaje = () => {
+        const nuevosPersonajes = personajesbd.map((personaje) =>
+        personaje._id === personajeSeleccionado._id ? personajeSeleccionado : personaje
+        );
+        setLenguajesbd(nuevosPersonajes);
     }
 
     return(
@@ -913,8 +1019,12 @@ const Gestion = () => {
                             </select>
                             {personajeSeleccionado && (
                             <>
+                            <label>Nombre:</label>
+                            <input value={personajeSeleccionado.nombre} onChange={handlePersonajeUpdate}>
+                            </input>
+
                             <label>Género:</label>
-                            <select value={personajeSeleccionado.genero} onChange={handleGeneroChange}>
+                            <select value={personajeSeleccionado.genero} onChange={handleGeneroUpdate}>
                                 <option value="">Selecciona...</option>
                                 <option value="Masculino">Masculino</option>
                                 <option value="Femenino">Femenino</option>
@@ -922,42 +1032,42 @@ const Gestion = () => {
                             </select>
 
                             <label>Ámbito:</label>
-                            <input multiple value={personajeSeleccionado.ambito} onChange={handleAmbitoChange}>
+                            <input multiple value={personajeSeleccionado.ambito} onChange={handleAmbitoUpdate}>
                             </input>
 
                             <label>Adjetivo:</label>
                             <input
                                 type="text"
-                                value={personajeSeleccionado.adjetivo} onChange={handleAdjetivoChange}
+                                value={personajeSeleccionado.adjetivo} onChange={handleAdjetivoUpdate}
                             />
 
                             <label>Año:</label>
                             <input
                                 type="text"
-                                value={personajeSeleccionado.año} onChange={handleanioChange}
+                                value={personajeSeleccionado.año} onChange={handleAñoUpdate}
                             />
 
                             <label>Dato:</label>
                             <input
                                 type="text"
-                                value={personajeSeleccionado.dato} onChange={handleDatoChange}
+                                value={personajeSeleccionado.dato} onChange={handleDatoUpdate}
                             />
 
                             <label>Pista:</label>
                             <input
                                 type="text"
-                                value={personajeSeleccionado.pista} onChange={handlePistaChange}
+                                value={personajeSeleccionado.pista} onChange={handlePistaUpdate}
                             />
 
                             <label>País:</label>
                             <input
                                 type="text"
-                                value={personajeSeleccionado.pais} onChange={handlePaisChange}
+                                value={personajeSeleccionado.pais} onChange={handlePaisUpdate}
                             />
                             
                             <div className='botones-container'>
                                 <button className='delete' type="button"><i className='bx bx-trash'></i></button>
-                                <button className='add' type="button" onClick={handleEnviarClick}><i className='bx bxs-user-plus'></i></button>
+                                <button className='save' type="button" onClick={handleUpdatePersonaje}><i className='bx bx-save'></i></button>
                             </div>
                             </>
                             )}
@@ -1096,7 +1206,7 @@ const Gestion = () => {
                                 <label>Dato:</label>
                                 <input
                                     type="text"
-                                    value={iconoSeleccionado.dato} onChange={handleDatoIcono}
+                                    value={iconoSeleccionado.dato} onChange={handleDatoIconoUpdate}
                                 />
                                 
                                 <div className='botones-container'>

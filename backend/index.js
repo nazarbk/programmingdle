@@ -105,6 +105,8 @@ app.put('/Personajes', async (req, res) => {
 
         res.status(200).json({ ok: true, mensaje: 'Personajes del dia logro actualizados con éxito' });
       }else if(actualizarPersonaje){
+        console.log('HOLAA: ', actualizarPersonaje);
+
         const personajeActualizado = await Personaje.findByIdAndUpdate(
           actualizarPersonaje._id,
           actualizarPersonaje,
