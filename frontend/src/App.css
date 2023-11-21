@@ -1335,14 +1335,14 @@ footer {
 
 .save{
   color: white;
-  background-color: #1f6797;
+  background-color: #419197;
   border: 3.5px solid #12486B;
   border-radius: 10px;
 }
 
 .save:hover{
   background-color: #12486B;
-  border: 3.5px solid #1f6797;
+  border: 3.5px solid #419197;
   cursor: pointer;
 }
 

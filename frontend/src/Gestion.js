@@ -13,9 +13,16 @@ const Gestion = () => {
 
     const [lenguajesbd, setLenguajesbd] = useState([]);
     const [lenguajeDelDiaNuevo, setLenguajeDelDiaNuevo] = useState(null);
+    const [lenguajeSeleccionado, setLenguajeSeleccionado] = useState({
+        lenguaje: '',
+        codigo: '',
+        dato: '',
+        pista: '',
+      });
 
     const [iconosbd, setIconosbd] = useState([]);
     const [iconoDelDiaNuevo, setIconoDelDiaNuevo] = useState(null);
+    const [iconoSeleccionado, setIconoSeleccionado] = useState(null);
 
     const [showContent, setShowContent] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -110,6 +117,35 @@ const Gestion = () => {
     const handlePopupToggle = () => {
         setEnviadoConExito(!enviadoConExito);
     };
+
+
+    const handleLenguajeUpdate = (e) => {
+        setLenguajeSeleccionado({
+          ...lenguajeSeleccionado,
+          lenguaje: e.target.value,
+        });
+      };
+    
+      const handleCodigoUpdate = (e) => {
+        setLenguajeSeleccionado({
+          ...lenguajeSeleccionado,
+          codigo: e.target.value,
+        });
+      };
+    
+      const handleDatoCodigoUpdate = (e) => {
+        setLenguajeSeleccionado({
+          ...lenguajeSeleccionado,
+          dato: e.target.value,
+        });
+      };
+    
+      const handlePistaCodigoUpdate = (e) => {
+        setLenguajeSeleccionado({
+          ...lenguajeSeleccionado,
+          pista: e.target.value,
+        });
+      };
 
     useEffect(() => {
         //Personajes
@@ -517,6 +553,38 @@ const Gestion = () => {
         }
     };
 
+    const handleUpdateCodigo= () => {
+        if (
+            lenguajeSeleccionado.lenguaje.trim() !== '' &&
+            lenguajeSeleccionado.codigo.trim() !== '' &&
+            lenguajeSeleccionado.dato.trim() !== '' &&
+            lenguajeSeleccionado.pista.trim() !== ''
+        ) {
+          const actualizarLenguaje = lenguajeSeleccionado
+    
+          fetch('https://programmingdle.onrender.com/Lenguajes', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(actualizarLenguaje),
+          })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    setEnviadoConExito(true);
+                  } else {
+                    setEnviadoConExito(false);
+                  }
+            })
+            .catch(error => {
+              console.error('Error al hacer la solicitud:', error);
+            });
+        } else {
+            alert('No puedes dejar ningun campo vacío');
+        }
+      };
+
     return(
         <div className='clasico'>
             <Header/>
@@ -769,7 +837,7 @@ const Gestion = () => {
                                 setPersonajeSeleccionado(selectedPersonaje);
                                 }}
                             >
-                                <option value="">Selecciona un personaje...</option>
+                                <option value="">-</option>
                                 {personajesbd.map((personaje) => (
                                 <option key={personaje.id} value={personaje.nombre}>
                                     {personaje.nombre}
@@ -821,6 +889,7 @@ const Gestion = () => {
                             />
                             
                             <div className='botones-container'>
+                                <button className='delete' type="button"><i className='bx bx-trash'></i></button>
                                 <button className='add' type="button" onClick={handleEnviarClick}><i className='bx bxs-user-plus'></i></button>
                             </div>
                             </>
@@ -849,22 +918,59 @@ const Gestion = () => {
                             <button className='save' type="button" onClick={handleSaveLenguajeClick}><i className='bx bx-save'></i></button>
                         </div>
 
-                        <label htmlFor="selectPersonajes">Selecciona un lenguaje:</label>
+                        <label htmlFor="selectLenguajes">Selecciona un lenguaje:</label>
                             <select
-                                id="selectPersonajes"
-                                value={personajeSeleccionado ? personajeSeleccionado.nombre : ''}
+                                id="selectLenguajes"
+                                value={lenguajeSeleccionado ? lenguajeSeleccionado.lenguaje : ''}
                                 onChange={(e) => {
-                                const selectedPersonaje = personajesbd.find((p) => p.nombre === e.target.value);
-                                setPersonajeSeleccionado(selectedPersonaje);
+                                const selectedPersonaje = lenguajesbd.find((p) => p.lenguaje === e.target.value);
+                                setLenguajeSeleccionado(selectedPersonaje);
                                 }}
                             >
-                                <option value="">Selecciona un personaje...</option>
-                                {personajesbd.map((personaje) => (
-                                <option key={personaje.id} value={personaje.nombre}>
-                                    {personaje.nombre}
+                                <option value="">-</option>
+                                {lenguajesbd.map((lenguaje) => (
+                                <option key={lenguaje.id} value={lenguaje.lenguaje}>
+                                    {lenguaje.lenguaje}
                                 </option>
                                 ))}
                             </select>
+
+                            {lenguajeSeleccionado && (
+                            <>
+                                <label>Nombre:</label>
+                                <input
+                                    type="text"
+                                    value={lenguajeSeleccionado.lenguaje}
+                                    onChange={handleLenguajeUpdate}
+                                />
+
+                                <label>Código:</label>
+                                <textarea
+                                    value={lenguajeSeleccionado.codigo}
+                                    onChange={handleCodigoUpdate}
+                                    style={{ minHeight: '30px', maxHeight: '400px', overflow: 'auto' }}
+                                />
+
+                                <label>Dato:</label>
+                                <input
+                                    type="text"
+                                    value={lenguajeSeleccionado.dato}
+                                    onChange={handleDatoCodigoUpdate}
+                                />
+
+                                <label>Pista:</label>
+                                <input
+                                    type="text"
+                                    value={lenguajeSeleccionado.pista}
+                                    onChange={handlePistaCodigoUpdate}
+                                />
+                                
+                                <div className='botones-container'>
+                                    <button className='delete' type="button"><i className='bx bx-trash'></i></button>
+                                    <button className='save' type="button" onClick={handleUpdateCodigo}><i className='bx bx-save'></i></button>
+                                </div>
+                            </>
+                            )}
                         </div>
 
                         <div className="personaje-card2">
@@ -889,22 +995,43 @@ const Gestion = () => {
                             <button className='save' type="button" onClick={handleSaveIconoClick}><i className='bx bx-save'></i></button>
                         </div>
 
-                        <label htmlFor="selectPersonajes">Selecciona un Icono:</label>
+                        <label htmlFor="selectIconos">Selecciona un icono:</label>
                             <select
-                                id="selectPersonajes"
-                                value={personajeSeleccionado ? personajeSeleccionado.nombre : ''}
+                                id="selectIconos"
+                                value={iconoSeleccionado ? iconoSeleccionado.nombre : ''}
                                 onChange={(e) => {
-                                const selectedPersonaje = personajesbd.find((p) => p.nombre === e.target.value);
-                                setPersonajeSeleccionado(selectedPersonaje);
+                                const selectedPersonaje = iconosbd.find((p) => p.nombre === e.target.value);
+                                setIconoSeleccionado(selectedPersonaje);
                                 }}
                             >
-                                <option value="">Selecciona un personaje...</option>
-                                {personajesbd.map((personaje) => (
-                                <option key={personaje.id} value={personaje.nombre}>
-                                    {personaje.nombre}
+                                <option value="">-</option>
+                                {iconosbd.map((icono) => (
+                                <option key={icono.id} value={icono.nombre}>
+                                    {icono.nombre}
                                 </option>
                                 ))}
                             </select>
+
+                            {iconoSeleccionado && (
+                            <>
+                                <label>Icon:</label>
+                                <input
+                                    type="text"
+                                    value={iconoSeleccionado.icon} onChange={handleIcono}
+                                />
+
+                                <label>Dato:</label>
+                                <input
+                                    type="text"
+                                    value={iconoSeleccionado.dato} onChange={handleDatoIcono}
+                                />
+                                
+                                <div className='botones-container'>
+                                    <button className='delete' type="button"><i className='bx bx-trash'></i></button>
+                                    <button className='add' type="button" onClick={handleEnviarIconoClick}><i className='bx bxs-user-plus'></i></button>
+                                </div>
+                            </>
+                            )}
                         </div>
                     </div>
 

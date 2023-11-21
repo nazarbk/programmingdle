@@ -166,7 +166,7 @@ app.post("/Lenguajes", async (req, res) => {
 //put
 app.put('/Lenguajes', async (req, res) => {
   try {
-      const { lenguajeDelDia, lenguajeDelDiaNuevo } = req.body;
+      const { lenguajeDelDia, lenguajeDelDiaNuevo, actualizarLenguaje } = req.body;
 
       if (lenguajeDelDia && lenguajeDelDiaNuevo) {
           await Lenguaje.findByIdAndUpdate(lenguajeDelDia._id, { deldia: false });
@@ -176,7 +176,11 @@ app.put('/Lenguajes', async (req, res) => {
           await Usuario.deleteMany({});
 
           res.status(200).json({ ok: true, mensaje: 'Lenguajes del dia actualizados con éxito' });
-      }else {
+      }else if(actualizarLenguaje){
+          const { _id, ...nuevosDatos } = actualizarLenguaje;
+
+          await Lenguaje.findByIdAndUpdate(_id, nuevosDatos);
+      }else { 
           res.status(400).json({ ok: false, mensaje: 'Lenguajes no definidos correctamente' });
       }
   } catch (error) {
