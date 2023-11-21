@@ -13,12 +13,7 @@ const Gestion = () => {
 
     const [lenguajesbd, setLenguajesbd] = useState([]);
     const [lenguajeDelDiaNuevo, setLenguajeDelDiaNuevo] = useState(null);
-    const [lenguajeSeleccionado, setLenguajeSeleccionado] = useState({
-        lenguaje: '',
-        codigo: '',
-        dato: '',
-        pista: '',
-      });
+    const [lenguajeSeleccionado, setLenguajeSeleccionado] = useState(null);
 
     const [iconosbd, setIconosbd] = useState([]);
     const [iconoDelDiaNuevo, setIconoDelDiaNuevo] = useState(null);
@@ -595,6 +590,8 @@ const Gestion = () => {
             .then(response => response.json())
             .then(data => {
                 if (data.ok) {
+                    actualizarLenguaje();
+                    setLenguajeSeleccionado('');
                     setEnviadoConExito(true);
                   } else {
                     setEnviadoConExito(false);
@@ -607,6 +604,53 @@ const Gestion = () => {
             alert('No puedes dejar ningun campo vacío');
         }
       };
+
+      const handleUpdateIcono= () => {
+        if (
+            iconoSeleccionado.nombre.trim() !== '' &&
+            iconoSeleccionado.icon.trim() !== '' &&
+            iconoSeleccionado.dato.trim() !== ''
+        ) {
+          fetch('https://programmingdle.onrender.com/Frameworks', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                actualizarIcono: iconoSeleccionado,
+            }),
+          })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    actualizarIcono();
+                    setIconoSeleccionado('');
+                    setEnviadoConExito(true);
+                  } else {
+                    setEnviadoConExito(false);
+                  }
+            })
+            .catch(error => {
+              console.error('Error al hacer la solicitud:', error);
+            });
+        } else {
+            alert('No puedes dejar ningun campo vacío');
+        }
+      };
+
+    const actualizarIcono = () => {
+        const nuevosIconos = iconosbd.map((icono) =>
+            icono._id === iconoSeleccionado._id ? iconoSeleccionado : icono
+        );
+        setIconosbd(nuevosIconos);
+    }
+
+    const actualizarLenguaje = () => {
+        const nuevosLenguajes = lenguajesbd.map((lenguaje) =>
+            lenguaje._id === lenguajeSeleccionado._id ? lenguajeSeleccionado : lenguaje
+        );
+        setLenguajesbd(nuevosLenguajes);
+    }
 
     return(
         <div className='clasico'>
@@ -943,8 +987,8 @@ const Gestion = () => {
 
                         <label htmlFor="selectLenguajes">Selecciona un lenguaje:</label>
                             <select
-                                    id="selectLenguajes"
-                                    value={lenguajeSeleccionado ? lenguajeSeleccionado.lenguaje : ''}
+                                id="selectLenguajes"
+                                value={lenguajeSeleccionado ? lenguajeSeleccionado.lenguaje : ''}
                                     onChange={(e) => {
                                     const selectedPersonaje = lenguajesbd.find((p) => p.lenguaje === e.target.value);
                                     setLenguajeSeleccionado(selectedPersonaje);
@@ -1057,7 +1101,7 @@ const Gestion = () => {
                                 
                                 <div className='botones-container'>
                                     <button className='delete' type="button"><i className='bx bx-trash'></i></button>
-                                    <button className='add' type="button" onClick={handleEnviarIconoClick}><i className='bx bxs-user-plus'></i></button>
+                                    <button className='save' type="button" onClick={handleUpdateIcono}><i className='bx bx-save'></i></button>
                                 </div>
                             </>
                             )}

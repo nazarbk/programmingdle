@@ -86,7 +86,7 @@ app.post("/Personajes", async (req, res) => {
 //put
 app.put('/Personajes', async (req, res) => {
   try {
-      const { personajeDelDia, personajeDelDiaNuevo, personajeDelDiaLogro, personajeDelDiaNuevoLogro } = req.body;
+      const { personajeDelDia, personajeDelDiaNuevo, personajeDelDiaLogro, personajeDelDiaNuevoLogro, actualizarPersonaje } = req.body;
 
       if (personajeDelDia && personajeDelDiaNuevo) {
           await Personaje.findByIdAndUpdate(personajeDelDia._id, { deldia: false });
@@ -104,6 +104,18 @@ app.put('/Personajes', async (req, res) => {
         await Usuario.deleteMany({});
 
         res.status(200).json({ ok: true, mensaje: 'Personajes del dia logro actualizados con éxito' });
+      }else if(actualizarPersonaje){
+        const personajeActualizado = await Personaje.findByIdAndUpdate(
+          actualizarPersonaje._id,
+          actualizarPersonaje,
+          { new: true }
+        );
+
+        if (!personajeActualizado) {
+          return res.status(404).json({ ok: false, mensaje: 'Icono no encontrado para actualizar' });
+        }
+
+        res.status(200).json({ ok: true, mensaje: 'Icono actualizado con éxito' });
       }else {
           res.status(400).json({ ok: false, mensaje: 'Personajes no definidos correctamente' });
       }

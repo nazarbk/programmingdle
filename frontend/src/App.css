@@ -1246,12 +1246,12 @@ footer {
 .personajes-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  align-items: center;
   gap: 45px;
+  align-items: flex-start;
+  align-content: space-between;
 }
 
 .personaje-card {
-
   position: relative;
   overflow: hidden;
   display: flex;
