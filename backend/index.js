@@ -177,11 +177,18 @@ app.put('/Lenguajes', async (req, res) => {
 
           res.status(200).json({ ok: true, mensaje: 'Lenguajes del dia actualizados con éxito' });
       }else if(actualizarLenguaje){
-         console.log('ACTUALIZAR LENGUAJE: ', actualizarLenguaje);
+        const lenguajeActualizado = await Lenguaje.findByIdAndUpdate(
+          actualizarLenguaje._id,
+          actualizarLenguaje,
+          { new: true }
+        );
+  
+        if (!lenguajeActualizado) {
+          return res.status(404).json({ ok: false, mensaje: 'Lenguaje no encontrado para actualizar' });
+        }
 
-          await Lenguaje.findByIdAndUpdate(actualizarLenguaje._id, actualizarLenguaje);
+        res.status(200).json({ ok: true, mensaje: 'Lenguaje actualizado con éxito' });
       }else { 
-          console.error('Error al actualizar lenguajes:', error);
           res.status(400).json({ ok: false, mensaje: 'Lenguajes no definidos correctamente' });
       }
   } catch (error) {
