@@ -127,6 +127,23 @@ app.put('/Personajes', async (req, res) => {
   }
 });
 
+app.delete("/Personajes/:id", async (req, res) => {
+  const personajeId = req.params.id;
+
+  try {
+      const resultado = await Personaje.deleteOne({ _id: personajeId });
+
+      if (resultado.deletedCount === 0) {
+          res.status(404).send({ ok: false, error: "Personaje no encontrada" });
+      } else {
+          res.status(200).send({ ok: true, mensaje: "Personaje eliminada con éxito" });
+      }
+  } catch (error) {
+      console.error("Error al eliminar el personaje:", error);
+      res.status(500).send({ ok: false, error: "Error al eliminar el personaje", detalle: error.message });
+  }
+});
+
 //Lenguajes
 const lenguajeSchema = new mongoose.Schema({
   lenguaje: String ,
@@ -208,6 +225,23 @@ app.put('/Lenguajes', async (req, res) => {
   } catch (error) {
       console.error('Error al actualizar lenguajes:', error);
       res.status(500).json({ ok: false, error: 'Error al actualizar lenguajes' });
+  }
+});
+
+app.delete("/Lenguajes/:id", async (req, res) => {
+  const lenguajeId = req.params.id;
+
+  try {
+      const resultado = await Lenguaje.deleteOne({ _id: lenguajeId });
+
+      if (resultado.deletedCount === 0) {
+          res.status(404).send({ ok: false, error: "Lenguaje no encontrado" });
+      } else {
+          res.status(200).send({ ok: true, mensaje: "Lenguaje eliminado con éxito" });
+      }
+  } catch (error) {
+      console.error("Error al eliminar el lenguaje:", error);
+      res.status(500).send({ ok: false, error: "Error al eliminar el lenguaje", detalle: error.message });
   }
 });
 
@@ -569,6 +603,23 @@ app.put('/Frameworks', async (req, res) => {
   } catch (error) {
       console.error('Error al actualizar iconos:', error);
       res.status(500).json({ ok: false, error: 'Error al actualizar iconos' });
+  }
+});
+
+app.delete("/Frameworks/:id", async (req, res) => {
+  const frameworkId = req.params.id;
+
+  try {
+      const resultado = await Framework.deleteOne({ _id: frameworkId });
+
+      if (resultado.deletedCount === 0) {
+          res.status(404).send({ ok: false, error: "framework no encontrado" });
+      } else {
+          res.status(200).send({ ok: true, mensaje: "framework eliminado con éxito" });
+      }
+  } catch (error) {
+      console.error("Error al eliminar el framework:", error);
+      res.status(500).send({ ok: false, error: "Error al eliminar el framework", detalle: error.message });
   }
 });
 

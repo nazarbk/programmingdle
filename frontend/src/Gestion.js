@@ -195,10 +195,15 @@ const Gestion = () => {
         };
 
         const handleAñoUpdate = (e) => {
+            const inputValue = e.target.value;
+
+            const numericValue = inputValue.replace(/[^0-9]/g, '');
+
             setPersonajeSeleccionado({
                 ...personajeSeleccionado,
-                año: e.target.value,
+                año: numericValue,
             });
+             
         };
 
         const handleDatoUpdate = (e) => {
@@ -636,7 +641,7 @@ const Gestion = () => {
             personajeSeleccionado.genero.trim() !== '' &&
             personajeSeleccionado.ambito.trim() !== '' &&
             personajeSeleccionado.adjetivo.trim() !== '' &&
-            personajeSeleccionado.año.trim() !== '' &&
+            personajeSeleccionado.año !== '' &&
             personajeSeleccionado.dato.trim() !== '' &&
             personajeSeleccionado.pista.trim() !== '' &&
             personajeSeleccionado.pais.trim() !== ''
@@ -755,7 +760,7 @@ const Gestion = () => {
         const nuevosPersonajes = personajesbd.map((personaje) =>
         personaje._id === personajeSeleccionado._id ? personajeSeleccionado : personaje
         );
-        setLenguajesbd(nuevosPersonajes);
+        setPersonajesbd(nuevosPersonajes);
     }
 
     return(
