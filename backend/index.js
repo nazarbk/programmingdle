@@ -16,7 +16,7 @@ app.use(express.json());
 
 //CORS
 const corsOptions = {
-  origin: 'https://programmingdle.web.app/',
+  origin: 'https://programmingdle.web.app',
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
