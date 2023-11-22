@@ -30,26 +30,6 @@ app.use((req, res, next) => {
 //Cabeceras 
 app.use(helmet());
 
-
-const authenticate = (req, res, next) => {
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.status(401).json({ error: 'Autenticación requerida' });
-  }
-
-  jwt.verify(token, secretKey2, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: 'Token inválido' });
-    }
-
-    req.user = decoded;
-
-    next();
-  });
-};
-
-
 app.set('trust proxy', true);
 
 //Personajes
