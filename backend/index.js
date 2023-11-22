@@ -93,7 +93,7 @@ app.put('/Personajes', async (req, res) => {
 
           await Personaje.findByIdAndUpdate(personajeDelDiaNuevo._id, { deldia: true });
 
-          await Usuario.deleteMany({});
+          await Usuario.deleteMany({ rol: { $ne: 'admin' } });
 
           res.status(200).json({ ok: true, mensaje: 'Personajes del dia clasico actualizados con éxito' });
       }else if(personajeDelDiaLogro && personajeDelDiaNuevoLogro){
@@ -101,7 +101,7 @@ app.put('/Personajes', async (req, res) => {
 
         await Personaje.findByIdAndUpdate(personajeDelDiaNuevoLogro._id, { deldialogro: true });
 
-        await Usuario.deleteMany({});
+        await Usuario.deleteMany({ rol: { $ne: 'admin' } });
 
         res.status(200).json({ ok: true, mensaje: 'Personajes del dia logro actualizados con éxito' });
       }else if(actualizarPersonaje){
@@ -204,7 +204,7 @@ app.put('/Lenguajes', async (req, res) => {
 
           await Lenguaje.findByIdAndUpdate(lenguajeDelDiaNuevo._id, { deldia: true });
           
-          await Usuario.deleteMany({});
+          await Usuario.deleteMany({ rol: { $ne: 'admin' } });
 
           res.status(200).json({ ok: true, mensaje: 'Lenguajes del dia actualizados con éxito' });
       }else if(actualizarLenguaje){
@@ -303,7 +303,7 @@ const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
 cron.schedule('0 0 * * *', async () => {
   console.log('ME EJECUTO PUTO');
   try {
-    await Usuario.deleteMany({});
+    await Usuario.deleteMany({ rol: { $ne: 'admin' } });
     console.log('Usuarios eliminados exitosamente.');
 
     await Personaje.updateMany({}, { $set: { deldia: false, deldialogro: false } });
@@ -582,7 +582,7 @@ app.put('/Frameworks', async (req, res) => {
 
           await Framework.findByIdAndUpdate(iconoDelDiaNuevo._id, { deldia: true });
 
-          await Usuario.deleteMany({});
+          await Usuario.deleteMany({ rol: { $ne: 'admin' } });
 
           res.status(200).json({ ok: true, mensaje: 'Iconos del dia actualizados con éxito' });
       }else if(actualizarIcono){

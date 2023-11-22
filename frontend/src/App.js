@@ -3,6 +3,7 @@ import Header from './Header';
 import Modos from './Modos';
 import { useEffect } from 'react';
 import Footer from './Footer';
+import ScrollToTop from './ScrollToTop';
 
 function App() {
 

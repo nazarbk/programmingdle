@@ -18,6 +18,10 @@ const Gestion = () => {
     const [iconoDelDiaNuevo, setIconoDelDiaNuevo] = useState(null);
     const [iconoSeleccionado, setIconoSeleccionado] = useState(null);
 
+    const [mostrarContenido2, setMostrarContenido2] = useState(false);
+    const [mostrarContenido3, setMostrarContenido3] = useState(false);
+    const [mostrarContenido4, setMostrarContenido4] = useState(false);
+
     const [showContent, setShowContent] = useState(false);
     const [loading, setLoading] = useState(true);
     const [personajedeldia, setpersonajedeldia] = useState([]);
@@ -358,8 +362,9 @@ const Gestion = () => {
             if (!deleteResponse.ok) {
                 console.error('Error al eliminar la sugerencia después de agregar el personaje:', deleteResponse.status);
             }
-    
-            // Eliminar el personaje de la lista local
+            
+            setEnviadoConExito(true);
+            actualizarPersonaje();
             const updatedPersonajes = [...personajes];
             updatedPersonajes.splice(index, 1);
             setPersonajes(updatedPersonajes);
@@ -382,7 +387,7 @@ const Gestion = () => {
                 console.error('Error al eliminar la sugerencia después de agregar el personaje:', deleteResponse.status);
             }
 
-            // Eliminar el personaje de la lista local
+            setEnviadoConExito(true);
             const updatedPersonajes = [...personajes];
             updatedPersonajes.splice(index, 1);
             setPersonajes(updatedPersonajes);
@@ -424,6 +429,7 @@ const Gestion = () => {
             .then(response => response.json())
             .then(data => {
                 if (data.ok) {
+                    actualizarPersonaje();
                     setEnviadoConExito(true);
                     setNombre('');
                     setGenero('');
@@ -469,6 +475,7 @@ const Gestion = () => {
             .then(response => response.json())
             .then(data => {
                 if (data.ok) {
+                    actualizarLenguaje();
                     setEnviadoConExito(true);
                     setlenguaje('');
                     setcodigo('');
@@ -509,6 +516,7 @@ const Gestion = () => {
             .then(response => response.json())
             .then(data => {
                 if (data.ok) {
+                    actualizarIcono();
                     setEnviadoConExito(true);
                     setnombretecnologia('');
                     seticono('');
@@ -542,6 +550,7 @@ const Gestion = () => {
                 if (!response.ok) {
                     throw new Error('La solicitud PUT no fue exitosa.');
                 }
+                actualizarPersonaje();
                 setEnviadoConExito(true);
                 console.log('Solicitud PUT exitosa');
             } else {
@@ -569,6 +578,7 @@ const Gestion = () => {
                 if (!response.ok) {
                     throw new Error('La solicitud PUT no fue exitosa.');
                 }
+                actualizarPersonaje();
                 setEnviadoConExito(true);
                 console.log('Solicitud PUT exitosa');
             } else {
@@ -596,6 +606,7 @@ const Gestion = () => {
                 if (!response.ok) {
                     throw new Error('La solicitud PUT no fue exitosa.');
                 }
+                actualizarLenguaje();
                 setEnviadoConExito(true);
                 console.log('Solicitud PUT exitosa');
             } else {
@@ -623,6 +634,7 @@ const Gestion = () => {
                 if (!response.ok) {
                     throw new Error('La solicitud PUT no fue exitosa.');
                 }
+                actualizarIcono();
                 setEnviadoConExito(true);
                 console.log('Solicitud PUT exitosa');
             } else {
@@ -742,26 +754,137 @@ const Gestion = () => {
         }
       };
 
+      const eliminarPersonaje = async () => {
+        console.log('PERONSJAE: ',personajeSeleccionado);
+
+        if(personajeSeleccionado.deldia === false && personajeSeleccionado.deldialogro === false){
+            if(personajeSeleccionado._id){
+                try {
+                    const deleteResponse = await fetch(`https://programmingdle.onrender.com/Personajes/${personajeSeleccionado._id}`, {
+                        method: 'DELETE',
+                    });
+        
+                    if (!deleteResponse.ok) {
+                        console.error('Error al eliminar la sugerencia después de agregar el personaje:', deleteResponse.status);
+                    }
+
+                    actualizarPersonaje();
+                    setPersonajeSeleccionado('');
+                    setEnviadoConExito(true);
+                } catch (error) {
+                  console.error('Error al agregar el personaje:', error);
+                }
+            }else{
+                alert('Algo no ha ido como se esperaba');
+            }
+        }else{
+            alert('No se puede elimar un personaje del día');
+        }
+      };
+
+      const eliminarLenguaje = async () => {
+
+        if(lenguajeSeleccionado.deldia === false){
+            if(lenguajeSeleccionado._id){
+                try {
+                    const deleteResponse = await fetch(`https://programmingdle.onrender.com/Lenguajes/${lenguajeSeleccionado._id}`, {
+                        method: 'DELETE',
+                    });
+        
+                    if (!deleteResponse.ok) {
+                        console.error('Error al eliminar la sugerencia después de agregar el personaje:', deleteResponse.status);
+                    }
+
+                    actualizarLenguaje();
+                    setLenguajeSeleccionado('');
+                    setEnviadoConExito(true);
+                } catch (error) {
+                  console.error('Error al agregar el personaje:', error);
+                }
+            }else{
+                alert('Algo no ha ido como se esperaba');
+            }
+        }else{
+            alert('No se puede elimar un lenguaje del día');
+        }
+      };
+
+      const eliminarIcono = async () => {
+
+        if(iconoSeleccionado.deldia === false){
+            if(iconoSeleccionado._id){
+                try {
+                    const deleteResponse = await fetch(`https://programmingdle.onrender.com/Frameworks/${iconoSeleccionado._id}`, {
+                        method: 'DELETE',
+                    });
+        
+                    if (!deleteResponse.ok) {
+                        console.error('Error al eliminar la sugerencia después de agregar el personaje:', deleteResponse.status);
+                    }
+
+                    actualizarIcono();
+                    setIconoSeleccionado('');
+                    setEnviadoConExito(true);
+                } catch (error) {
+                  console.error('Error al agregar el personaje:', error);
+                }
+            }else{
+                alert('Algo no ha ido como se esperaba');
+            }
+        }else{
+            alert('No se puede elimar un icono del día');
+        }
+      };
+
     const actualizarIcono = () => {
-        const nuevosIconos = iconosbd.map((icono) =>
-            icono._id === iconoSeleccionado._id ? iconoSeleccionado : icono
-        );
-        setIconosbd(nuevosIconos);
+        fetch('https://programmingdle.onrender.com/Frameworks')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('La solicitud no pudo ser completada.');
+          }
+          return response.json();
+        })
+        .then(data => {
+            setIconosbd(data.resultado);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
 
     const actualizarLenguaje = () => {
-        const nuevosLenguajes = lenguajesbd.map((lenguaje) =>
-            lenguaje._id === lenguajeSeleccionado._id ? lenguajeSeleccionado : lenguaje
-        );
-        setLenguajesbd(nuevosLenguajes);
+        fetch('https://programmingdle.onrender.com/Lenguajes')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('La solicitud no pudo ser completada.');
+          }
+          return response.json();
+        })
+        .then(data => {
+            setLenguajesbd(data.resultado);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
 
     const actualizarPersonaje = () => {
-        const nuevosPersonajes = personajesbd.map((personaje) =>
-        personaje._id === personajeSeleccionado._id ? personajeSeleccionado : personaje
-        );
-        setPersonajesbd(nuevosPersonajes);
+        fetch('https://programmingdle.onrender.com/Personajes')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('La solicitud no pudo ser completada.');
+          }
+          return response.json();
+        })
+        .then(data => {
+            setPersonajesbd(data.resultado);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
+
+    console.log('ICONO SELECCIONADO: ', iconoSeleccionado);
 
     return(
         <div className='clasico'>
@@ -771,7 +894,14 @@ const Gestion = () => {
             {showContent ? (
                 <div>
                     <h2 className='gestiontitle'><i className='bx bx-user-pin'></i> Últimos personajes sugeridos</h2>
-                    <div className="personajes-row">
+                    <div className='contenidoboton'>
+                        <button className='botonmostrar' onClick={() => setMostrarContenido4(!mostrarContenido4)}>
+                            {mostrarContenido4 ? <i className='bx bx-chevron-up'></i> : <i className='bx bx-chevron-down'></i>}
+                        </button>
+                    </div>
+
+                    <div className={`contenido ${mostrarContenido4 ? 'mostrar' : ''}`}>
+                    <div id='añadirsugerencias' className="personajes-row">
                     {personajes.slice(0, 6).map((personaje, index) => (
                     <div key={index} className="personaje-card">
                         <label htmlFor={`nombre-${index}`}>Nombre:</label>
@@ -845,9 +975,17 @@ const Gestion = () => {
                     </div>
                     ))}
                     </div>
+                    </div>
 
                     <h2 className='gestiontitle'><i className='bx bx-folder-plus'></i> Añadir </h2>
-                    <div className="personajes-row">
+                    <div className='contenidoboton'>
+                        <button className='botonmostrar' onClick={() => setMostrarContenido3(!mostrarContenido3)}>
+                            {mostrarContenido3 ? <i className='bx bx-chevron-up'></i> : <i className='bx bx-chevron-down'></i>}
+                        </button>
+                    </div>
+
+                    <div className={`contenido ${mostrarContenido3 ? 'mostrar' : ''}`}>
+                    <div id='añadirpersonajes' className="personajes-row">
                     
                         <div className="personaje-card2">
                             <h3>Personaje</h3>
@@ -961,11 +1099,18 @@ const Gestion = () => {
                             </div>
                         </div>
                     </div>
+                    </div>
 
                     <h2 className='gestiontitle'><i className='bx bx-edit' ></i> Editar/Eliminar </h2>
-                    <div className="personajes-row">
-                    
-                        <div className="personaje-card2">
+                    <div className='contenidoboton'>
+                        <button className='botonmostrar' onClick={() => setMostrarContenido2(!mostrarContenido2)}>
+                            {mostrarContenido2 ? <i className='bx bx-chevron-up'></i> : <i className='bx bx-chevron-down'></i>}
+                        </button>
+                    </div>
+
+                    <div className={`contenido ${mostrarContenido2 ? 'mostrar' : ''}`}>
+                    <div id='editarpersonajes' className="personajes-row">
+                        <div className="personaje-card3">
                         <h3>Personaje</h3>
                         
                         <label>Personaje del día modo Clásico:</label>
@@ -1071,14 +1216,14 @@ const Gestion = () => {
                             />
                             
                             <div className='botones-container'>
-                                <button className='delete' type="button"><i className='bx bx-trash'></i></button>
+                                <button className='delete' type="button" onClick={eliminarPersonaje}><i className='bx bx-trash'></i></button>
                                 <button className='save' type="button" onClick={handleUpdatePersonaje}><i className='bx bx-save'></i></button>
                             </div>
                             </>
                             )}
                         </div>
 
-                        <div className="personaje-card2">
+                        <div className="personaje-card3">
                         <h3>Lenguaje</h3>
                         
                         <label>Lenguaje del día:</label>
@@ -1148,14 +1293,14 @@ const Gestion = () => {
                                 />
                                 
                                 <div className='botones-container'>
-                                    <button className='delete' type="button"><i className='bx bx-trash'></i></button>
+                                <button className='delete' type="button" onClick={eliminarLenguaje}><i className='bx bx-trash'></i></button>
                                     <button className='save' type="button" onClick={handleUpdateCodigo}><i className='bx bx-save'></i></button>
                                 </div>
                             </>
                             )}
                         </div>
 
-                        <div className="personaje-card2">
+                        <div className="personaje-card3">
                         <h3>Icono</h3>
                         
                         <label>Icono del día:</label>
@@ -1183,6 +1328,7 @@ const Gestion = () => {
                                 value={iconoSeleccionado ? iconoSeleccionado.nombre : ''}
                                 onChange={(e) => {
                                 const selectedPersonaje = iconosbd.find((p) => p.nombre === e.target.value);
+                                console.log('ICONOS : ', selectedPersonaje);
                                 setIconoSeleccionado(selectedPersonaje);
                                 }}
                             >
@@ -1215,12 +1361,13 @@ const Gestion = () => {
                                 />
                                 
                                 <div className='botones-container'>
-                                    <button className='delete' type="button"><i className='bx bx-trash'></i></button>
+                                <button className='delete' type="button" onClick={eliminarIcono}><i className='bx bx-trash'></i></button>
                                     <button className='save' type="button" onClick={handleUpdateIcono}><i className='bx bx-save'></i></button>
                                 </div>
                             </>
                             )}
                         </div>
+                    </div>
                     </div>
 
                     {enviadoConExito && (

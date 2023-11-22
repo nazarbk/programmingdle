@@ -3,6 +3,7 @@ import './App.css';
 import Typed from 'typed.js';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import ScrollToTop from './ScrollToTop';
 
 
 const Header = () => {
@@ -69,6 +70,7 @@ const Header = () => {
 
     return (
       <div className="header-container">
+        <ScrollToTop/>
         <header className="header">
           <div className="menu" onClick={toggleMenu}>
             <i className={`bx ${menuVisible ? 'bx-x' : 'bx-menu'}`}></i>

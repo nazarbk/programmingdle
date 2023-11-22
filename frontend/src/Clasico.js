@@ -629,7 +629,7 @@ const Clasico = () => {
       </h2>
 
       <div className='ranking-container' id='ranking-section'>
-        {!username && (
+        {!username ? (
           <div className="popup">
             <h2>Ingresa tu nombre de usuario para acceder al ranking</h2>
             <input
@@ -640,25 +640,26 @@ const Clasico = () => {
             />
             <button onClick={actualizarNombreUsuario}>Guardar</button>
           </div>
-        )}
-        <div className='ranking'>
-          <table className='paper-table'>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Intentos</th>
-              </tr>
-            </thead>
-            <tbody>
-              {usersranking.map(user => (
-                <tr key={user._id}>
-                  <td>{user.nombre || ''}</td>
-                  <td>{user.clasico.length || ''}</td>
+        ): (
+          <div className='ranking'>
+            <table className='paper-table'>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Intentos</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {usersranking.map(user => (
+                  <tr key={user._id}>
+                    <td>{user.nombre || ''}</td>
+                    <td>{user.clasico.length || ''}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
       </div>
       )}
