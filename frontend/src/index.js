@@ -12,6 +12,7 @@ import Lenguaje from './Lenguaje';
 import Sugerencia from './Sugerencia';
 import Icono from './Icono';
 import Gestion from './Gestion';
+import Privacidad from './Privacidad';
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/gestion",
     element: <Gestion/>
+  },
+  {
+    path: "/privacidad",
+    element: <Privacidad/>
   }
 ]);
 

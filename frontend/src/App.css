@@ -1248,6 +1248,15 @@ footer {
   padding: 10px;
 }
 
+.politicapriv{
+  font-size: 12px;
+}
+
+.politicapriv:hover{
+  border-bottom: 2px solid white;
+  cursor: pointer;
+}
+
 
 .nopermitido:hover{
   cursor: not-allowed;
@@ -1529,3 +1538,17 @@ footer {
   cursor: pointer;
 }
 
+.politica-privacidad{
+  padding: 20px;
+  background-color: #F5FCCD;
+}
+
+.politica-privacidad h2{
+  color:  #0E3650;
+  margin-top: 40px;
+}
+
+.enlase{
+  color: #12486B;
+  border-bottom: 2px solid #12486B;
+}

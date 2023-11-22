@@ -7,7 +7,7 @@ import ScrollToTop from './ScrollToTop';
 
 
 const Header = () => {
-  const [admin, setAdmin] = useState(true);
+  const [admin, setAdmin] = useState(false);
 
   useEffect(() => {
     fetch('https://programmingdle.onrender.com/')

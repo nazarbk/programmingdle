@@ -3,16 +3,52 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cron = require("node-cron");
 const { ObjectId } = require("mongodb");
-const bcrypt = require("bcrypt");
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 const secretKey = 'SecretKeyProgrammingdle';
+const helmet = require("helmet");
 
-//mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/?retryWrites=true&w=majority");
+
 mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/Programmingdle");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+//CORS
+const corsOptions = {
+  origin: 'https://programmingdle.web.app/',
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+
+//HSTS
+app.use((req, res, next) => {
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  next();
+});
+
+//Cabeceras 
+app.use(helmet());
+
+
+const authenticate = (req, res, next) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).json({ error: 'Autenticación requerida' });
+  }
+
+  jwt.verify(token, secretKey2, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ error: 'Token inválido' });
+    }
+
+    req.user = decoded;
+
+    next();
+  });
+};
+
 
 app.set('trust proxy', true);
 
@@ -105,7 +141,6 @@ app.put('/Personajes', async (req, res) => {
 
         res.status(200).json({ ok: true, mensaje: 'Personajes del dia logro actualizados con éxito' });
       }else if(actualizarPersonaje){
-        console.log('HOLAA: ', actualizarPersonaje);
 
         const personajeActualizado = await Personaje.findByIdAndUpdate(
           actualizarPersonaje._id,
@@ -301,13 +336,10 @@ const usuarioSchema = new mongoose.Schema({
 const Usuario = mongoose.model("Usuario", usuarioSchema, "Usuarios");
 
 cron.schedule('0 0 * * *', async () => {
-  console.log('ME EJECUTO PUTO');
   try {
     await Usuario.deleteMany({ rol: { $ne: 'admin' } });
-    console.log('Usuarios eliminados exitosamente.');
 
     await Personaje.updateMany({}, { $set: { deldia: false, deldialogro: false } });
-    console.log('Campos "deldia" y "deldialogro" actualizados para todos los personajes.');
 
     //Seleccionar un personaje random para clasico y para logro 
     const personajes = await Personaje.aggregate([{ $sample: { size: 2 } }]);
@@ -315,8 +347,6 @@ cron.schedule('0 0 * * *', async () => {
     await Personaje.updateOne({ nombre: personajes[0].nombre }, { $set: { deldia: true } });
     
     await Personaje.updateOne({ nombre: personajes[1].nombre }, { $set: { deldialogro: true } });
-
-    console.log('Personajes: ', personajes);
     
     //Seleccionar un lenguaje random
     await Lenguaje.updateMany({}, { $set: { deldia: false } });
@@ -325,16 +355,12 @@ cron.schedule('0 0 * * *', async () => {
 
     await Lenguaje.updateOne({ nombre: lenguajes[0].nombre }, { $set: { deldia: true } });
 
-    console.log('Lenguaje: ', lenguajes);
-
     //Seleccionar un icono random
     await Framework.updateMany({}, { $set: { deldia: false } });
 
     const iconos = await Framework.aggregate([{ $sample: { size: 1 } }]);
 
     await Framework.updateOne({ nombre: iconos[0].nombre }, { $set: { deldia: true } });
-
-    console.log('Icono: ', iconos);
 
   } catch (error) {
     console.error('Error al eliminar usuarios:', error);
@@ -345,21 +371,16 @@ cron.schedule('0 0 * * *', async () => {
 app.post('/Usuarios', async (req, res) => {
   const { ip } = req.body;
 
-  console.log('USER IP: ', ip);
-
   if (!ip) {
     return res.status(400).json({ error: 'La dirección IP es requerida.' });
   }
 
   const encryptedIP = encryptIP(ip, secretKey);
-  console.log('ENCRYPTED IP: ', encryptedIP);
 
   try {
     const nuevoUsuario = new Usuario({
       ip: encryptedIP,
     });
-
-    console.log('NUEVO USUARIO: ', nuevoUsuario);
 
     await nuevoUsuario.save();
 
@@ -373,8 +394,6 @@ app.post('/Usuarios', async (req, res) => {
 // Buscar usuario por IP
 app.get('/Usuarios/:ip', async (req, res) => {
   const { ip } = req.params;
-
-  console.log('IP a comparar: ', ip);
 
   if (!ip) {
     return res.status(400).json({ error: 'La dirección IP es requerida.' });
@@ -420,14 +439,10 @@ app.put("/Usuarios/:ip", async (req, res) => {
   try {
     const usuarios = await Usuario.find();
 
-    console.log('USUARIOS CON IP', usuarios);
-
     const usuario = usuarios.find((usuario) => {
       const decryptedIP = decryptIP(usuario.ip, secretKey);
       return decryptedIP === ip;
     });
-
-    console.log('USUARIO A ACTUALIZAR: ', usuario);
 
     if (!usuario) {
       return res.status(404).send({ ok: false, mensaje: "Usuario no encontrado" });
