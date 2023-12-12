@@ -438,7 +438,7 @@ const Icono = () => {
         ) : (
           <div className='downcard'>
             <div className='clasicoinput'>
-              <input className='personajebuscador' placeholder='Escribe el nombre de un personaje' value={busqueda} onChange={handleBusquedaChange}></input>
+              <input className='personajebuscador' placeholder='Escribe el nombre de una tecnología' value={busqueda} onChange={handleBusquedaChange}></input>
             </div>
             <div className='clasicoicono'>
               <button className='send'onClick={compararPersonajes}>
@@ -451,7 +451,7 @@ const Icono = () => {
         <div className='listaresultados'>  
           {personajeNoEncontrado && (
             <div className='noresultado'>
-              <p>No se ha encontrado ningun personaje</p>
+              <p>No se ha encontrado ninguna tecnología</p>
             </div>
           )}
         </div>

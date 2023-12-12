@@ -1,11 +1,13 @@
 import React from 'react';
 import Header from './Header';
 import Modos from './Modos';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Footer from './Footer';
 import ScrollToTop from './ScrollToTop';
 
 function App() {
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch('https://programmingdle.onrender.com/')
@@ -16,7 +18,7 @@ function App() {
           ip: data,
         };
 
-        console.log('IP A BUSCAR: ', data)
+        setIsLoading(false);
   
         const options = {
           method: 'POST',
@@ -66,8 +68,17 @@ function App() {
 
   return (
       <div className="App">
-        <Header />
-        <Modos/>
+        {isLoading ? (
+          <div className="loading-overlay">
+            <p>Conectando a la base de datos... </p>
+            <div><i class='bx bx-loader-circle bx-spin'></i></div>
+          </div>
+        ) : (
+          <>
+            <Header />
+            <Modos/>
+          </>
+        )}
       </div>
   );
 }

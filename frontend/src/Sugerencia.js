@@ -14,7 +14,7 @@ const Sugerencia = () => {
   const [enviadoConExito, setEnviadoConExito] = useState(false);
 
   const handleNombreChange = (e) => {
-    const nuevoNombre = e.target.value.replace(/[^A-Za-z]/g, '');
+    const nuevoNombre = e.target.value.replace(/[^A-Za-z ]/g, '');
     setNombre(nuevoNombre);
   };
 
@@ -28,7 +28,7 @@ const Sugerencia = () => {
   };
 
   const handleAdjetivoChange = (e) => {
-    const nuevoAdjetivo = e.target.value.replace(/[^A-Za-z]/g, '');
+    const nuevoAdjetivo = e.target.value.replace(/[^A-Za-z ]/g, '');
     setAdjetivo(nuevoAdjetivo);
   };
 

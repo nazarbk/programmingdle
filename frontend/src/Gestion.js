@@ -340,34 +340,38 @@ const Gestion = () => {
         const personajeToAdd = personajes[index];
     
         try {
-          const response = await fetch('https://programmingdle.onrender.com/Personajes', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(personajeToAdd),
-          });
-    
-          if (!response.ok) {
-            console.log('RESPONSE: ', response);
-            throw new Error('La solicitud POST para agregar el personaje no fue exitosa.');
-          }
-
-            const nuevoPersonajeId = personajeToAdd._id;
-            console.log('PERSONAJE ID: ', personajeToAdd._id);
-            const deleteResponse = await fetch(`https://programmingdle.onrender.com/Sugerencias/${nuevoPersonajeId}`, {
-                method: 'DELETE',
+            if (!personajeToAdd.nombre || !personajeToAdd.genero || !personajeToAdd.ambito || !personajeToAdd.adjetivo || !personajeToAdd.año || !personajeToAdd.dato || !personajeToAdd.pista || !personajeToAdd.pais) {
+                alert('Debes rellenar todos los campos');
+            }else{
+                const response = await fetch('https://programmingdle.onrender.com/Personajes', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(personajeToAdd),
             });
-
-            if (!deleteResponse.ok) {
-                console.error('Error al eliminar la sugerencia después de agregar el personaje:', deleteResponse.status);
+        
+            if (!response.ok) {
+                console.log('RESPONSE: ', response);
+                throw new Error('La solicitud POST para agregar el personaje no fue exitosa.');
             }
-            
-            setEnviadoConExito(true);
-            actualizarPersonaje();
-            const updatedPersonajes = [...personajes];
-            updatedPersonajes.splice(index, 1);
-            setPersonajes(updatedPersonajes);
+
+                const nuevoPersonajeId = personajeToAdd._id;
+                console.log('PERSONAJE ID: ', personajeToAdd._id);
+                const deleteResponse = await fetch(`https://programmingdle.onrender.com/Sugerencias/${nuevoPersonajeId}`, {
+                    method: 'DELETE',
+                });
+
+                if (!deleteResponse.ok) {
+                    console.error('Error al eliminar la sugerencia después de agregar el personaje:', deleteResponse.status);
+                }
+                
+                setEnviadoConExito(true);
+                actualizarPersonaje();
+                const updatedPersonajes = [...personajes];
+                updatedPersonajes.splice(index, 1);
+                setPersonajes(updatedPersonajes);
+            }
         } catch (error) {
           console.error('Error al agregar el personaje:', error);
         }

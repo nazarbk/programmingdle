@@ -1552,3 +1552,27 @@ footer {
   color: #12486B;
   border-bottom: 2px solid #12486B;
 }
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 1.5em;
+}
+.loading-overlay p {
+  margin-bottom: 20px;
+}
+
+.loading-overlay i{
+  font-size: 50px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}

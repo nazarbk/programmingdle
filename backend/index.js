@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const cron = require("node-cron");
 const { ObjectId } = require("mongodb");
@@ -7,7 +6,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const secretKey = 'SecretKeyProgrammingdle';
 const helmet = require("helmet");
-
+const mongoose = require("mongoose");
 
 mongoose.connect("mongodb+srv://nazarblancokataran:rLw4jKya6zHXocX0@cluster0.xhdituv.mongodb.net/Programmingdle");
 
